@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from comprehend.summary.schema import MathEntry, PaperSummary, VisualSpec, VisualType, render_markdown
+from comprehend.summary.schema import MathEntry, PaperSummary, VisualSpec, VisualType, linkify_refs, render_markdown
 from comprehend.util import arxiv_slug, parse_arxiv_id, slugify
 
 
@@ -78,3 +78,45 @@ def test_render_markdown_includes_sections(tmp_path: Path) -> None:
     assert "## 3. Key concepts" in markdown
     assert "$$L = 0$$" in markdown
     assert "assets/arxiv-2012-12877-5a.png" in markdown
+    assert '<a id="4a"></a>' in markdown
+    assert '<a id="5a"></a>' in markdown
+
+
+def test_linkify_refs_bold_and_parens() -> None:
+    ref_ids = {"4a", "5a"}
+    text = "See **5a** and soft distillation **4a**."
+
+    linked = linkify_refs(text, ref_ids)
+
+    assert linked == "See [**5a**](#5a) and soft distillation [**4a**](#4a)."
+
+    paren_linked = linkify_refs("Details in (5a).", ref_ids)
+
+    assert paren_linked == "Details in [(5a)](#5a)."
+
+
+def test_render_markdown_linkifies_solution_refs() -> None:
+    summary = PaperSummary(
+        title="Test Paper",
+        pdf_url="https://arxiv.org/pdf/2012.12877.pdf",
+        tags=[],
+        slug="test",
+        problem=[],
+        solution=["Use token (**5a**) with loss **4a**."],
+        key_concepts=[],
+        math=[MathEntry(id="4a", label="loss", latex="L = 0")],
+        visuals=[
+            VisualSpec(
+                id="5a",
+                caption="Overview",
+                type=VisualType.EXTRACT,
+                description="diagram",
+                page=1,
+            ),
+        ],
+    )
+
+    markdown = render_markdown(summary)
+
+    assert "[**4a**](#4a)" in markdown
+    assert "[**5a**](#5a)" in markdown

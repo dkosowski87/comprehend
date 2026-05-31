@@ -6,6 +6,7 @@ from comprehend.summary.schema import (
     VisualSpec,
     VisualType,
     default_asset_filename,
+    linkify_refs,
     load_summary,
     render_markdown,
     save_summary,

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from enum import Enum
 from pathlib import Path
 
@@ -86,8 +87,58 @@ def default_asset_filename(slug: str, visual_id: str) -> str:
     return f"{slug}-{safe_visual_id}.png"
 
 
+def collect_ref_ids(summary: PaperSummary) -> set[str]:
+    """Collect cross-reference ids from math and visual sections.
+
+    Args:
+        summary: Paper summary model.
+
+    Returns:
+        Set of ids such as ``4a`` or ``5a`` that can be link targets.
+    """
+    ref_ids = {entry.id for entry in summary.math}
+    ref_ids.update(visual.id for visual in summary.visuals)
+
+    return ref_ids
+
+
+def linkify_refs(text: str, ref_ids: set[str]) -> str:
+    """Turn cross-reference markers in text into markdown jump links.
+
+    Supports ``**4a**`` and ``(4a)`` forms when ``4a`` is a known target id.
+
+    Args:
+        text: Bullet or paragraph text from a summary section.
+        ref_ids: Known anchor ids from :func:`collect_ref_ids`.
+
+    Returns:
+        Text with markdown links to in-page anchors.
+    """
+    if not ref_ids:
+        return text
+
+    linked = text
+    for ref_id in sorted(ref_ids, key=len, reverse=True):
+        escaped_id = re.escape(ref_id)
+        bold_pattern = re.compile(rf"(?<!\[)\*\*{escaped_id}\*\*")
+        linked = bold_pattern.sub(rf"[**{ref_id}**](#{ref_id})", linked)
+
+        paren_pattern = re.compile(rf"(?<!\[)\({escaped_id}\)")
+        linked = paren_pattern.sub(rf"[({ref_id})](#{ref_id})", linked)
+
+    return linked
+
+
+def _anchor(ref_id: str) -> str:
+    return f'<a id="{ref_id}"></a>'
+
+
 def render_markdown(summary: PaperSummary) -> str:
     """Assemble wiki markdown from a summary model.
+
+    Cross-references such as ``**4a**`` or ``(5a)`` in section bullets become
+    jump links when matching math or visual ids exist. Targets use HTML
+    anchors compatible with GitHub wiki.
 
     Args:
         summary: Completed summary including rendered asset filenames.
@@ -95,6 +146,7 @@ def render_markdown(summary: PaperSummary) -> str:
     Returns:
         GitHub wiki markdown string.
     """
+    ref_ids = collect_ref_ids(summary)
     tag_line = ", ".join(f"`{tag}`" for tag in summary.tags)
     lines: list[str] = [
         f"# {summary.title}",
@@ -107,21 +159,23 @@ def render_markdown(summary: PaperSummary) -> str:
     ]
 
     for item in summary.problem:
-        lines.append(f"- {item}")
+        lines.append(f"- {linkify_refs(item, ref_ids)}")
 
     lines.extend(["", "## 2. Solution", ""])
     for item in summary.solution:
-        lines.append(f"- {item}")
+        lines.append(f"- {linkify_refs(item, ref_ids)}")
 
     lines.extend(["", "## 3. Key concepts", ""])
     for item in summary.key_concepts:
-        lines.append(f"- {item}")
+        lines.append(f"- {linkify_refs(item, ref_ids)}")
 
     if summary.math:
         lines.extend(["", "## 4. Math", ""])
         for entry in summary.math:
             lines.extend(
                 [
+                    _anchor(entry.id),
+                    "",
                     f"**{entry.id}** {entry.label}:",
                     "",
                     f"$${entry.latex}$$",
@@ -138,6 +192,8 @@ def render_markdown(summary: PaperSummary) -> str:
             )
             lines.extend(
                 [
+                    _anchor(visual.id),
+                    "",
                     f"### {visual.id} — {visual.caption}",
                     "",
                     f"![{visual.id}](assets/{asset_name})",

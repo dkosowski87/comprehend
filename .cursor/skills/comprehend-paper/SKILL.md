@@ -80,7 +80,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 **Sections:**
 
 1. **Problem** — what limitation or gap the paper addresses (2–4 bullets).
-2. **Solution** — how the paper solves it. Use cross-reference ids (`4a`, `5a`) where helpful.
+2. **Solution** — how the paper solves it. Use cross-reference ids (`**4a**`, `(5a)`) where helpful; these become jump links in the wiki output.
 3. **Key concepts** — theoretical explanations aligned with *this paper's* contributions. Not a general ML primer. Include intuition (e.g. why attention helps long-range dependencies) when the paper relies on it.
 4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly).
 5. **Visualisation** — specs only (Agent 2 renders). **Maximum 2 visuals.**
@@ -153,10 +153,16 @@ Assembled pages follow this structure:
 - ...
 
 ## 4. Math
+
+<a id="4a"></a>
+
 **4a** soft distillation:
 $$...$$
 
 ## 5. Visualisation
+
+<a id="5a"></a>
+
 ### 5a — {caption}
 ![5a](assets/{slug}-5a.png)
 ```
