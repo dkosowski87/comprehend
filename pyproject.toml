@@ -2,6 +2,7 @@
 name = "comprehend"
 version = "0.1.0"
 description = "Agent-native library for ML paper summaries with visuals, published to GitHub wiki"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "arxiv>=2.1.0",
