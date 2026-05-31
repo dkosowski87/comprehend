@@ -9,6 +9,21 @@ from pydantic import BaseModel, Field, field_validator
 from comprehend.summary.schema import VisualSpec, default_asset_filename
 
 
+CONCEPT_VISUAL_ID = "visual"
+
+
+def default_concept_asset_filename(slug: str) -> str:
+    """Build the asset filename for a concept page visual.
+
+    Args:
+        slug: Concept wiki slug such as ``concept-cyclic-shift``.
+
+    Returns:
+        Filename like ``concept-cyclic-shift-visual.png``.
+    """
+    return default_asset_filename(slug, CONCEPT_VISUAL_ID)
+
+
 class RelatedPaper(BaseModel):
     """Link from a concept page back to a paper summary."""
 
@@ -34,7 +49,13 @@ class ConceptSummary(BaseModel):
         if len(value) > 1:
             raise ValueError("At most 1 visual is allowed per concept")
 
-        return value
+        normalized: list[VisualSpec] = []
+        for visual in value:
+            if visual.id != CONCEPT_VISUAL_ID:
+                visual = visual.model_copy(update={"id": CONCEPT_VISUAL_ID})
+            normalized.append(visual)
+
+        return normalized
 
 
 def render_concept_markdown(summary: ConceptSummary) -> str:
@@ -71,15 +92,14 @@ def render_concept_markdown(summary: ConceptSummary) -> str:
     if summary.visuals:
         lines.extend(["", "## Visualisation", ""])
         for visual in summary.visuals:
-            asset_name = visual.asset_filename or default_asset_filename(
+            asset_name = visual.asset_filename or default_concept_asset_filename(
                 summary.slug,
-                visual.id,
             )
             lines.extend(
                 [
-                    f"### {visual.id} — {visual.caption}",
+                    f"### {visual.caption}",
                     "",
-                    f"![{visual.id}](assets/{asset_name})",
+                    f"![{visual.caption}](assets/{asset_name})",
                     "",
                 ],
             )

@@ -64,7 +64,7 @@ Write `<cache_dir>/concept.json`:
   "tags": ["vision", "transformers"],
   "visuals": [
     {
-      "id": "5a",
+      "id": "visual",
       "caption": "...",
       "type": "manim",
       "description": "...",
@@ -79,7 +79,7 @@ Write `<cache_dir>/concept.json`:
 
 - **English only**
 - **No paper-specific context section** — do not add "Why it appears in Swin Transformer". Keep explanations general.
-- **Max 1 visual**
+- **Max 1 visual** — use id `"visual"` (not paper-style ids like `5a`; concept pages have no cross-ref numbering)
 - Sections: **What it is**, **How it works**, optional **Visualisation**
 - Include the triggering paper in `related_papers`
 - Use `slug` from prepare output (`concept-*` prefix)

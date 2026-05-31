@@ -72,3 +72,33 @@ def test_render_concept_markdown_structure() -> None:
     assert "## How it works" in markdown
     assert "Swin Transformer" in markdown
     assert "Why it appears" not in markdown
+
+
+def test_concept_visual_uses_caption_heading_not_paper_ids() -> None:
+    from comprehend.summary.schema import VisualSpec, VisualType
+
+    summary = ConceptSummary(
+        name="Cyclic shift",
+        concept_id="cyclic_shift",
+        slug="concept-cyclic-shift",
+        related_papers=[
+            RelatedPaper(slug="arxiv-2103-14030", title="Swin Transformer"),
+        ],
+        what_it_is=["Defines window movement on a grid."],
+        how_it_works=["Shifts patch layout cyclically."],
+        visuals=[
+            VisualSpec(
+                id="5a",
+                caption="Grid roll illustration",
+                type=VisualType.MANIM,
+                description="diagram",
+                asset_filename="concept-cyclic-shift-visual.png",
+            ),
+        ],
+    )
+
+    markdown = render_concept_markdown(summary)
+
+    assert "### Grid roll illustration" in markdown
+    assert "### 5a" not in markdown
+    assert summary.visuals[0].id == "visual"
