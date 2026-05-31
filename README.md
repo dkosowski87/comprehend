@@ -205,7 +205,7 @@ Wiki pages are stored at `https://github.com/owner/repo/wiki`. An index of all s
 
 ## Concept explanations (manual)
 
-For concepts used in a paper but not fully explained (e.g. **cyclic shift** in Swin Transformer), declare them in `papers.yaml`:
+For concepts used in a paper but not fully explained (e.g. **cyclic shift** in Swin Transformer), declare them under that paper in `papers.yaml`:
 
 ```yaml
 papers:
@@ -218,17 +218,66 @@ papers:
         terms: ["cyclic shift", "shifted window"]
 ```
 
-The paper summary must be published first. Then use the **comprehend-concept** skill:
+You do **not** need to pass the paper URL when running the concept agent — the URL is already in `papers.yaml`. Use the **wiki slug** (`arxiv-2103-14030`) and **concept id** (`cyclic_shift`).
 
-```bash
-uv run comprehend concept prepare --paper arxiv-2103-14030 --concept cyclic_shift
-# agent writes concept.json, renders 1 visual
-uv run comprehend concept publish <cache>/concept.json --paper arxiv-2103-14030 --assets-dir <cache>/assets
+### Prerequisites
+
+1. **Paper summary published** — the wiki page `arxiv-2103-14030.md` must exist (run the comprehend-paper workflow first).
+2. **Concept declared** in `papers.yaml` under that paper (see above).
+
+### Running the agent (Cursor)
+
+Enable or invoke the **comprehend-concept** skill, then prompt with the slug and concept id — no URL required:
+
+```
+/comprehend-concept
+
+Add concept cyclic_shift for paper arxiv-2103-14030.
+Run prepare, write concept.json, render the visual, and publish.
 ```
 
+Shorter prompt (when the skill is already attached):
+
+> Explain **cyclic_shift** for the Swin paper (`arxiv-2103-14030`).
+
+### CLI steps (agent runs these)
+
+```bash
+# 1. Validate paths and create cache dir
+uv run comprehend concept prepare \
+  --paper arxiv-2103-14030 \
+  --concept cyclic_shift
+
+# 2. Agent: web search + read paper wiki/summary → write concept.json
+#    → .comprehend/concepts/cyclic-shift/concept.json
+
+# 3. Render one visual
+uv run comprehend concept render .comprehend/concepts/cyclic-shift/concept.json \
+  --assets-dir .comprehend/concepts/cyclic-shift/assets
+
+# 4. Publish concept page and link first mention in paper wiki
+uv run comprehend concept publish .comprehend/concepts/cyclic-shift/concept.json \
+  --paper arxiv-2103-14030 \
+  --assets-dir .comprehend/concepts/cyclic-shift/assets
+```
+
+`concept render` and `concept publish` require `concept.json` to exist — the agent must write it in step 2.
+
+### Check `prepare` output before starting
+
+| Field | Meaning |
+|-------|---------|
+| `concept_already_published: false` | Proceed with a new concept page |
+| `paper_already_links_concept: true` | Already linked — nothing to do |
+| Error: paper wiki must exist | Publish the paper summary first |
+| `paper_summary_path: null` | OK — agent can read the paper wiki page instead |
+
+### Behavior
+
 - Links the **first mention** of the term in the paper wiki page
-- If the concept page already exists (from another paper), only patches links — does not overwrite the concept page
-- Use `--force` to overwrite an existing concept page
+- If the concept page already exists (from another paper), **only patches links** — does not overwrite the concept page
+- Use `--force` on `concept publish` to overwrite an existing concept page
+- Concept wiki URL: `https://github.com/<owner>/<repo>/wiki/concept-cyclic-shift`
 
 Skill: [`.cursor/skills/comprehend-concept/SKILL.md`](.cursor/skills/comprehend-concept/SKILL.md)
 

@@ -9,4 +9,5 @@ papers:
       - vision
       - transformers
     concepts:
-      - cyclic_shift
+      - slug: cyclic_shift
+        terms: ["cyclic shift"]
