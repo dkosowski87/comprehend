@@ -8,3 +8,5 @@ papers:
     tags:
       - vision
       - transformers
+    concepts:
+      - cyclic_shift

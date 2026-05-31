@@ -149,6 +149,152 @@ def publish_wiki_page(
     return page_url_path
 
 
+def publish_concept_page(
+    *,
+    slug: str,
+    markdown: str,
+    assets: dict[str, Path],
+    config: WikiConfig,
+    name: str,
+    tags: list[str],
+) -> str:
+    """Publish a concept wiki page and its assets.
+
+    Args:
+        slug: Concept wiki slug such as ``concept-cyclic-shift``.
+        markdown: Concept page markdown body.
+        assets: Mapping of asset filename to local PNG path.
+        config: Wiki configuration.
+        name: Concept display name for the index page.
+        tags: Concept tags for the index page.
+
+    Returns:
+        Published wiki page URL path (without domain).
+
+    Raises:
+        WikiPublishError: If git operations fail.
+    """
+    wiki_dir = ensure_wiki_checkout(config)
+    page_path = wiki_dir / f"{slug}.md"
+    assets_dir = wiki_dir / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+
+    page_path.write_text(markdown, encoding="utf-8")
+
+    for asset_name, asset_path in assets.items():
+        if not asset_path.is_file():
+            raise WikiPublishError(f"Asset not found: {asset_path}")
+
+        destination = assets_dir / asset_name
+        destination.write_bytes(asset_path.read_bytes())
+
+    _update_concepts_index(
+        wiki_dir=wiki_dir,
+        slug=slug,
+        name=name,
+        tags=tags,
+    )
+
+    _run_git(["add", page_path.name, "assets", "Concepts.md"], cwd=wiki_dir)
+
+    if _git_has_changes(wiki_dir):
+        message = f"Add concept: {name}"
+        _run_git(["commit", "-m", message], cwd=wiki_dir)
+        _run_git(["push", "origin", "HEAD"], cwd=wiki_dir)
+
+    page_url_path = f"/{config.repo}/wiki/{slug}"
+
+    return page_url_path
+
+
+def patch_paper_concept_links(
+    *,
+    paper_slug: str,
+    concept_slug: str,
+    terms: list[str],
+    config: WikiConfig,
+) -> bool:
+    """Add first-mention links from a paper wiki page to a concept page.
+
+    Args:
+        paper_slug: Paper wiki slug.
+        concept_slug: Concept wiki slug.
+        terms: Phrases to link (first match wins across all terms).
+        config: Wiki configuration.
+
+    Returns:
+        ``True`` when the paper page was updated.
+
+    Raises:
+        WikiPublishError: If the paper page is missing or git operations fail.
+    """
+    from comprehend.concept.linkify import (
+        paper_links_to_concept,
+        patch_first_concept_mention,
+    )
+
+    wiki_dir = ensure_wiki_checkout(config)
+    page_path = wiki_dir / f"{paper_slug}.md"
+    if not page_path.is_file():
+        raise WikiPublishError(f"Paper wiki page not found: {paper_slug}")
+
+    markdown = page_path.read_text(encoding="utf-8")
+    if paper_links_to_concept(markdown, concept_slug=concept_slug):
+        return False
+
+    patched = markdown
+    linked = False
+    for term in terms:
+        patched, term_linked = patch_first_concept_mention(
+            patched,
+            term=term,
+            concept_slug=concept_slug,
+        )
+        if term_linked:
+            linked = True
+            break
+
+    if not linked:
+        return False
+
+    page_path.write_text(patched, encoding="utf-8")
+    _run_git(["add", page_path.name], cwd=wiki_dir)
+
+    if _git_has_changes(wiki_dir):
+        message = f"Link {concept_slug} in {paper_slug}"
+        _run_git(["commit", "-m", message], cwd=wiki_dir)
+        _run_git(["push", "origin", "HEAD"], cwd=wiki_dir)
+
+    return True
+
+
+def _update_concepts_index(
+    *,
+    wiki_dir: Path,
+    slug: str,
+    name: str,
+    tags: list[str],
+) -> None:
+    concepts_path = wiki_dir / "Concepts.md"
+    tag_text = ", ".join(f"`{tag}`" for tag in tags)
+    timestamp = datetime.now(tz=UTC).strftime("%Y-%m-%d")
+    entry = f"- [{name}]({slug}) — {tag_text} — {timestamp}"
+
+    if concepts_path.is_file():
+        content = concepts_path.read_text(encoding="utf-8")
+    else:
+        content = "# Concepts\n\n"
+
+    if re.search(rf"\]\({re.escape(slug)}\)", content):
+        return
+
+    if not content.endswith("\n"):
+        content += "\n"
+
+    content += entry + "\n"
+    concepts_path.write_text(content, encoding="utf-8")
+
+
 def _update_home_index(
     *,
     wiki_dir: Path,

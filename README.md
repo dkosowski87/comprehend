@@ -201,7 +201,36 @@ If the queue is empty or the paper is already published, the automation posts a 
    git ls-remote git@github.com:owner/repo.wiki.git
    ```
 
-Wiki pages are stored at `https://github.com/owner/repo/wiki`. An index of all summaries is maintained in `Home.md`.
+Wiki pages are stored at `https://github.com/owner/repo/wiki`. An index of all summaries is maintained in `Home.md`. Concept pages use the `concept-*` prefix and are listed in `Concepts.md`.
+
+## Concept explanations (manual)
+
+For concepts used in a paper but not fully explained (e.g. **cyclic shift** in Swin Transformer), declare them in `papers.yaml`:
+
+```yaml
+papers:
+  - url: https://arxiv.org/abs/2103.14030
+    tags: [vision, transformers]
+    concepts:
+      - cyclic_shift
+      # optional custom link terms:
+      - slug: cyclic_shift
+        terms: ["cyclic shift", "shifted window"]
+```
+
+The paper summary must be published first. Then use the **comprehend-concept** skill:
+
+```bash
+uv run comprehend concept prepare --paper arxiv-2103-14030 --concept cyclic_shift
+# agent writes concept.json, renders 1 visual
+uv run comprehend concept publish <cache>/concept.json --paper arxiv-2103-14030 --assets-dir <cache>/assets
+```
+
+- Links the **first mention** of the term in the paper wiki page
+- If the concept page already exists (from another paper), only patches links — does not overwrite the concept page
+- Use `--force` to overwrite an existing concept page
+
+Skill: [`.cursor/skills/comprehend-concept/SKILL.md`](.cursor/skills/comprehend-concept/SKILL.md)
 
 ## Development
 
@@ -220,8 +249,10 @@ comprehend/
 ├── publish/      # GitHub wiki clone, push, dedup
 ├── prepare.py    # download + extract workflow
 ├── queue.py      # papers.yaml loading
+├── concept/      # concept schema, link patching, prepare
 └── cli.py        # click CLI
-papers.yaml       # paper queue
+papers.yaml       # paper queue + per-paper concepts
 .cursor/skills/comprehend-paper/SKILL.md
+.cursor/skills/comprehend-concept/SKILL.md
 .cursor/automations/daily-paper-summary.prompt.md
 ```

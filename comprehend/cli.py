@@ -8,12 +8,25 @@ from pathlib import Path
 
 import click
 
+from comprehend.concept.prepare import ConceptPrepareError, prepare_concept
+from comprehend.concept.render import render_concept_visuals
+from comprehend.concept.schema import load_concept_summary, render_concept_markdown, save_concept_summary
 from comprehend.pdf.download import PaperDownloadError
 from comprehend.pdf.extract import extract_figure_by_xref, extract_paper, render_page_region
 from comprehend.prepare import prepare_paper
-from comprehend.publish.github_wiki import WikiConfig, WikiPublishError, ensure_wiki_checkout, publish_wiki_page, wiki_page_exists
+from comprehend.publish.github_wiki import (
+    WikiConfig,
+    WikiPublishError,
+    ensure_wiki_checkout,
+    patch_paper_concept_links,
+    publish_concept_page,
+    publish_wiki_page,
+    wiki_page_exists,
+)
 from comprehend.queue import (
     QueueStatus,
+    find_concept_ref,
+    find_paper_entry,
     load_paper_queue,
     next_pending_item,
     prepare_queue_entry,
@@ -597,6 +610,245 @@ def queue_run(
     payload = {
         "pending_count": len(pending_items),
         "papers": prepared_items,
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@main.group()
+def concept() -> None:
+    """Concept explanation commands."""
+
+
+@concept.command("prepare")
+@click.option(
+    "--paper",
+    "paper_slug",
+    required=True,
+    help="Paper wiki slug, e.g. arxiv-2103-14030",
+)
+@click.option(
+    "--concept",
+    "concept_id",
+    required=True,
+    help="Concept id from papers.yaml, e.g. cyclic_shift",
+)
+@click.option(
+    "--papers-file",
+    type=click.Path(path_type=Path),
+    default="papers.yaml",
+    show_default=True,
+    help="Path to papers.yaml",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+def concept_prepare(
+    paper_slug: str,
+    concept_id: str,
+    papers_file: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+) -> None:
+    """Validate prerequisites and return paths for a concept explanation run."""
+    config = _wiki_config(repo, wiki_dir)
+    _sync_wiki_for_status(config)
+
+    try:
+        prepared = prepare_concept(
+            paper_slug=paper_slug,
+            concept_id=concept_id,
+            papers_file=papers_file,
+            wiki_config=config,
+        )
+    except ConceptPrepareError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    payload = {
+        "concept_id": prepared.concept_id,
+        "concept_slug": prepared.concept_slug,
+        "concept_name": prepared.concept_name,
+        "terms": prepared.terms,
+        "paper_slug": prepared.paper_slug,
+        "paper_title": prepared.paper_title,
+        "paper_url": prepared.paper_url,
+        "paper_tags": prepared.paper_tags,
+        "cache_dir": str(prepared.cache_dir),
+        "concept_json_path": str(prepared.concept_json_path),
+        "paper_summary_path": str(prepared.paper_summary_path)
+        if prepared.paper_summary_path
+        else None,
+        "paper_wiki_path": str(prepared.paper_wiki_path)
+        if prepared.paper_wiki_path
+        else None,
+        "concept_already_published": prepared.concept_already_published,
+        "paper_already_links_concept": prepared.paper_already_links_concept,
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@concept.command("render")
+@click.argument("concept_json", type=click.Path(path_type=Path, exists=True))
+@click.option(
+    "--assets-dir",
+    type=click.Path(path_type=Path),
+    required=True,
+    help="Directory for rendered PNG assets",
+)
+@click.option(
+    "--pdf-path",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Optional source PDF for extract visuals",
+)
+def concept_render(
+    concept_json: Path,
+    assets_dir: Path,
+    pdf_path: Path | None,
+) -> None:
+    """Render visuals defined in a concept JSON file."""
+    summary = load_concept_summary(concept_json)
+
+    try:
+        rendered = render_concept_visuals(
+            summary,
+            output_dir=assets_dir,
+            pdf_path=pdf_path,
+        )
+    except VisualRenderError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    save_concept_summary(summary, concept_json)
+    payload = {visual_id: str(path) for visual_id, path in rendered.items()}
+    click.echo(json.dumps(payload, indent=2))
+
+
+@concept.command("publish")
+@click.argument("concept_json", type=click.Path(path_type=Path, exists=True))
+@click.option(
+    "--paper",
+    "paper_slug",
+    required=True,
+    help="Paper wiki slug to patch with concept links",
+)
+@click.option(
+    "--assets-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Directory with PNG assets (required when publishing a new concept page)",
+)
+@click.option(
+    "--papers-file",
+    type=click.Path(path_type=Path),
+    default="papers.yaml",
+    show_default=True,
+    help="Path to papers.yaml for link terms",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+@click.option(
+    "--force",
+    is_flag=True,
+    default=False,
+    help="Overwrite an existing concept wiki page",
+)
+def concept_publish(
+    concept_json: Path,
+    paper_slug: str,
+    assets_dir: Path,
+    papers_file: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+    force: bool,
+) -> None:
+    """Publish a concept page and link its first mention in a paper summary."""
+    summary = load_concept_summary(concept_json)
+    config = _wiki_config(repo, wiki_dir)
+
+    entries = load_paper_queue(papers_file)
+    paper_entry = find_paper_entry(entries, paper_slug=paper_slug)
+    if paper_entry is None:
+        raise click.ClickException(f"Paper '{paper_slug}' not found in {papers_file}")
+
+    concept_ref = find_concept_ref(paper_entry, concept_id=summary.concept_id)
+    if concept_ref is None:
+        raise click.ClickException(
+            f"Concept '{summary.concept_id}' not declared for paper '{paper_slug}'",
+        )
+
+    concept_exists = False
+    if config.wiki_dir.is_dir():
+        concept_exists = wiki_page_exists(summary.slug, wiki_dir=config.wiki_dir)
+
+    published_concept = False
+    if not concept_exists or force:
+        if not assets_dir:
+            raise click.ClickException(
+                "--assets-dir is required when publishing a new concept page",
+            )
+
+        markdown = render_concept_markdown(summary)
+        assets: dict[str, Path] = {}
+
+        for visual in summary.visuals:
+            asset_name = visual.asset_filename
+            if asset_name is None:
+                raise click.ClickException(
+                    f"Visual {visual.id} has no asset_filename; run concept render first",
+                )
+
+            asset_path = assets_dir / asset_name
+            if not asset_path.is_file():
+                raise click.ClickException(f"Missing asset: {asset_path}")
+
+            assets[asset_name] = asset_path
+
+        try:
+            publish_concept_page(
+                slug=summary.slug,
+                markdown=markdown,
+                assets=assets,
+                config=config,
+                name=summary.name,
+                tags=summary.tags,
+            )
+        except WikiPublishError as exc:
+            raise click.ClickException(str(exc)) from exc
+
+        published_concept = True
+
+    try:
+        linked = patch_paper_concept_links(
+            paper_slug=paper_slug,
+            concept_slug=summary.slug,
+            terms=concept_ref.terms,
+            config=config,
+        )
+    except WikiPublishError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    payload = {
+        "concept_slug": summary.slug,
+        "paper_slug": paper_slug,
+        "published_concept": published_concept,
+        "patched_paper_links": linked,
+        "wiki_url": f"https://github.com/{config.repo}/wiki/{summary.slug}",
     }
     click.echo(json.dumps(payload, indent=2))
 

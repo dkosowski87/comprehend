@@ -8,6 +8,7 @@ from pathlib import Path
 
 import yaml
 
+from comprehend.concept.refs import ConceptRef, parse_concept_ref
 from comprehend.prepare import infer_slug, prepare_paper
 from comprehend.publish.github_wiki import WikiConfig, wiki_page_exists
 from comprehend.util import default_cache_dir
@@ -26,6 +27,7 @@ class PaperQueueEntry:
 
     url: str
     tags: list[str]
+    concepts: list[ConceptRef]
 
 
 @dataclass(frozen=True)
@@ -59,9 +61,18 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
         if not isinstance(tags, list):
             tags = []
 
+        raw_concepts = item.get("concepts", [])
+        concepts: list[ConceptRef] = []
+        if isinstance(raw_concepts, list):
+            for raw_concept in raw_concepts:
+                concept_ref = parse_concept_ref(raw_concept)
+                if concept_ref is not None:
+                    concepts.append(concept_ref)
+
         entry = PaperQueueEntry(
             url=str(item["url"]),
             tags=[str(tag) for tag in tags],
+            concepts=concepts,
         )
         entries.append(entry)
 
@@ -137,3 +148,45 @@ def prepare_queue_entry(
     prepared = prepare_paper(entry.url, cache_root=cache)
 
     return prepared.cache_dir
+
+
+def find_paper_entry(
+    entries: list[PaperQueueEntry],
+    *,
+    paper_slug: str,
+) -> PaperQueueEntry | None:
+    """Find a queue entry by its wiki slug.
+
+    Args:
+        entries: Parsed queue entries.
+        paper_slug: Paper wiki slug such as ``arxiv-2103-14030``.
+
+    Returns:
+        Matching entry, or ``None``.
+    """
+    for entry in entries:
+        if infer_slug(entry.url) == paper_slug:
+            return entry
+
+    return None
+
+
+def find_concept_ref(
+    entry: PaperQueueEntry,
+    *,
+    concept_id: str,
+) -> ConceptRef | None:
+    """Find a declared concept on a paper entry.
+
+    Args:
+        entry: Paper queue entry.
+        concept_id: Concept id such as ``cyclic_shift``.
+
+    Returns:
+        Matching concept reference, or ``None``.
+    """
+    for concept_ref in entry.concepts:
+        if concept_ref.concept_id == concept_id:
+            return concept_ref
+
+    return None

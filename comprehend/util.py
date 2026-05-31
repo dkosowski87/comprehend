@@ -75,6 +75,49 @@ def arxiv_slug(arxiv_id: str) -> str:
     return f"arxiv-{safe_id}"
 
 
+def concept_wiki_slug(concept_id: str) -> str:
+    """Build a wiki slug for a concept identifier.
+
+    Args:
+        concept_id: Concept id from ``papers.yaml`` such as ``cyclic_shift``.
+
+    Returns:
+        Slug prefixed with ``concept-``, e.g. ``concept-cyclic-shift``.
+    """
+    normalized = slugify(concept_id.replace("_", " "))
+
+    return f"concept-{normalized}"
+
+
+def concept_display_name(concept_id: str) -> str:
+    """Build a human-readable concept name from an id.
+
+    Args:
+        concept_id: Concept id such as ``cyclic_shift``.
+
+    Returns:
+        Display name with sentence casing, e.g. ``Cyclic shift``.
+    """
+    words = concept_id.replace("_", " ")
+
+    return words.capitalize()
+
+
+def concept_cache_dir(concept_id: str, *, cache_root: Path) -> Path:
+    """Return the local cache directory for a concept.
+
+    Args:
+        concept_id: Concept id from ``papers.yaml``.
+        cache_root: Root cache directory.
+
+    Returns:
+        Cache path under ``concepts/``.
+    """
+    directory_name = slugify(concept_id.replace("_", " "))
+
+    return cache_root / "concepts" / directory_name
+
+
 def default_repo_from_git() -> str | None:
     """Infer ``owner/repo`` from the current git remote when available.
 
