@@ -1,0 +1,6 @@
+papers:
+  - url: https://arxiv.org/abs/2012.12877
+    tags:
+      - vision
+      - transformers
+      - distillation
