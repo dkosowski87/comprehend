@@ -4,3 +4,7 @@ papers:
       - vision
       - transformers
       - distillation
+  - url: https://arxiv.org/abs/2103.14030
+    tags:
+      - vision
+      - transformers
