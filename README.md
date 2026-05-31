@@ -169,7 +169,27 @@ The project includes a Cursor skill at `.cursor/skills/comprehend-paper/SKILL.md
 2. **Visualizer** — renders 1–2 PNGs via extract / Mermaid / Manim  
 3. **Publish** — pushes to the GitHub wiki  
 
-The skill can be used manually in Cursor or wired into a [Cursor Automation](https://docs.cursor.com) that runs `comprehend queue next` on a schedule.
+The skill can be used manually in Cursor or wired into a **Cursor Automation** (see below).
+
+## Daily automation (Cursor)
+
+A scheduled automation can process one paper per day from `papers.yaml` and post the wiki link to Slack.
+
+**Prompt:** copy from [`.cursor/automations/daily-paper-summary.prompt.md`](.cursor/automations/daily-paper-summary.prompt.md)
+
+| Setting | Value |
+|---------|-------|
+| Schedule | Daily at 8:00 (`0 8 * * *`) — adjust in the Automations editor |
+| Repository | `dkosowski87/comprehend`, branch `main` |
+| Tools | Post to Slack |
+| Runtime | **Local** (recommended — wiki SSH, optional Manim/Mermaid) |
+| Skill | Enable **comprehend-paper** for the agent |
+
+**Slack:** pick the destination channel in the Automations editor (channel or DM).
+
+**Wiki link format:** `https://github.com/dkosowski87/comprehend/wiki/<slug>`
+
+If the queue is empty or the paper is already published, the automation posts a short Slack status and exits.
 
 ## Wiki setup
 
@@ -203,4 +223,5 @@ comprehend/
 └── cli.py        # click CLI
 papers.yaml       # paper queue
 .cursor/skills/comprehend-paper/SKILL.md
+.cursor/automations/daily-paper-summary.prompt.md
 ```
