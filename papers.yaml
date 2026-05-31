@@ -11,3 +11,154 @@ papers:
     concepts:
       - slug: cyclic_shift
         terms: ["cyclic shift"]
+  - url: https://arxiv.org/abs/2410.24164
+    tags:
+      - vision
+      - robotics
+  - url: https://arxiv.org/abs/2304.02643
+    tags:
+      - vision
+      - instance-segmentation
+  - url: https://arxiv.org/abs/2304.08069
+    tags:
+      - vision
+      - object-detection
+      - transformers
+  - url: https://arxiv.org/abs/2312.08344
+    tags:
+      - vision
+      - 6dof-pose-estimation
+  - url: https://arxiv.org/abs/2003.08934
+    tags:
+      - vision
+      - neural-rendering
+  - url: https://arxiv.org/abs/2111.06377
+    tags:
+      - vision
+      - auto-encoders
+  - url: https://arxiv.org/abs/2511.09554
+    tags:
+      - vision
+      - object-detection
+      - neural-architecture-search
+  - url: https://openaccess.thecvf.com/content_cvpr_2018/papers/Liao_Deep_Marching_Cubes_CVPR_2018_paper.pdf
+    tags:
+      - vision
+      - implicit-representations
+  - url: https://arxiv.org/abs/2211.17192
+    tags:
+      - language
+      - speculative-decoding
+  - url: https://arxiv.org/abs/2103.00020
+    tags:
+      - vision
+      - transformers
+      - contrastive-learning
+  - url: https://arxiv.org/abs/2509.25164
+    tags:
+    - vision
+    - object-detection
+  - url: https://openaccess.thecvf.com/content_ICCV_2019/papers/Niemeyer_Occupancy_Flow_4D_Reconstruction_by_Learning_Particle_Dynamics_ICCV_2019_paper.pdf
+    tags:
+      - vision
+      - 4d-reconstruction
+      - implicit-representations
+  - url: https://arxiv.org/abs/2604.22875
+    tags:
+      - vision
+      - vlm
+  - url: https://robotics-transformer2.github.io/assets/rt2.pdf
+    tags:
+      - vision
+      - vlm
+      - robotics
+  - url: https://arxiv.org/abs/2603.19312
+    tags:
+    - jepa
+  - url: https://arxiv.org/abs/2307.08691
+    tags:
+      - optimization
+      - transformers
+  - url: https://arxiv.org/abs/2407.08608
+    tags:
+      - optimization
+      - transformers
+  - url: https://arxiv.org/abs/2104.14294
+    tags:
+    - vision
+    - transformers
+    - self-supervised-learning
+  - url: https://arxiv.org/abs/2504.13181
+    tags:
+    - vision
+    - contrastive-learning
+  - url: https://arxiv.org/abs/2408.00714
+    tags:
+    - vision
+    - instance-segmentation
+  - url: https://arxiv.org/abs/2511.16719
+    tags:
+    - vision
+    - instance-segmentation
+  - url: https://arxiv.org/abs/1912.07372
+    tags:
+    - vision
+    - implicit-representations
+    - neural-rendering
+  - url: https://arxiv.org/abs/2205.06230
+    tags:
+    - vision
+    - object-detection
+    - zero-shot
+  - url: https://arxiv.org/abs/2501.09898
+    tags:
+    - vision
+    - stereo-matching
+    - zero-shot
+  - url: https://arxiv.org/abs/2401.10891
+    tags:
+    - vision
+    - depth-estimation
+  - url: https://arxiv.org/abs/2406.09414
+    tags:
+    - vision
+    - depth-estimation
+  - url: https://arxiv.org/abs/2312.14635
+    tags:
+    - vision
+    - implicit-representations
+    - flow-maps
+  - url: https://arxiv.org/abs/2311.12198
+    tags:
+    - vision
+    - gaussian-splatting
+  - url: https://arxiv.org/abs/2511.16624
+    tags:
+    - vision
+    - 3d-reconstruction
+  - url: https://arxiv.org/abs/2112.10752
+    tags:
+    - vision
+    - diffusion
+  - url: https://arxiv.org/abs/2210.02747
+    - vision
+    - flow-matching
+  - url: https://3dvar.com/Pandey2021Total.pdf
+    tags:
+    - vision
+    - neural-rendering
+  - url: https://files.is.tue.mpg.de/black/papers/SMPL2015.pdf
+    tags:
+    - vision
+    - human-body-modeling
+  - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
+    tags:
+    - vision
+    - neural-tangent-kernels
+  - url: https://arxiv.org/abs/2604.13036
+    tags:
+    - vision
+    - scene-generation
+  - url: https://arxiv.org/abs/2503.20020
+    tags:
+    - robotics
