@@ -1,5 +1,5 @@
 {
-  "title": "\u03c0_0: A Vision-Language-Action Flow Model for General Robot Control",
+  "title": "π_0: A Vision-Language-Action Flow Model for General Robot Control",
   "pdf_url": "https://arxiv.org/pdf/2410.24164.pdf",
   "tags": [
     "vision",
@@ -46,12 +46,17 @@
         "4b"
       ],
       "page": 4,
+      "xref": null,
       "clip": [
-        45,
-        65,
-        575,
-        190
-      ]
+        45.0,
+        65.0,
+        575.0,
+        190.0
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2410-24164-5a.png"
     },
     {
       "id": "5b",
@@ -60,7 +65,12 @@
       "description": "Figure 4: pie charts summarizing the cross-embodiment pre-training mixture by robot/source and relative dataset weights.",
       "refs": [],
       "page": 5,
-      "xref": 603
+      "xref": 603,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2410-24164-5b.png"
     }
   ]
 }
