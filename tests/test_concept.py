@@ -3,6 +3,7 @@
 from comprehend.concept.linkify import patch_first_concept_mention
 from comprehend.concept.refs import parse_concept_ref
 from comprehend.concept.schema import ConceptSummary, RelatedPaper, render_concept_markdown
+from comprehend.summary.schema import MathEntry
 from comprehend.util import concept_display_name, concept_wiki_slug
 
 
@@ -72,6 +73,33 @@ def test_render_concept_markdown_structure() -> None:
     assert "## How it works" in markdown
     assert "Swin Transformer" in markdown
     assert "Why it appears" not in markdown
+
+
+def test_render_concept_markdown_math_section_and_links() -> None:
+    summary = ConceptSummary(
+        name="Euler integration",
+        concept_id="euler-integration",
+        slug="concept-euler-integration",
+        related_papers=[
+            RelatedPaper(slug="arxiv-2410-24164", title="π₀"),
+        ],
+        what_it_is=["One step is **m1**."],
+        how_it_works=["Initialize with **m2**."],
+        math=[
+            MathEntry(id="m1", label="update", latex="x \\leftarrow x + \\delta v"),
+            MathEntry(id="m2", label="init", latex="x_0 \\sim \\mathcal{N}(0,I)"),
+        ],
+        tags=["robotics"],
+    )
+
+    markdown = render_concept_markdown(summary)
+
+    assert "## Math" in markdown
+    assert '<a id="m1"></a>' in markdown
+    assert "$$x \\leftarrow x + \\delta v$$" in markdown
+    assert "[**m1**](#m1)" in markdown
+    assert "[**m2**](#m2)" in markdown
+    assert "\\(" not in markdown
 
 
 def test_concept_visual_uses_caption_heading_not_paper_ids() -> None:

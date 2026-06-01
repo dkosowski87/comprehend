@@ -61,6 +61,9 @@ Write `<cache_dir>/concept.json`:
   ],
   "what_it_is": ["2-4 bullets defining the concept"],
   "how_it_works": ["2-4 bullets on mechanism/intuition"],
+  "math": [
+    {"id": "m1", "label": "short label", "latex": "E = mc^2"}
+  ],
   "tags": ["vision", "transformers"],
   "visuals": [
     {
@@ -79,8 +82,9 @@ Write `<cache_dir>/concept.json`:
 
 - **English only**
 - **No paper-specific context section** — do not add "Why it appears in Swin Transformer". Keep explanations general.
-- **Max 1 visual** — use id `"visual"` (not paper-style ids like `5a`; concept pages have no cross-ref numbering)
-- Sections: **What it is**, **How it works**, optional **Visualisation**
+- **Max 1 visual** — use id `"visual"` (not paper-style ids like `5a`)
+- **No inline LaTeX** in bullets — GitHub wiki does not render `\(...\)`. Put equations in a **`math`** array and reference them with `**m1**`, `**m2**`, … (ids `m1`, `m2`, …). They become jump links to a **Math** section with `$$...$$` blocks, same as paper summaries.
+- Sections: **What it is**, **How it works**, optional **Math**, optional **Visualisation**
 - Include the triggering paper in `related_papers`
 - Use `slug` from prepare output (`concept-*` prefix)
 

@@ -19,7 +19,7 @@ papers:
       - slug: conditional-flow-matching
         terms: ["conditional flow matching", conditional flow-matching]
       - slug: euler-integration
-        terms: ["Euler integration, Euler action sampling"]
+        terms: ["Euler integration", "Euler action sampling"]
   - url: https://arxiv.org/abs/2304.02643
     tags:
       - vision
@@ -146,6 +146,7 @@ papers:
     - vision
     - diffusion
   - url: https://arxiv.org/abs/2210.02747
+    tags:
     - vision
     - flow-matching
   - url: https://3dvar.com/Pandey2021Total.pdf

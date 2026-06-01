@@ -263,6 +263,8 @@ uv run comprehend concept publish .comprehend/concepts/cyclic-shift/concept.json
 
 `concept render` and `concept publish` require `concept.json` to exist — the agent must write it in step 2.
 
+Concept pages use the same **Math** section pattern as paper summaries: put LaTeX in a `math` array (`m1`, `m2`, …) and reference equations in bullets with `**m1**` — do not use inline `\(...\)` in prose (GitHub wiki does not render it).
+
 ### Check `prepare` output before starting
 
 | Field | Meaning |

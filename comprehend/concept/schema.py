@@ -6,7 +6,12 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, field_validator
 
-from comprehend.summary.schema import VisualSpec, default_asset_filename
+from comprehend.summary.schema import (
+    MathEntry,
+    VisualSpec,
+    default_asset_filename,
+    linkify_refs,
+)
 
 
 CONCEPT_VISUAL_ID = "visual"
@@ -40,6 +45,7 @@ class ConceptSummary(BaseModel):
     related_papers: list[RelatedPaper]
     what_it_is: list[str]
     how_it_works: list[str]
+    math: list[MathEntry] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     visuals: list[VisualSpec] = Field(default_factory=list)
 
@@ -58,6 +64,24 @@ class ConceptSummary(BaseModel):
         return normalized
 
 
+def collect_concept_ref_ids(summary: ConceptSummary) -> set[str]:
+    """Collect math anchor ids used for cross-references in concept bullets.
+
+    Args:
+        summary: Concept summary model.
+
+    Returns:
+        Set of math entry ids such as ``m1``.
+    """
+    ref_ids = {entry.id for entry in summary.math}
+
+    return ref_ids
+
+
+def _anchor(ref_id: str) -> str:
+    return f'<a id="{ref_id}"></a>'
+
+
 def render_concept_markdown(summary: ConceptSummary) -> str:
     """Assemble wiki markdown for a concept page.
 
@@ -67,6 +91,7 @@ def render_concept_markdown(summary: ConceptSummary) -> str:
     Returns:
         GitHub wiki markdown string.
     """
+    ref_ids = collect_concept_ref_ids(summary)
     related_links = ", ".join(
         f"[{paper.title}]({paper.slug})" for paper in summary.related_papers
     )
@@ -83,11 +108,25 @@ def render_concept_markdown(summary: ConceptSummary) -> str:
 
     lines.extend(["", "## What it is", ""])
     for item in summary.what_it_is:
-        lines.append(f"- {item}")
+        lines.append(f"- {linkify_refs(item, ref_ids)}")
 
     lines.extend(["", "## How it works", ""])
     for item in summary.how_it_works:
-        lines.append(f"- {item}")
+        lines.append(f"- {linkify_refs(item, ref_ids)}")
+
+    if summary.math:
+        lines.extend(["", "## Math", ""])
+        for entry in summary.math:
+            lines.extend(
+                [
+                    _anchor(entry.id),
+                    "",
+                    f"**{entry.id}** {entry.label}:",
+                    "",
+                    f"$${entry.latex}$$",
+                    "",
+                ],
+            )
 
     if summary.visuals:
         lines.extend(["", "## Visualisation", ""])
