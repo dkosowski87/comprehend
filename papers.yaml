@@ -15,6 +15,11 @@ papers:
     tags:
       - vision
       - robotics
+    concepts:
+      - slug: conditional-flow-matching
+        terms: ["conditional flow matching", conditional flow-matching]
+      - slug: euler-integration
+        terms: ["Euler integration, Euler action sampling"]
   - url: https://arxiv.org/abs/2304.02643
     tags:
       - vision
