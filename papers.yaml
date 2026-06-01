@@ -141,6 +141,7 @@ papers:
     - vision
     - diffusion
   - url: https://arxiv.org/abs/2210.02747
+    tags:
     - vision
     - flow-matching
   - url: https://3dvar.com/Pandey2021Total.pdf
