@@ -4,7 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from comprehend.summary.schema import MathEntry, PaperSummary, VisualSpec, VisualType, linkify_refs, render_markdown
+from comprehend.summary.schema import (
+    MathEntry,
+    PaperSummary,
+    VisualSpec,
+    VisualType,
+    linkify_refs,
+    normalize_wiki_latex,
+    render_markdown,
+)
 from comprehend.util import arxiv_slug, parse_arxiv_id, slugify
 
 
@@ -120,3 +128,37 @@ def test_render_markdown_linkifies_solution_refs() -> None:
 
     assert "[**4a**](#4a)" in markdown
     assert "[**5a**](#5a)" in markdown
+
+
+def test_normalize_wiki_latex_rewrites_operatorname() -> None:
+    latex = r"\operatorname{IoU}\left(\mathbf{1}[\ell>-1],\mathbf{1}[\ell>1]\right)\ge 0.95"
+
+    normalized_latex = normalize_wiki_latex(latex)
+
+    assert r"\operatorname{" not in normalized_latex
+    assert r"\mathrm{IoU}" in normalized_latex
+
+
+def test_render_markdown_normalizes_operatorname_in_math() -> None:
+    summary = PaperSummary(
+        title="Test Paper",
+        pdf_url="https://arxiv.org/pdf/2012.12877.pdf",
+        tags=[],
+        slug="test",
+        problem=[],
+        solution=[],
+        key_concepts=[],
+        math=[
+            MathEntry(
+                id="4a",
+                label="iou",
+                latex=r"\operatorname{IoU}\left(\mathbf{1}[\ell>-1],\mathbf{1}[\ell>1]\right)\ge 0.95",
+            ),
+        ],
+        visuals=[],
+    )
+
+    markdown = render_markdown(summary)
+
+    assert r"\operatorname{" not in markdown
+    assert r"$$\mathrm{IoU}\left(\mathbf{1}[\ell>-1],\mathbf{1}[\ell>1]\right)\ge 0.95$$" in markdown

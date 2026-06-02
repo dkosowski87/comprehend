@@ -130,3 +130,29 @@ def test_concept_visual_uses_caption_heading_not_paper_ids() -> None:
     assert "### Grid roll illustration" in markdown
     assert "### 5a" not in markdown
     assert summary.visuals[0].id == "visual"
+
+
+def test_render_concept_markdown_normalizes_operatorname_in_math() -> None:
+    summary = ConceptSummary(
+        name="IoU thresholding",
+        concept_id="iou-thresholding",
+        slug="concept-iou-thresholding",
+        related_papers=[
+            RelatedPaper(slug="arxiv-0000-00000", title="Test Paper"),
+        ],
+        what_it_is=[],
+        how_it_works=[],
+        math=[
+            MathEntry(
+                id="m1",
+                label="threshold",
+                latex=r"\operatorname{IoU}\left(\mathbf{1}[\ell>-1],\mathbf{1}[\ell>1]\right)\ge 0.95",
+            ),
+        ],
+        visuals=[],
+    )
+
+    markdown = render_concept_markdown(summary)
+
+    assert r"\operatorname{" not in markdown
+    assert r"$$\mathrm{IoU}\left(\mathbf{1}[\ell>-1],\mathbf{1}[\ell>1]\right)\ge 0.95$$" in markdown

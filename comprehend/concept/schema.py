@@ -11,6 +11,7 @@ from comprehend.summary.schema import (
     VisualSpec,
     default_asset_filename,
     linkify_refs,
+    normalize_wiki_latex,
 )
 
 
@@ -117,13 +118,14 @@ def render_concept_markdown(summary: ConceptSummary) -> str:
     if summary.math:
         lines.extend(["", "## Math", ""])
         for entry in summary.math:
+            normalized_latex = normalize_wiki_latex(entry.latex)
             lines.extend(
                 [
                     _anchor(entry.id),
                     "",
                     f"**{entry.id}** {entry.label}:",
                     "",
-                    f"$${entry.latex}$$",
+                    f"$${normalized_latex}$$",
                     "",
                 ],
             )

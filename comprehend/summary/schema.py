@@ -133,6 +133,24 @@ def _anchor(ref_id: str) -> str:
     return f'<a id="{ref_id}"></a>'
 
 
+def normalize_wiki_latex(latex: str) -> str:
+    """Normalize LaTeX for GitHub wiki math rendering.
+
+    GitHub wiki math can reject some macros (for example ``\\operatorname``).
+    This rewrites known unsupported macros to compatible forms before emitting
+    ``$$...$$`` blocks.
+
+    Args:
+        latex: Raw equation string from summary JSON.
+
+    Returns:
+        Equation string with wiki-compatible macros.
+    """
+    normalized = re.sub(r"\\operatorname\s*\{([^{}]+)\}", r"\\mathrm{\1}", latex)
+
+    return normalized
+
+
 def render_markdown(summary: PaperSummary) -> str:
     """Assemble wiki markdown from a summary model.
 
@@ -172,13 +190,14 @@ def render_markdown(summary: PaperSummary) -> str:
     if summary.math:
         lines.extend(["", "## 4. Math", ""])
         for entry in summary.math:
+            normalized_latex = normalize_wiki_latex(entry.latex)
             lines.extend(
                 [
                     _anchor(entry.id),
                     "",
                     f"**{entry.id}** {entry.label}:",
                     "",
-                    f"$${entry.latex}$$",
+                    f"$${normalized_latex}$$",
                     "",
                 ],
             )
