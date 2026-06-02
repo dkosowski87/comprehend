@@ -57,7 +57,11 @@ def fetch_arxiv_metadata(arxiv_id: str) -> arxiv.Result:
     """
     base_id = arxiv_id.split("v", maxsplit=1)[0]
     search = arxiv.Search(id_list=[base_id], max_results=1)
-    client = arxiv.Client()
+    client = arxiv.Client(
+        page_size=1,
+        delay_seconds=3.0,
+        num_retries=3,
+    )
     results = list(client.results(search))
     if not results:
         raise PaperDownloadError(f"No arXiv paper found for id: {arxiv_id}")
@@ -97,7 +101,8 @@ def download_paper(
         try:
             arxiv_result = fetch_arxiv_metadata(arxiv_id)
             metadata["title"] = arxiv_result.title
-        except PaperDownloadError:
+        except (PaperDownloadError, arxiv.ArxivError):
+            # Title lookup is optional; arXiv API rate limits (429) must not block PDF download.
             pass
 
     try:
