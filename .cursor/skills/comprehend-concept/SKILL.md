@@ -2,7 +2,7 @@
 name: comprehend-concept
 description: >-
   Explain ML concepts referenced in paper summaries: web research, short wiki
-  page with one visual, link first mention in the paper. Use with comprehend
+  page with up to two visuals, link first mention in the paper. Use with comprehend
   concept prepare/publish or when papers.yaml lists concepts for a paper.
 ---
 
@@ -82,7 +82,7 @@ Write `<cache_dir>/concept.json`:
 
 - **English only**
 - **No paper-specific context section** — do not add "Why it appears in Swin Transformer". Keep explanations general.
-- **Max 1 visual** — use id `"visual"` (not paper-style ids like `5a`)
+- **Max 2 visuals** — use ids like `"visual-1"` and `"visual-2"` (not paper-style ids like `5a`)
 - **No inline LaTeX** in bullets — GitHub wiki does not render `\(...\)`. Put equations in a **`math`** array and reference them with `**m1**`, `**m2**`, … (ids `m1`, `m2`, …). They become jump links to a **Math** section with `$$...$$` blocks, same as paper summaries.
 - Sections: **What it is**, **How it works**, optional **Math**, optional **Visualisation**
 - Include the triggering paper in `related_papers`

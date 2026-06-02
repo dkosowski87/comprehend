@@ -8,7 +8,7 @@ description: >-
 
 # Comprehend — ML Paper Summaries
 
-Turn an arXiv or PDF URL into a structured wiki summary with 1–2 visuals, published to this repository's GitHub wiki.
+Turn an arXiv or PDF URL into a structured wiki summary with up to 4 visuals, published to this repository's GitHub wiki.
 
 ## Workflow overview
 
@@ -16,7 +16,7 @@ Use a **2-agent pipeline** orchestrated by the main agent:
 
 1. **Prepare** — run CLI, check deduplication
 2. **Agent 1 (Reader/Writer)** — read PDF text, write `summary.json`
-3. **Agent 2 (Visualizer)** — render 1–2 PNG visuals
+3. **Agent 2 (Visualizer)** — render up to 4 PNG visuals
 4. **Publish** — assemble markdown and push to wiki
 
 Retry solvable errors up to **3 times** (network, Manim/mmdc failures). After 3 failures, stop **without publishing**.
@@ -83,7 +83,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 2. **Solution** — how the paper solves it. Use cross-reference ids (`**4a**`, `(5a)`) where helpful; these become jump links in the wiki output.
 3. **Key concepts** — theoretical explanations aligned with *this paper's* contributions. Not a general ML primer. Include intuition (e.g. why attention helps long-range dependencies) when the paper relies on it.
 4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly).
-5. **Visualisation** — specs only (Agent 2 renders). **Maximum 2 visuals.**
+5. **Visualisation** — specs only (Agent 2 renders). **Maximum 4 visuals.**
 
 **Do not** include a key-results or benchmarks section.
 
@@ -93,7 +93,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 
 ## Step 2 — Agent 2: Visualizer
 
-Read `summary.json` and `figures.json`. Render each visual (max 2):
+Read `summary.json` and `figures.json`. Render each visual (max 4):
 
 | type | when to use | how |
 |------|-------------|-----|
@@ -119,7 +119,7 @@ uv run comprehend render manim scene.py --scene-class MyScene --output assets/<s
 uv run comprehend pdf crop paper.pdf --page 4 --xref 42 --output assets/<slug>-5a.png
 ```
 
-Manim renders **static PNG only** (never video). For multi-step ideas, use 2 static frames as separate visuals (still max 2 total).
+Manim renders **static PNG only** (never video). For multi-step ideas, use multiple static frames as separate visuals (still max 4 total).
 
 ## Step 3 — Publish
 
