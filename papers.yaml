@@ -24,14 +24,14 @@ papers:
     tags:
       - vision
       - instance-segmentation
-    concepts:
-      - slug: ccff
-        terms: ["cross-scale feature fusion"]
   - url: https://arxiv.org/abs/2304.08069
     tags:
       - vision
       - object-detection
       - transformers
+    concepts:
+      - slug: ccff
+        terms: ["cross-scale feature fusion"]
   - url: https://arxiv.org/abs/2312.08344
     tags:
       - vision
