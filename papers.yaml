@@ -24,6 +24,9 @@ papers:
     tags:
       - vision
       - instance-segmentation
+    concepts:
+      - slug: ccff
+        terms: ["cross-scale feature fusion"]
   - url: https://arxiv.org/abs/2304.08069
     tags:
       - vision
