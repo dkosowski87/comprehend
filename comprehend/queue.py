@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from enum import Enum
 from pathlib import Path
 
 import yaml
 
-from comprehend.concept.refs import ConceptRef, parse_concept_ref
 from comprehend.prepare import infer_slug, prepare_paper
+
+if TYPE_CHECKING:
+    from comprehend.concept.refs import ConceptRef
 from comprehend.publish.github_wiki import WikiConfig, wiki_page_exists
 from comprehend.util import default_cache_dir
 
@@ -28,6 +31,19 @@ class PaperQueueEntry:
     url: str
     tags: list[str]
     concepts: list[ConceptRef]
+    slug: str | None = None
+    title: str | None = None
+
+    def resolve_slug(self) -> str:
+        """Return the wiki slug for this entry.
+
+        Uses the explicit ``slug`` from ``papers.yaml`` when set; otherwise infers
+        from the URL (arXiv id or title-based slug).
+        """
+        if self.slug is not None:
+            return self.slug
+
+        return infer_slug(self.url)
 
 
 @dataclass(frozen=True)
@@ -37,6 +53,7 @@ class PaperQueueItem:
     url: str
     tags: list[str]
     slug: str
+    title: str | None
     status: QueueStatus
 
 
@@ -49,6 +66,8 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
     Returns:
         Parsed queue entries.
     """
+    from comprehend.concept.refs import ConceptRef, parse_concept_ref
+
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     papers = raw.get("papers", []) if isinstance(raw, dict) else []
     entries: list[PaperQueueEntry] = []
@@ -69,10 +88,18 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
                 if concept_ref is not None:
                     concepts.append(concept_ref)
 
+        slug_value = item.get("slug")
+        slug = str(slug_value) if slug_value is not None else None
+
+        title_value = item.get("title")
+        title = str(title_value) if title_value is not None else None
+
         entry = PaperQueueEntry(
             url=str(item["url"]),
             tags=[str(tag) for tag in tags],
             concepts=concepts,
+            slug=slug,
+            title=title,
         )
         entries.append(entry)
 
@@ -96,7 +123,7 @@ def queue_items(
     items: list[PaperQueueItem] = []
 
     for entry in entries:
-        slug = infer_slug(entry.url)
+        slug = entry.resolve_slug()
         if wiki_config.wiki_dir.is_dir():
             published = wiki_page_exists(slug, wiki_dir=wiki_config.wiki_dir)
         else:
@@ -107,6 +134,7 @@ def queue_items(
             url=entry.url,
             tags=entry.tags,
             slug=slug,
+            title=entry.title,
             status=status,
         )
         items.append(item)
@@ -145,7 +173,11 @@ def prepare_queue_entry(
         Paper cache directory path.
     """
     cache = cache_root or default_cache_dir()
-    prepared = prepare_paper(entry.url, cache_root=cache)
+    prepared = prepare_paper(
+        entry.url,
+        cache_root=cache,
+        slug=entry.resolve_slug(),
+    )
 
     return prepared.cache_dir
 
@@ -165,7 +197,7 @@ def find_paper_entry(
         Matching entry, or ``None``.
     """
     for entry in entries:
-        if infer_slug(entry.url) == paper_slug:
+        if entry.resolve_slug() == paper_slug:
             return entry
 
     return None
@@ -175,7 +207,7 @@ def find_concept_ref(
     entry: PaperQueueEntry,
     *,
     concept_id: str,
-) -> ConceptRef | None:
+) -> ConceptRef | None:  # noqa: F821
     """Find a declared concept on a paper entry.
 
     Args:

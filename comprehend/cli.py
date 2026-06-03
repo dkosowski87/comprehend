@@ -469,6 +469,7 @@ def queue_status(
         {
             "url": item.url,
             "slug": item.slug,
+            "title": item.title,
             "tags": item.tags,
             "status": item.status.value,
         }
@@ -525,13 +526,18 @@ def queue_next(
     payload: dict[str, object] = {
         "url": pending.url,
         "slug": pending.slug,
+        "title": pending.title,
         "tags": pending.tags,
         "status": pending.status.value,
     }
 
     if prepare:
         try:
-            prepared = prepare_paper(pending.url, cache_root=default_cache_dir())
+            prepared = prepare_paper(
+                pending.url,
+                cache_root=default_cache_dir(),
+                slug=pending.slug,
+            )
         except PaperDownloadError as exc:
             raise click.ClickException(str(exc)) from exc
 
@@ -582,11 +588,16 @@ def queue_run(
     entries = load_paper_queue(papers_file)
     items = queue_items(entries, wiki_config=config)
     pending_items = [item for item in items if item.status == QueueStatus.PENDING]
+    entry_by_slug = {entry.resolve_slug(): entry for entry in entries}
 
     prepared_items: list[dict[str, object]] = []
     for item in pending_items:
+        entry = entry_by_slug.get(item.slug)
+        if entry is None:
+            continue
+
         try:
-            cache_dir = prepare_queue_entry(item)
+            cache_dir = prepare_queue_entry(entry)
         except PaperDownloadError as exc:
             prepared_items.append(
                 {

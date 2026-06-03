@@ -90,9 +90,13 @@ Maintain a list of papers in `papers.yaml`:
 
 ```yaml
 papers:
-  - url: https://arxiv.org/abs/2012.12877
-    tags: [vision, transformers, distillation]
+  - url: https://arxiv.org/abs/2304.08069
+    slug: arxiv-2304-08069
+    title: DETRs Beat YOLOs on Real-time Object Detection
+    tags: [vision, object-detection, transformers]
 ```
+
+Each entry includes an explicit **`slug`** (wiki page id, e.g. `arxiv-2304-08069` with hyphens) and **`title`** (display name). Slugs are still inferred from the URL when omitted, but explicit slugs avoid confusion between dot and hyphen forms.
 
 Queue commands:
 
@@ -218,7 +222,7 @@ papers:
         terms: ["cyclic shift", "shifted window"]
 ```
 
-You do **not** need to pass the paper URL when running the concept agent — the URL is already in `papers.yaml`. Use the **wiki slug** (`arxiv-2103-14030`) and **concept id** (`cyclic_shift`).
+You do **not** need to pass the paper URL when running the concept agent — the URL is already in `papers.yaml`. Use the entry **`slug`** (`arxiv-2103-14030`) and **concept id** (`cyclic_shift`).
 
 ### Prerequisites
 

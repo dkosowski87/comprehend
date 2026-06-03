@@ -36,6 +36,8 @@ uv run comprehend concept prepare \
   --concept cyclic_shift
 ```
 
+Use the **`slug`** from `papers.yaml` (e.g. `arxiv-2304-08069`, with hyphens—not dots).
+
 | Output field | Meaning |
 |--------------|---------|
 | `concept_already_published` | Concept wiki page exists — skip writing page, only patch paper links |
