@@ -222,3 +222,65 @@ def find_concept_ref(
             return concept_ref
 
     return None
+
+
+def add_paper_to_queue(
+    path: Path,
+    *,
+    url: str,
+    tags: list[str],
+    slug: str | None = None,
+    title: str | None = None,
+) -> PaperQueueEntry:
+    """Append a paper to ``papers.yaml`` when it is not already listed.
+
+    Args:
+        path: Path to ``papers.yaml``.
+        url: Paper URL (arXiv abstract or direct PDF).
+        tags: Topic tags for the entry.
+        slug: Optional wiki slug override.
+        title: Optional display title.
+
+    Returns:
+        The new or existing queue entry.
+
+    Raises:
+        ValueError: When the URL is already present under a different slug.
+    """
+    entries = load_paper_queue(path)
+    resolved_slug = slug or infer_slug(url)
+
+    for entry in entries:
+        if entry.url.rstrip("/") == url.rstrip("/"):
+            return entry
+
+        if entry.resolve_slug() == resolved_slug:
+            raise ValueError(
+                f"Slug '{resolved_slug}' already used for {entry.url}",
+            )
+
+    new_entry = PaperQueueEntry(
+        url=url,
+        tags=list(tags),
+        concepts=[],
+        slug=resolved_slug,
+        title=title,
+    )
+
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    papers = raw.get("papers", []) if isinstance(raw, dict) else []
+    papers.append(
+        {
+            "url": url,
+            "slug": resolved_slug,
+            "title": title or resolved_slug,
+            "tags": list(tags),
+        },
+    )
+    raw["papers"] = papers
+    path.write_text(
+        yaml.dump(raw, sort_keys=False, allow_unicode=True, default_flow_style=False),
+        encoding="utf-8",
+    )
+
+    return new_entry

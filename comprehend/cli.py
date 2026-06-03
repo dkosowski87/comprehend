@@ -9,6 +9,7 @@ from pathlib import Path
 import click
 
 from comprehend.concept.prepare import ConceptPrepareError, prepare_concept
+from comprehend.concept.triage import triage_concept, triage_result_to_dict
 from comprehend.concept.render import render_concept_visuals
 from comprehend.concept.schema import load_concept_summary, render_concept_markdown, save_concept_summary
 from comprehend.pdf.download import PaperDownloadError
@@ -25,6 +26,7 @@ from comprehend.publish.github_wiki import (
 )
 from comprehend.queue import (
     QueueStatus,
+    add_paper_to_queue,
     find_concept_ref,
     find_paper_entry,
     load_paper_queue,
@@ -625,6 +627,66 @@ def queue_run(
     click.echo(json.dumps(payload, indent=2))
 
 
+@queue.command("add")
+@click.argument("url")
+@click.option(
+    "--slug",
+    default=None,
+    help="Wiki slug (inferred from URL when omitted)",
+)
+@click.option(
+    "--title",
+    default=None,
+    help="Display title for papers.yaml",
+)
+@click.option(
+    "--tag",
+    "tags",
+    multiple=True,
+    help="Topic tag (repeatable)",
+)
+@click.option(
+    "--papers-file",
+    type=click.Path(path_type=Path),
+    default="papers.yaml",
+    show_default=True,
+    help="Path to papers.yaml",
+)
+def queue_add(
+    url: str,
+    slug: str | None,
+    title: str | None,
+    tags: tuple[str, ...],
+    papers_file: Path,
+) -> None:
+    """Add a paper URL to papers.yaml."""
+    if not papers_file.is_file():
+        raise click.ClickException(f"Papers file not found: {papers_file}")
+
+    if not tags:
+        raise click.ClickException("Provide at least one --tag")
+
+    try:
+        entry = add_paper_to_queue(
+            papers_file,
+            url=url,
+            tags=list(tags),
+            slug=slug,
+            title=title,
+        )
+    except ValueError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    payload = {
+        "url": entry.url,
+        "slug": entry.resolve_slug(),
+        "title": entry.title,
+        "tags": entry.tags,
+        "added": True,
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
 @main.group()
 def concept() -> None:
     """Concept explanation commands."""
@@ -702,6 +764,63 @@ def concept_prepare(
         "concept_already_published": prepared.concept_already_published,
         "paper_already_links_concept": prepared.paper_already_links_concept,
     }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@concept.command("triage")
+@click.option(
+    "--paper",
+    "paper_slug",
+    required=True,
+    help="Paper wiki slug, e.g. arxiv-2304-08069",
+)
+@click.option(
+    "--concept",
+    "concept_id",
+    required=True,
+    help="Concept id from papers.yaml, e.g. ccff",
+)
+@click.option(
+    "--papers-file",
+    type=click.Path(path_type=Path),
+    default="papers.yaml",
+    show_default=True,
+    help="Path to papers.yaml",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+def concept_triage(
+    paper_slug: str,
+    concept_id: str,
+    papers_file: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+) -> None:
+    """Check whether a concept comes from a cited paper and if that paper is queued."""
+    config = _wiki_config(repo, wiki_dir)
+    _sync_wiki_for_status(config)
+
+    try:
+        result = triage_concept(
+            paper_slug=paper_slug,
+            concept_id=concept_id,
+            papers_file=papers_file,
+            wiki_config=config,
+            cache_root=default_cache_dir(),
+        )
+    except ConceptPrepareError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    payload = triage_result_to_dict(result)
     click.echo(json.dumps(payload, indent=2))
 
 

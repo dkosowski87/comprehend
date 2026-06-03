@@ -4,7 +4,12 @@ from pathlib import Path
 
 import yaml
 
-from comprehend.queue import PaperQueueEntry, find_paper_entry, load_paper_queue
+from comprehend.queue import (
+    PaperQueueEntry,
+    add_paper_to_queue,
+    find_paper_entry,
+    load_paper_queue,
+)
 
 
 def test_load_paper_queue_slug_and_title(tmp_path: Path) -> None:
@@ -66,3 +71,27 @@ def test_resolve_slug_falls_back_to_url(tmp_path: Path) -> None:
     )
 
     assert entry.resolve_slug() == "arxiv-2103-14030"
+
+
+def test_add_paper_to_queue(tmp_path: Path) -> None:
+    papers_file = tmp_path / "papers.yaml"
+    papers_file.write_text(
+        "papers:\n"
+        "  - url: https://arxiv.org/abs/2012.12877\n"
+        "    slug: arxiv-2012-12877\n"
+        "    title: DeiT\n"
+        "    tags: [vision]\n",
+        encoding="utf-8",
+    )
+
+    entry = add_paper_to_queue(
+        papers_file,
+        url="https://arxiv.org/abs/9999.99999",
+        slug="arxiv-9999-99999",
+        title="Test Paper",
+        tags=["vision"],
+    )
+
+    assert entry.resolve_slug() == "arxiv-9999-99999"
+    reloaded = load_paper_queue(papers_file)
+    assert len(reloaded) == 2

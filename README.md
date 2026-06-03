@@ -252,6 +252,11 @@ uv run comprehend concept prepare \
   --paper arxiv-2103-14030 \
   --concept cyclic_shift
 
+# 1b. Optional: check if the concept comes from a cited paper (PANet, CCFF, …)
+uv run comprehend concept triage \
+  --paper arxiv-2304-08069 \
+  --concept ccff
+
 # 2. Agent: web search + read paper wiki/summary → write concept.json
 #    → .comprehend/concepts/cyclic-shift/concept.json
 
@@ -277,6 +282,8 @@ Concept pages use the same **Math** section pattern as paper summaries: put LaTe
 | `paper_already_links_concept: true` | Already linked — nothing to do |
 | Error: paper wiki must exist | Publish the paper summary first |
 | `paper_summary_path: null` | OK — agent can read the paper wiki page instead |
+
+**Triage** (`concept triage`) classifies concepts as `simple` vs `paper_originated` using the cached PDF bibliography. If the origin paper is not in `papers.yaml`, the agent should ask before running `queue add`. See the **comprehend-concept** skill.
 
 ### Behavior
 
