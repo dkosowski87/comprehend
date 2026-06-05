@@ -66,8 +66,8 @@ class PaperSummary(BaseModel):
     @field_validator("visuals")
     @classmethod
     def validate_visual_count(cls, value: list[VisualSpec]) -> list[VisualSpec]:
-        if len(value) > 2:
-            raise ValueError("At most 2 visuals are allowed per summary")
+        if len(value) > 4:
+            raise ValueError("At most 4 visuals are allowed per summary")
 
         return value
 

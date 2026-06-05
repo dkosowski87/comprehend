@@ -102,11 +102,15 @@ def extract_figure_by_xref(
         Path to the written image file.
     """
     document = fitz.open(pdf_path)
-    extracted = document.extract_image(xref)
-    document.close()
+    try:
+        pixmap = fitz.Pixmap(document, xref)
+        if pixmap.n - pixmap.alpha > 3:
+            pixmap = fitz.Pixmap(fitz.csRGB, pixmap)
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_bytes(extracted["image"])
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        pixmap.save(output_path)
+    finally:
+        document.close()
 
     return output_path
 

@@ -43,10 +43,10 @@ def test_visual_count_limit() -> None:
             description="d",
             page=1,
         )
-        for x in "abc"
+        for x in "abcde"
     ]
 
-    with pytest.raises(ValueError, match="At most 2 visuals"):
+    with pytest.raises(ValueError, match="At most 4 visuals"):
         PaperSummary(
             title="T",
             pdf_url="https://example.com/paper.pdf",
