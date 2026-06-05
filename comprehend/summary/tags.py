@@ -69,8 +69,6 @@ ALLOWED_PAPER_TAGS: frozenset[str] = frozenset(
         "temporal-coherence",
         "transformers",
         "video-generation",
-        "vision",
-        "vision-transformers",
         "visual-odometry",
         "visual-question-answering",
         "visual-tracking",

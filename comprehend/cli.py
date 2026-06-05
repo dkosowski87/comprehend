@@ -37,6 +37,7 @@ from comprehend.queue import (
 )
 from comprehend.render.manim_render import render_manim_scene
 from comprehend.render.mermaid_render import render_mermaid
+from comprehend.render.visuals import VisualRenderError, render_summary_visuals
 from comprehend.summary.tags import ALLOWED_PAPER_TAGS, MAX_PAPER_TAGS
 from comprehend.summary.schema import load_summary, render_markdown, save_summary
 from comprehend.util import default_cache_dir, default_repo_from_git
