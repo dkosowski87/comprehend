@@ -64,14 +64,6 @@ class PaperSummary(BaseModel):
     math: list[MathEntry] = Field(default_factory=list)
     visuals: list[VisualSpec] = Field(default_factory=list)
 
-    @field_validator("visuals")
-    @classmethod
-    def validate_visual_count(cls, value: list[VisualSpec]) -> list[VisualSpec]:
-        if len(value) > 2:
-            raise ValueError("At most 2 visuals are allowed per summary")
-
-        return value
-
 
 def default_asset_filename(slug: str, visual_id: str) -> str:
     """Build a wiki asset filename for a visual id.

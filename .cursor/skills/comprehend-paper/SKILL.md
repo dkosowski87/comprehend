@@ -8,15 +8,15 @@ description: >-
 
 # Comprehend — ML Paper Summaries
 
-Turn an arXiv or PDF URL into a structured wiki summary with up to 4 visuals, published to this repository's GitHub wiki.
+Turn an arXiv or PDF URL into a structured wiki summary with paper figures and generated visuals, published to this repository's GitHub wiki.
 
 ## Workflow overview
 
 Use a **2-agent pipeline** orchestrated by the main agent:
 
 1. **Prepare** — run CLI, check deduplication
-2. **Agent 1 (Reader/Writer)** — read PDF text, write `summary.json`
-3. **Agent 2 (Visualizer)** — render up to 4 PNG visuals
+2. **Agent 1 (Reader/Writer)** — read PDF text, triage figures, write `summary.json`
+3. **Agent 2 (Visualizer)** — render all visuals in `summary.json`
 4. **Publish** — assemble markdown and push to wiki
 
 Retry solvable errors up to **3 times** (network, Manim/mmdc failures). After 3 failures, stop **without publishing**.
@@ -43,7 +43,32 @@ Save outputs under `.comprehend/papers/<slug>/`:
 
 ## Step 1 — Agent 1: Reader/Writer
 
-Read `.comprehend/papers/<slug>/text.txt` and inspect `figures.json` for extractable figures.
+Read `.comprehend/papers/<slug>/text.txt` and inspect `figures.json` → `figure_regions` (each entry has `page`, `number`, `clip`, and `caption`).
+
+### Figure triage (do this before writing visuals)
+
+Review **every** caption in `figure_regions`. For each figure, read its caption and decide whether it helps explain the **problem**, **solution**, **key concepts**, or **math**. Include all figures that pass the include rules below. There is **no visual count limit**.
+
+**Include** when the caption or figure content shows:
+
+| Category | Examples |
+|----------|----------|
+| **Process visualisation** | Data flow, training/inference pipeline, rendering procedure (e.g. NeRF Figure 2: scene representation + differentiable rendering) |
+| **Model architecture** | Network diagrams, module layouts, encoder/decoder structure (e.g. Swin Transformer Figure 3, RT-DETR Figure 4) |
+| **Methodology plots** | Diagrams that explain *how* the method works — loss formulations visualised, attention patterns as architecture, schematic comparisons of approaches |
+
+**Exclude** — even if visually appealing:
+
+| Category | Examples |
+|----------|----------|
+| **Qualitative results** | Example generated images, segmentation mask overlays, before/after comparisons on sample inputs |
+| **Quantitative results** | Benchmark tables rendered as figures, mAP/accuracy bar charts, scatter plots of speed vs. accuracy |
+| **Ablations** | Component removal studies, hyperparameter sweep plots, "w/ vs w/o X" result grids |
+| **Dataset samples** | Random training images, annotation examples, teaser photos |
+
+When unsure, ask: *"Does this figure teach the reader how the method works, or does it show that it works well?"* Include the former; skip the latter.
+
+Cross-reference included figures from **problem**, **solution**, **key concepts**, and **math** using ids like `**5a**` or `(5b)`.
 
 Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 
@@ -62,12 +87,21 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
   "visuals": [
     {
       "id": "5a",
-      "caption": "Architecture overview",
+      "caption": "NeRF scene representation and rendering",
       "type": "extract",
-      "description": "...",
-      "refs": ["3a"],
+      "description": "5D input, volume rendering, and rendering loss",
+      "refs": ["2a", "3a"],
+      "page": 3,
+      "figure_number": 2
+    },
+    {
+      "id": "5b",
+      "caption": "Swin Transformer architecture",
+      "type": "extract",
+      "description": "Hierarchical stages and shifted-window blocks",
+      "refs": ["2a"],
       "page": 4,
-      "figure_number": 4
+      "figure_number": 3
     }
   ]
 }
@@ -83,7 +117,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 2. **Solution** — how the paper solves it. Use cross-reference ids (`**4a**`, `(5a)`) where helpful; these become jump links in the wiki output.
 3. **Key concepts** — theoretical explanations aligned with *this paper's* contributions. Not a general ML primer. Include intuition (e.g. why attention helps long-range dependencies) when the paper relies on it.
 4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly).
-5. **Visualisation** — specs only (Agent 2 renders). **Maximum 4 visuals.**
+5. **Visualisation** — one entry per included figure. Use sequential ids: `5a`, `5b`, `5c`, … Assign ids in figure order. No count limit — include every figure that passes the triage rules above.
 
 **Do not** include a key-results or benchmarks section.
 
@@ -93,7 +127,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 
 ## Step 2 — Agent 2: Visualizer
 
-Read `summary.json` and `figures.json`. Render each visual (max 4):
+Read `summary.json` and `figures.json`. Render **every** visual listed in the summary:
 
 | type | when to use | how |
 |------|-------------|-----|
@@ -101,7 +135,7 @@ Read `summary.json` and `figures.json`. Render each visual (max 4):
 | `mermaid` | flowcharts, token/data flow, architecture simplified | write `.mmd` file, set `mermaid_source` in JSON or render separately |
 | `manim` | math-heavy layouts, matrices, coordinate diagrams | write scene `.py`, set `manim_scene_path` and `manim_scene_class` |
 
-**Decision rule:** extract when quality is good; generate when simplification or annotation is needed.
+**Decision rule:** `extract` when the paper figure is clear and passes triage; `mermaid` or `manim` only when simplification or annotation is needed and no suitable paper figure exists.
 
 For `extract` visuals, prefer `figure_number` from `figures.json` → `figure_regions`. Paper figures are usually composites of many embedded images and vector paths; extracting a single `xref` tile crops the figure. When only `xref` is available, rendering still resolves the full composite region automatically.
 
@@ -121,7 +155,7 @@ uv run comprehend render manim scene.py --scene-class MyScene --output assets/<s
 uv run comprehend pdf crop paper.pdf --page 4 --figure 4 --output assets/<slug>-5a.png
 ```
 
-Manim renders **static PNG only** (never video). For multi-step ideas, use multiple static frames as separate visuals (still max 4 total).
+Manim renders **static PNG only** (never video). For multi-step ideas, use multiple static frames as separate visuals.
 
 ## Step 3 — Publish
 

@@ -55,6 +55,17 @@ def test_figure_clip_for_xref_covers_composite_figure() -> None:
     assert clip[2] - clip[0] > 400
 
 
+def test_list_figure_regions_includes_captions() -> None:
+    pdf_path = _require_pdf("arxiv-2304-08069")
+
+    regions = list_figure_regions(pdf_path)
+    figure_four = next(
+        region for region in regions if region.page == 5 and region.number == 4
+    )
+
+    assert "RT-DETR" in figure_four.caption or "Overview" in figure_four.caption
+
+
 def test_list_figure_regions_includes_numbered_figures() -> None:
     pdf_path = _require_pdf("arxiv-2304-08069")
 

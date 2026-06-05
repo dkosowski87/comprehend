@@ -34,7 +34,7 @@ def test_slugify_title() -> None:
     assert slug.startswith("deit-training")
 
 
-def test_visual_count_limit() -> None:
+def test_many_visuals_allowed() -> None:
     visuals = [
         VisualSpec(
             id=f"5{x}",
@@ -42,21 +42,23 @@ def test_visual_count_limit() -> None:
             type=VisualType.EXTRACT,
             description="d",
             page=1,
+            figure_number=1,
         )
         for x in "abc"
     ]
 
-    with pytest.raises(ValueError, match="At most 2 visuals"):
-        PaperSummary(
-            title="T",
-            pdf_url="https://example.com/paper.pdf",
-            tags=[],
-            slug="test",
-            problem=["p"],
-            solution=["s"],
-            key_concepts=["k"],
-            visuals=visuals,
-        )
+    summary = PaperSummary(
+        title="T",
+        pdf_url="https://example.com/paper.pdf",
+        tags=[],
+        slug="test",
+        problem=["p"],
+        solution=["s"],
+        key_concepts=["k"],
+        visuals=visuals,
+    )
+
+    assert len(summary.visuals) == 3
 
 
 def test_render_markdown_includes_sections(tmp_path: Path) -> None:

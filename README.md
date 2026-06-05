@@ -12,7 +12,7 @@ Each summary follows a fixed template designed for quick understanding:
 2. **Solution** — how the paper solves it (with cross-refs like **4a**, **5a**)  
 3. **Key concepts** — theoretical explanations tied to the paper's contributions  
 4. **Math** — central equations in LaTeX  
-5. **Visualisation** — 1–2 figures (extracted from the PDF or generated)
+5. **Visualisation** — paper figures and generated diagrams that explain the method (no count limit)
 
 Cross-references in the text become jump links to equations and visuals on the wiki page.
 
@@ -144,10 +144,19 @@ Agent-written `summary.json` follows this structure:
   "visuals": [
     {
       "id": "5a",
-      "caption": "Architecture overview",
+      "caption": "NeRF rendering pipeline",
       "type": "extract",
       "description": "...",
-      "page": 7
+      "page": 3,
+      "figure_number": 2
+    },
+    {
+      "id": "5b",
+      "caption": "Model architecture",
+      "type": "extract",
+      "description": "...",
+      "page": 4,
+      "figure_number": 3
     }
   ]
 }
@@ -161,7 +170,7 @@ Visual types:
 | `mermaid` | Flowcharts, token/data flow — set `mermaid_source` |
 | `manim` | Math-heavy diagrams — set `manim_scene_path` and `manim_scene_class` |
 
-Maximum **2 visuals** per summary.
+**Figure selection:** include process visualisations, architecture diagrams, and methodology plots that connect to the problem, solution, key concepts, or math. Skip qualitative results, benchmark plots, ablations, and dataset samples. See the [comprehend-paper skill](.cursor/skills/comprehend-paper/SKILL.md) for full triage rules. There is no visual count limit.
 
 Cross-references like `**4a**` or `(5a)` in section bullets are automatically turned into jump links when matching math/visual ids exist.
 
@@ -169,8 +178,8 @@ Cross-references like `**4a**` or `(5a)` in section bullets are automatically tu
 
 The project includes a Cursor skill at `.cursor/skills/comprehend-paper/SKILL.md` that orchestrates a 2-agent pipeline:
 
-1. **Reader/Writer** — reads the PDF text, writes `summary.json`  
-2. **Visualizer** — renders 1–2 PNGs via extract / Mermaid / Manim  
+1. **Reader/Writer** — reads the PDF text, triages figures, writes `summary.json`  
+2. **Visualizer** — renders all PNGs via extract / Mermaid / Manim  
 3. **Publish** — pushes to the GitHub wiki  
 
 The skill can be used manually in Cursor or wired into a **Cursor Automation** (see below).

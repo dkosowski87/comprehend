@@ -20,6 +20,7 @@ class FigureCaption:
     number: int
     rect: fitz.Rect
     page: int
+    text: str
 
 
 @dataclass(frozen=True)
@@ -29,6 +30,7 @@ class FigureRegion:
     page: int
     number: int
     clip: tuple[float, float, float, float]
+    caption: str
 
 
 def _block_text(block: dict) -> str:
@@ -64,6 +66,7 @@ def find_figure_captions(page: fitz.Page, *, page_number: int) -> list[FigureCap
             number=int(match.group(1)),
             rect=fitz.Rect(block["bbox"]),
             page=page_number,
+            text=text,
         )
         captions.append(caption)
 
@@ -412,6 +415,7 @@ def list_figure_regions(pdf_path: Path) -> list[FigureRegion]:
                 page=page_number,
                 number=caption.number,
                 clip=clip,
+                caption=caption.text,
             )
             regions.append(region)
 

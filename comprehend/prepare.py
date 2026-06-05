@@ -122,6 +122,7 @@ def prepare_paper(
                 "page": region.page,
                 "number": region.number,
                 "clip": list(region.clip),
+                "caption": region.caption,
             }
             for region in figure_regions
         ],
