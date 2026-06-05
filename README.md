@@ -135,6 +135,7 @@ Agent-written `summary.json` follows this structure:
   "pdf_url": "https://arxiv.org/pdf/....pdf",
   "tags": ["tag1", "tag2"],
   "slug": "arxiv-2012-12877",
+  "keywords": ["DeiT", "distillation token", "attention distillation"],
   "problem": ["..."],
   "solution": ["Use **5a** for architecture, loss **4a**."],
   "key_concepts": ["..."],
@@ -179,7 +180,7 @@ Visual types:
 
 **Figure selection:** include process visualisations, architecture diagrams, and methodology plots that connect to the problem, solution, key concepts, or math. Skip qualitative results, benchmark plots, ablations, and dataset samples. See the [comprehend-paper skill](.cursor/skills/comprehend-paper/SKILL.md) for full triage rules. There is no visual count limit.
 
-Cross-references like `**4a**` or `(5a)` in section bullets are automatically turned into jump links when matching math/visual ids exist.
+Cross-references like `**4a**` or `(5a)` in section bullets are automatically turned into jump links when matching math/visual ids exist. Terms in `keywords` are auto-bolded in section bullets during assembly.
 
 ## Agent workflow (Cursor)
 

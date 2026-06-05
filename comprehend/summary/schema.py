@@ -66,6 +66,7 @@ class PaperSummary(BaseModel):
     pdf_url: str
     tags: list[str] = Field(default_factory=list)
     slug: str
+    keywords: list[str] = Field(default_factory=list)
     problem: list[str]
     solution: list[str]
     key_concepts: list[str]
@@ -126,6 +127,55 @@ def linkify_refs(text: str, ref_ids: set[str]) -> str:
 
         paren_pattern = re.compile(rf"(?<!\[)\({escaped_id}\)")
         linked = paren_pattern.sub(rf"[({ref_id})](#{ref_id})", linked)
+
+    return linked
+
+
+def emphasize_keywords(text: str, keywords: list[str]) -> str:
+    """Wrap occurrences of paper-specific keywords in bold markdown.
+
+    Skips text that is already bold. Longer keywords are emphasized first so
+    phrases like ``cross-scale feature fusion`` win over shorter substrings.
+
+    Args:
+        text: Bullet text from a summary section.
+        keywords: Terms to emphasize, such as method or module names.
+
+    Returns:
+        Text with newly bolded keyword occurrences.
+    """
+    unique_keywords = [keyword.strip() for keyword in keywords if keyword.strip()]
+    if not unique_keywords:
+        return text
+
+    parts = re.split(r"(\*\*[^*]+\*\*)", text)
+    emphasized_parts: list[str] = []
+
+    for index, part in enumerate(parts):
+        if index % 2 == 1:
+            emphasized_parts.append(part)
+            continue
+
+        emphasized = part
+        for keyword in sorted(set(unique_keywords), key=len, reverse=True):
+            escaped_keyword = re.escape(keyword)
+            pattern = re.compile(rf"\b({escaped_keyword})\b", re.IGNORECASE)
+            emphasized = pattern.sub(r"**\1**", emphasized)
+
+        emphasized_parts.append(emphasized)
+
+    emphasized_text = "".join(emphasized_parts)
+
+    return emphasized_text
+
+
+def _format_summary_bullet(
+    text: str,
+    *,
+    ref_ids: set[str],
+    keywords: list[str],
+) -> str:
+    linked = linkify_refs(emphasize_keywords(text, keywords), ref_ids)
 
     return linked
 
@@ -208,15 +258,15 @@ def render_markdown(summary: PaperSummary) -> str:
     ]
 
     for item in summary.problem:
-        lines.append(f"- {linkify_refs(item, ref_ids)}")
+        lines.append(f"- {_format_summary_bullet(item, ref_ids=ref_ids, keywords=summary.keywords)}")
 
     lines.extend(["", "## 2. Solution", ""])
     for item in summary.solution:
-        lines.append(f"- {linkify_refs(item, ref_ids)}")
+        lines.append(f"- {_format_summary_bullet(item, ref_ids=ref_ids, keywords=summary.keywords)}")
 
     lines.extend(["", "## 3. Key concepts", ""])
     for item in summary.key_concepts:
-        lines.append(f"- {linkify_refs(item, ref_ids)}")
+        lines.append(f"- {_format_summary_bullet(item, ref_ids=ref_ids, keywords=summary.keywords)}")
 
     if summary.math:
         lines.extend(["", "## 4. Math", ""])

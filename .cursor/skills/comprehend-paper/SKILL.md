@@ -78,6 +78,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
   "pdf_url": "https://arxiv.org/pdf/....pdf",
   "tags": ["tag1", "tag2"],
   "slug": "arxiv-2012-12877",
+  "keywords": ["DeiT", "distillation token", "attention distillation"],
   "problem": ["bullet 1", "bullet 2"],
   "solution": ["bullet with cross-refs like 4a, 5a"],
   "key_concepts": ["theoretical explanations tied to this paper's contributions"],
@@ -151,6 +152,12 @@ Include variables that a reader cannot infer from the label alone. Skip universa
 **Slug:** use the slug from `comprehend prepare` (typically `arxiv-<id-with-dashes>`).
 
 **Tags:** from `papers.yaml` when queue-driven; otherwise infer 2–4 topical tags.
+
+**Keywords:** add a `keywords` array with 5–15 paper-specific terms (method name, core modules, losses, datasets when central to the method). These are auto-bolded in **problem**, **solution**, and **key concepts** during assembly. Examples: `"RT-DETR"`, `"shifted-window attention"`, `"volume rendering"`, `"distillation token"`.
+
+- Prefer `keywords` for recurring terms; use inline `**...**` in bullets for one-off emphasis.
+- Reserve `**4a**` / `(5a)` only for cross-references to math or visuals — do not list ref ids in `keywords`.
+- Do not bold every noun; emphasize terms a reader needs to track across sections.
 
 ## Step 2 — Agent 2: Visualizer
 

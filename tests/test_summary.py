@@ -10,6 +10,7 @@ from comprehend.summary.schema import (
     PaperSummary,
     VisualSpec,
     VisualType,
+    emphasize_keywords,
     linkify_refs,
     normalize_wiki_latex,
     render_markdown,
@@ -129,6 +130,60 @@ def test_render_markdown_includes_sections(tmp_path: Path) -> None:
     assert "assets/arxiv-2012-12877-5a.png" in markdown
     assert '<a id="4a"></a>' in markdown
     assert '<a id="5a"></a>' in markdown
+
+
+def test_emphasize_keywords_bolds_terms() -> None:
+    text = "RT-DETR replaces NMS with an efficient hybrid encoder."
+
+    emphasized = emphasize_keywords(text, ["RT-DETR", "hybrid encoder"])
+
+    assert emphasized == "**RT-DETR** replaces NMS with an efficient **hybrid encoder**."
+
+
+def test_emphasize_keywords_skips_existing_bold() -> None:
+    text = "The **RT-DETR** decoder uses cross-attention."
+
+    emphasized = emphasize_keywords(text, ["RT-DETR", "cross-attention"])
+
+    assert emphasized == "The **RT-DETR** decoder uses **cross-attention**."
+
+
+def test_render_markdown_emphasizes_keywords() -> None:
+    summary = PaperSummary(
+        title="Test Paper",
+        pdf_url="https://arxiv.org/pdf/2012.12877.pdf",
+        tags=[],
+        slug="test",
+        keywords=["distillation token"],
+        problem=["DeiT introduces a distillation token for attention transfer."],
+        solution=[],
+        key_concepts=[],
+        visuals=[],
+    )
+
+    markdown = render_markdown(summary)
+
+    assert "**distillation token**" in markdown
+
+
+def test_render_markdown_keywords_and_cross_refs() -> None:
+    summary = PaperSummary(
+        title="Test Paper",
+        pdf_url="https://arxiv.org/pdf/2012.12877.pdf",
+        tags=[],
+        slug="test",
+        keywords=["distillation token"],
+        problem=[],
+        solution=["The distillation token feeds loss **4a**."],
+        key_concepts=[],
+        math=[MathEntry(id="4a", label="loss", latex="L = 0")],
+        visuals=[],
+    )
+
+    markdown = render_markdown(summary)
+
+    assert "**distillation token**" in markdown
+    assert "[**4a**](#4a)" in markdown
 
 
 def test_linkify_refs_bold_and_parens() -> None:
