@@ -110,6 +110,26 @@ uv run comprehend queue run       # prepare all pending papers
 
 Papers already on the wiki are skipped automatically.
 
+### Import from paperswithcode.co
+
+Browse CVPR/ICCV proceedings on [paperswithcode.co](https://paperswithcode.co/conferences) and import papers into `papers.yaml`:
+
+```bash
+# List conferences
+uv run comprehend pwc conferences
+
+# Browse CVPR 2026 oral papers
+uv run comprehend pwc papers cvpr-2026 --presentation oral
+
+# Append new oral papers to papers.yaml (skips duplicates)
+uv run comprehend pwc import cvpr-2026 --presentation oral
+
+# Preview without writing
+uv run comprehend pwc import cvpr-2026 --presentation oral --dry-run
+```
+
+Presentation filters: `all`, `oral`, `spotlight`, `outstanding`.
+
 ## CLI reference
 
 | Command | Description |
@@ -125,6 +145,10 @@ Papers already on the wiki are skipped automatically.
 | `comprehend render mermaid <file.mmd> --output out.png` | Render a Mermaid diagram |
 | `comprehend render manim <scene.py> --scene-class Name --output out.png` | Render a Manim scene to PNG |
 | `comprehend render summary <summary.json> --assets-dir <dir>` | Render all visuals in a summary |
+| `comprehend queue add <url>` | Append a paper URL to papers.yaml |
+| `comprehend pwc conferences` | List conferences on paperswithcode.co |
+| `comprehend pwc papers <slug>` | List papers for a conference (`--presentation oral`) |
+| `comprehend pwc import <slug>` | Import conference papers into papers.yaml |
 
 Run `uv run comprehend <command> --help` for full options.
 
@@ -331,6 +355,7 @@ comprehend/
 ├── publish/      # GitHub wiki clone, push, dedup
 ├── prepare.py    # download + extract workflow
 ├── queue.py      # papers.yaml loading
+├── pwc/          # paperswithcode.co API client + queue import
 ├── concept/      # concept schema, link patching, prepare
 └── cli.py        # click CLI
 papers.yaml       # paper queue + per-paper concepts

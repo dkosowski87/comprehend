@@ -15,7 +15,9 @@ from comprehend.concept.schema import load_concept_summary, render_concept_markd
 from comprehend.pdf.download import PaperDownloadError
 from comprehend.pdf.extract import extract_paper, render_page_region
 from comprehend.pdf.figures import resolve_figure_region
-from comprehend.prepare import prepare_paper
+from comprehend.pwc.client import PapersWithCodeClient, PapersWithCodeError
+from comprehend.pwc.import_queue import import_conference_papers
+from comprehend.pwc.models import PresentationFilter
 from comprehend.publish.github_wiki import (
     WikiConfig,
     WikiPublishError,
@@ -991,6 +993,159 @@ def concept_publish(
         "published_concept": published_concept,
         "patched_paper_links": linked,
         "wiki_url": f"https://github.com/{config.repo}/wiki/{summary.slug}",
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@main.group("pwc")
+def pwc() -> None:
+    """Search paperswithcode.co and import conference papers into papers.yaml."""
+
+
+@pwc.command("conferences")
+@click.option("--page", default=1, show_default=True, help="Results page")
+@click.option(
+    "--items-per-page",
+    default=50,
+    show_default=True,
+    help="Page size",
+)
+def pwc_conferences(page: int, items_per_page: int) -> None:
+    """List conferences on paperswithcode.co."""
+    try:
+        with PapersWithCodeClient() as client:
+            payload = client.list_conferences(page=page, items_per_page=items_per_page)
+    except PapersWithCodeError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    click.echo(
+        json.dumps(
+            {
+                "count": payload.count,
+                "next_page": payload.next_page,
+                "results": [item.model_dump() for item in payload.results],
+            },
+            indent=2,
+        ),
+    )
+
+
+@pwc.command("conference")
+@click.argument("conference_slug")
+def pwc_conference(conference_slug: str) -> None:
+    """Show one conference by slug (e.g. cvpr-2026)."""
+    try:
+        with PapersWithCodeClient() as client:
+            conference = client.get_conference(conference_slug)
+    except PapersWithCodeError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    click.echo(json.dumps(conference.model_dump(), indent=2))
+
+
+@pwc.command("papers")
+@click.argument("conference_slug")
+@click.option(
+    "--presentation",
+    type=click.Choice(["all", "oral", "spotlight", "outstanding"]),
+    default="all",
+    show_default=True,
+    help="Filter by presentation type",
+)
+@click.option("--page", default=1, show_default=True, help="Results page")
+@click.option(
+    "--items-per-page",
+    default=50,
+    show_default=True,
+    help="Page size",
+)
+def pwc_papers(
+    conference_slug: str,
+    presentation: PresentationFilter,
+    page: int,
+    items_per_page: int,
+) -> None:
+    """List papers for a conference on paperswithcode.co."""
+    try:
+        with PapersWithCodeClient() as client:
+            payload = client.list_conference_papers(
+                conference_slug,
+                presentation=presentation,
+                page=page,
+                items_per_page=items_per_page,
+            )
+    except PapersWithCodeError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    click.echo(
+        json.dumps(
+            {
+                "count": payload.count,
+                "next_page": payload.next_page,
+                "presentation": presentation,
+                "results": [item.model_dump() for item in payload.results],
+            },
+            indent=2,
+        ),
+    )
+
+
+@pwc.command("import")
+@click.argument("conference_slug")
+@click.option(
+    "--presentation",
+    type=click.Choice(["all", "oral", "spotlight", "outstanding"]),
+    default="all",
+    show_default=True,
+    help="Import only papers with this presentation type",
+)
+@click.option(
+    "--papers-file",
+    type=click.Path(path_type=Path),
+    default="papers.yaml",
+    show_default=True,
+    help="Path to papers.yaml",
+)
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Report papers that would be added without writing papers.yaml",
+)
+def pwc_import(
+    conference_slug: str,
+    presentation: PresentationFilter,
+    papers_file: Path,
+    dry_run: bool,
+) -> None:
+    """Import conference papers into papers.yaml when not already queued."""
+    if not papers_file.is_file():
+        raise click.ClickException(f"Papers file not found: {papers_file}")
+
+    try:
+        result = import_conference_papers(
+            papers_file,
+            conference_slug,
+            presentation=presentation,
+            dry_run=dry_run,
+        )
+    except PapersWithCodeError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    payload = {
+        "conference_slug": result.conference_slug,
+        "presentation": result.presentation,
+        "fetched": result.fetched,
+        "added_count": result.added_count,
+        "skipped_count": result.skipped_count,
+        "dry_run": dry_run,
+        "added": [
+            {"title": item.title, "url": item.url, "slug": item.slug}
+            for item in result.added
+        ],
+        "skipped": [
+            {"title": item.title, "url": item.url, "reason": item.reason}
+            for item in result.skipped
+        ],
     }
     click.echo(json.dumps(payload, indent=2))
 
