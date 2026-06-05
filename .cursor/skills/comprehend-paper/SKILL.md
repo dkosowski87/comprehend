@@ -76,7 +76,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 {
   "title": "Paper title",
   "pdf_url": "https://arxiv.org/pdf/....pdf",
-  "tags": ["tag1", "tag2"],
+  "tags": ["transformers", "distillation"],
   "slug": "arxiv-2012-12877",
   "keywords": ["DeiT", "distillation token", "attention distillation"],
   "problem": ["bullet 1", "bullet 2"],
@@ -151,7 +151,7 @@ Include variables that a reader cannot infer from the label alone. Skip universa
 
 **Slug:** use the slug from `comprehend prepare` (typically `arxiv-<id-with-dashes>`).
 
-**Tags:** from `papers.yaml` when queue-driven; otherwise infer 2–4 topical tags.
+**Tags:** infer 1–5 tags from the paper content when writing `summary.json`. Tags are **not** stored in `papers.yaml`. Choose only from the allowed vocabulary — run `uv run comprehend tags` to list valid slugs. Pick the most specific tags that describe the paper's methods and task (e.g. `neural-rendering`, `object-detection`, `contrastive-learning`). Do not invent new tag slugs.
 
 **Keywords:** add a `keywords` array with 5–15 paper-specific terms (method name, core modules, losses, datasets when central to the method). These are auto-bolded in **problem**, **solution**, and **key concepts** during assembly. Examples: `"RT-DETR"`, `"shifted-window attention"`, `"volume rendering"`, `"distillation token"`.
 

@@ -37,7 +37,7 @@ from comprehend.queue import (
 )
 from comprehend.render.manim_render import render_manim_scene
 from comprehend.render.mermaid_render import render_mermaid
-from comprehend.render.visuals import VisualRenderError, render_summary_visuals
+from comprehend.summary.tags import ALLOWED_PAPER_TAGS, MAX_PAPER_TAGS
 from comprehend.summary.schema import load_summary, render_markdown, save_summary
 from comprehend.util import default_cache_dir, default_repo_from_git
 
@@ -68,6 +68,16 @@ def _sync_wiki_for_status(config: WikiConfig) -> None:
 @click.version_option(package_name="comprehend")
 def main() -> None:
     """ML paper summaries with visuals for GitHub wiki publishing."""
+
+
+@main.command("tags")
+def tags_list() -> None:
+    """List allowed topic tags for summary.json."""
+    payload = {
+        "max_tags": MAX_PAPER_TAGS,
+        "allowed_tags": sorted(ALLOWED_PAPER_TAGS),
+    }
+    click.echo(json.dumps(payload, indent=2))
 
 
 @main.group()
@@ -489,7 +499,6 @@ def queue_status(
             "url": item.url,
             "slug": item.slug,
             "title": item.title,
-            "tags": item.tags,
             "status": item.status.value,
         }
         for item in items
@@ -546,7 +555,6 @@ def queue_next(
         "url": pending.url,
         "slug": pending.slug,
         "title": pending.title,
-        "tags": pending.tags,
         "status": pending.status.value,
     }
 
@@ -622,7 +630,6 @@ def queue_run(
                 {
                     "url": item.url,
                     "slug": item.slug,
-                    "tags": item.tags,
                     "error": str(exc),
                 },
             )
@@ -632,7 +639,6 @@ def queue_run(
             {
                 "url": item.url,
                 "slug": item.slug,
-                "tags": item.tags,
                 "cache_dir": str(cache_dir),
             },
         )
@@ -657,12 +663,6 @@ def queue_run(
     help="Display title for papers.yaml",
 )
 @click.option(
-    "--tag",
-    "tags",
-    multiple=True,
-    help="Topic tag (repeatable)",
-)
-@click.option(
     "--papers-file",
     type=click.Path(path_type=Path),
     default="papers.yaml",
@@ -673,21 +673,16 @@ def queue_add(
     url: str,
     slug: str | None,
     title: str | None,
-    tags: tuple[str, ...],
     papers_file: Path,
 ) -> None:
     """Add a paper URL to papers.yaml."""
     if not papers_file.is_file():
         raise click.ClickException(f"Papers file not found: {papers_file}")
 
-    if not tags:
-        raise click.ClickException("Provide at least one --tag")
-
     try:
         entry = add_paper_to_queue(
             papers_file,
             url=url,
-            tags=list(tags),
             slug=slug,
             title=title,
         )
@@ -698,7 +693,6 @@ def queue_add(
         "url": entry.url,
         "slug": entry.resolve_slug(),
         "title": entry.title,
-        "tags": entry.tags,
         "added": True,
     }
     click.echo(json.dumps(payload, indent=2))

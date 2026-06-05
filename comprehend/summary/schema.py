@@ -8,6 +8,8 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, field_validator
 
+from comprehend.summary.tags import validate_paper_tags
+
 
 class VisualType(str, Enum):
     """Supported visual generation strategies."""
@@ -72,6 +74,13 @@ class PaperSummary(BaseModel):
     key_concepts: list[str]
     math: list[MathEntry] = Field(default_factory=list)
     visuals: list[VisualSpec] = Field(default_factory=list)
+
+    @field_validator("tags")
+    @classmethod
+    def validate_tags(cls, value: list[str]) -> list[str]:
+        validated = validate_paper_tags(value)
+
+        return validated
 
 
 def default_asset_filename(slug: str, visual_id: str) -> str:

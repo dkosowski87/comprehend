@@ -31,7 +31,6 @@ papers:
   - url: https://arxiv.org/abs/2103.14030
     slug: arxiv-2103-14030
     title: "Swin Transformer: ..."
-    tags: [vision, transformers]
     concepts:
       - slug: cyclic_shift
         terms: ["cyclic shift", "shifted window"]
@@ -152,6 +151,7 @@ Write `<cache_dir>/concept.json`:
 - **No paper-specific context section** — do not add "Why it appears in Swin Transformer". Keep explanations general.
 - **Max 2 visuals** — use ids like `"visual-1"` and `"visual-2"` (not paper-style ids like `5a`)
 - **No inline LaTeX** in bullets — GitHub wiki does not render `\(...\)`. Put equations in a **`math`** array and reference them with `**m1**`, `**m2**`, … (ids `m1`, `m2`, …). They become jump links to a **Math** section with `$$...$$` blocks, same as paper summaries. Add a `variables` legend for non-obvious symbols in each equation.
+- **Tags** in `concept.json` use the same allowed vocabulary as paper summaries (`uv run comprehend tags`, max 5).
 - Sections: **What it is**, **How it works**, optional **Math**, optional **Visualisation**
 - Include the triggering paper in `related_papers`
 - Use `slug` from prepare output (`concept-*` prefix)

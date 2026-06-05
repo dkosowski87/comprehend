@@ -110,10 +110,13 @@ def prepare_concept(
     summary_path = paper_cache / "summary.json"
     paper_summary_path: Path | None = None
     paper_title = paper_entry.title
+    paper_tags: list[str] = []
     if summary_path.is_file():
         paper_summary_path = summary_path
+        summary = load_summary(summary_path)
         if paper_title is None:
-            paper_title = load_summary(summary_path).title
+            paper_title = summary.title
+        paper_tags = list(summary.tags)
 
     concept_already_published = wiki_page_exists(
         concept_slug,
@@ -128,7 +131,7 @@ def prepare_concept(
         paper_slug=paper_slug,
         paper_title=paper_title,
         paper_url=paper_entry.url,
-        paper_tags=list(paper_entry.tags),
+        paper_tags=paper_tags,
         cache_dir=concept_dir,
         concept_json_path=concept_json_path,
         paper_summary_path=paper_summary_path,

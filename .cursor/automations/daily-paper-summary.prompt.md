@@ -46,7 +46,7 @@ uv run comprehend prepare <url> --repo dkosowski87/comprehend
 
 If `"already_published": true` — Slack: *"Skipped `<slug>` — already on wiki."* **Stop.**
 
-Otherwise keep `url`, `slug`, `tags`, `cache_dir`, `text_path`, `figures_path`, `pdf_path`.
+Otherwise keep `url`, `slug`, `cache_dir`, `text_path`, `figures_path`, `pdf_path`.
 
 ## Steps 2–4 — Follow comprehend-paper skill
 
@@ -56,7 +56,7 @@ Execute the skill workflow for this paper:
 2. **Agent 2 (Visualizer)** — skill § Step 2: render visuals into `<cache_dir>/assets`
 3. **Publish** — skill § Step 3: `comprehend wiki publish` with `--repo dkosowski87/comprehend`
 
-Use tags from the queue output. Do **not** use `--force` unless explicitly instructed.
+Use tags from `summary.json` (inferred during Agent 1 — see skill § Tags). Do **not** use `--force` unless explicitly instructed.
 
 On failure after 3 retries (per skill), **stop without publishing**.
 
@@ -67,7 +67,7 @@ Post to the configured Slack channel:
 - Paper title (from `summary.json`)
 - Wiki link: `https://github.com/dkosowski87/comprehend/wiki/<slug>`
 - PDF link (from `summary.json`)
-- Tags
+- Tags (from published `summary.json`)
 
 Example:
 

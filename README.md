@@ -93,10 +93,12 @@ papers:
   - url: https://arxiv.org/abs/2304.08069
     slug: arxiv-2304-08069
     title: DETRs Beat YOLOs on Real-time Object Detection
-    tags: [vision, object-detection, transformers]
+    concepts:
+      - slug: ccff
+        terms: ["cross-scale feature fusion"]
 ```
 
-Each entry includes an explicit **`slug`** (wiki page id, e.g. `arxiv-2304-08069` with hyphens) and **`title`** (display name). Slugs are still inferred from the URL when omitted, but explicit slugs avoid confusion between dot and hyphen forms.
+Each entry includes an explicit **`slug`** (wiki page id) and **`title`** (display name). **Tags** are inferred when the summary is written and stored in `summary.json` — see `uv run comprehend tags` for the allowed vocabulary (max 5).
 
 Queue commands:
 
@@ -112,6 +114,7 @@ Papers already on the wiki are skipped automatically.
 
 | Command | Description |
 |---------|-------------|
+| `comprehend tags` | List allowed topic tags for `summary.json` (max 5) |
 | `comprehend prepare <url>` | Download PDF, extract text, check wiki dedup |
 | `comprehend assemble <summary.json> --output page.md` | Build wiki markdown from JSON |
 | `comprehend wiki publish <summary.json> --assets-dir <dir>` | Push page + assets to wiki |
@@ -133,7 +136,7 @@ Agent-written `summary.json` follows this structure:
 {
   "title": "Paper title",
   "pdf_url": "https://arxiv.org/pdf/....pdf",
-  "tags": ["tag1", "tag2"],
+  "tags": ["transformers", "object-detection"],
   "slug": "arxiv-2012-12877",
   "keywords": ["DeiT", "distillation token", "attention distillation"],
   "problem": ["..."],
@@ -181,6 +184,8 @@ Visual types:
 **Figure selection:** include process visualisations, architecture diagrams, and methodology plots that connect to the problem, solution, key concepts, or math. Skip qualitative results, benchmark plots, ablations, and dataset samples. See the [comprehend-paper skill](.cursor/skills/comprehend-paper/SKILL.md) for full triage rules. There is no visual count limit.
 
 Cross-references like `**4a**` or `(5a)` in section bullets are automatically turned into jump links when matching math/visual ids exist. Terms in `keywords` are auto-bolded in section bullets during assembly.
+
+**Tags** in `summary.json` must come from the fixed CV vocabulary (`uv run comprehend tags`); at most 5 per summary.
 
 ## Agent workflow (Cursor)
 
@@ -231,10 +236,8 @@ For concepts used in a paper but not fully explained (e.g. **cyclic shift** in S
 ```yaml
 papers:
   - url: https://arxiv.org/abs/2103.14030
-    tags: [vision, transformers]
+    slug: arxiv-2103-14030
     concepts:
-      - cyclic_shift
-      # optional custom link terms:
       - slug: cyclic_shift
         terms: ["cyclic shift", "shifted window"]
 ```

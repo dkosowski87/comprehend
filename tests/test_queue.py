@@ -22,7 +22,6 @@ def test_load_paper_queue_slug_and_title(tmp_path: Path) -> None:
                         "url": "https://arxiv.org/abs/2304.08069",
                         "slug": "arxiv-2304-08069",
                         "title": "DETRs Beat YOLOs on Real-time Object Detection",
-                        "tags": ["vision"],
                     },
                 ],
             },
@@ -48,7 +47,6 @@ def test_find_paper_entry_by_explicit_slug(tmp_path: Path) -> None:
                         "url": "https://arxiv.org/abs/2304.08069",
                         "slug": "arxiv-2304-08069",
                         "title": "RT-DETR",
-                        "tags": [],
                     },
                 ],
             },
@@ -66,7 +64,6 @@ def test_find_paper_entry_by_explicit_slug(tmp_path: Path) -> None:
 def test_resolve_slug_falls_back_to_url(tmp_path: Path) -> None:
     entry = PaperQueueEntry(
         url="https://arxiv.org/abs/2103.14030",
-        tags=[],
         concepts=[],
     )
 
@@ -79,8 +76,7 @@ def test_add_paper_to_queue(tmp_path: Path) -> None:
         "papers:\n"
         "  - url: https://arxiv.org/abs/2012.12877\n"
         "    slug: arxiv-2012-12877\n"
-        "    title: DeiT\n"
-        "    tags: [vision]\n",
+        "    title: DeiT\n",
         encoding="utf-8",
     )
 
@@ -89,7 +85,6 @@ def test_add_paper_to_queue(tmp_path: Path) -> None:
         url="https://arxiv.org/abs/9999.99999",
         slug="arxiv-9999-99999",
         title="Test Paper",
-        tags=["vision"],
     )
 
     assert entry.resolve_slug() == "arxiv-9999-99999"

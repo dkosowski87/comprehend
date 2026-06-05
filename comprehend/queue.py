@@ -29,7 +29,6 @@ class PaperQueueEntry:
     """One paper entry from ``papers.yaml``."""
 
     url: str
-    tags: list[str]
     concepts: list[ConceptRef]
     slug: str | None = None
     title: str | None = None
@@ -51,7 +50,6 @@ class PaperQueueItem:
     """Queue entry enriched with slug and status."""
 
     url: str
-    tags: list[str]
     slug: str
     title: str | None
     status: QueueStatus
@@ -76,10 +74,6 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
         if not isinstance(item, dict) or "url" not in item:
             continue
 
-        tags = item.get("tags", [])
-        if not isinstance(tags, list):
-            tags = []
-
         raw_concepts = item.get("concepts", [])
         concepts: list[ConceptRef] = []
         if isinstance(raw_concepts, list):
@@ -96,7 +90,6 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
 
         entry = PaperQueueEntry(
             url=str(item["url"]),
-            tags=[str(tag) for tag in tags],
             concepts=concepts,
             slug=slug,
             title=title,
@@ -132,7 +125,6 @@ def queue_items(
         status = QueueStatus.PUBLISHED if published else QueueStatus.PENDING
         item = PaperQueueItem(
             url=entry.url,
-            tags=entry.tags,
             slug=slug,
             title=entry.title,
             status=status,
@@ -228,7 +220,6 @@ def add_paper_to_queue(
     path: Path,
     *,
     url: str,
-    tags: list[str],
     slug: str | None = None,
     title: str | None = None,
 ) -> PaperQueueEntry:
@@ -237,7 +228,6 @@ def add_paper_to_queue(
     Args:
         path: Path to ``papers.yaml``.
         url: Paper URL (arXiv abstract or direct PDF).
-        tags: Topic tags for the entry.
         slug: Optional wiki slug override.
         title: Optional display title.
 
@@ -261,7 +251,6 @@ def add_paper_to_queue(
 
     new_entry = PaperQueueEntry(
         url=url,
-        tags=list(tags),
         concepts=[],
         slug=resolved_slug,
         title=title,
@@ -274,7 +263,6 @@ def add_paper_to_queue(
             "url": url,
             "slug": resolved_slug,
             "title": title or resolved_slug,
-            "tags": list(tags),
         },
     )
     raw["papers"] = papers

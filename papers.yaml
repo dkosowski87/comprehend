@@ -1,249 +1,135 @@
 papers:
-  - url: https://arxiv.org/abs/2012.12877
-    slug: arxiv-2012-12877
-    title: "Training data-efficient image transformers & distillation through attention"
-    tags:
-      - vision
-      - transformers
-      - distillation
-  - url: https://arxiv.org/abs/2103.14030
-    slug: arxiv-2103-14030
-    title: "Swin Transformer: Hierarchical Vision Transformer using Shifted Windows"
-    tags:
-      - vision
-      - transformers
-    concepts:
-      - slug: cyclic_shift
-        terms: ["cyclic shift"]
-  - url: https://arxiv.org/abs/2410.24164
-    slug: arxiv-2410-24164
-    title: "\u03c0\u2080: A Vision-Language-Action Flow Model for General Robot Control"
-    tags:
-      - vision
-      - robotics
-    concepts:
-      - slug: conditional-flow-matching
-        terms: ["conditional flow matching", "conditional flow-matching"]
-      - slug: euler-integration
-        terms: ["Euler integration", "Euler action sampling"]
-  - url: https://arxiv.org/abs/2304.02643
-    slug: arxiv-2304-02643
-    title: "Segment Anything"
-    tags:
-      - vision
-      - instance-segmentation
-  - url: https://arxiv.org/abs/2304.08069
-    slug: arxiv-2304-08069
-    title: "DETRs Beat YOLOs on Real-time Object Detection"
-    tags:
-      - vision
-      - object-detection
-      - transformers
-    concepts:
-      - slug: ccff
-        terms: ["cross-scale feature fusion"]
-  - url: https://arxiv.org/abs/2312.08344
-    slug: arxiv-2312-08344
-    title: "FoundationPose: Unified 6D Pose Estimation and Model-Based Tracking"
-    tags:
-      - vision
-      - 6dof-pose-estimation
-  - url: https://arxiv.org/abs/2003.08934
-    slug: arxiv-2003-08934
-    title: "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis"
-    tags:
-      - vision
-      - neural-rendering
-  - url: https://arxiv.org/abs/2111.06377
-    slug: arxiv-2111-06377
-    title: "Masked Autoencoders Are Scalable Vision Learners"
-    tags:
-      - vision
-      - auto-encoders
-  - url: https://arxiv.org/abs/2511.09554
-    slug: arxiv-2511-09554
-    title: "Efficient Neural Architecture Search for Object Detection"
-    tags:
-      - vision
-      - object-detection
-      - neural-architecture-search
-  - url: https://openaccess.thecvf.com/content_cvpr_2018/papers/Liao_Deep_Marching_Cubes_CVPR_2018_paper.pdf
-    slug: deep-marching-cubes-cvpr-2018
-    title: "Deep Marching Cubes: Learning Explicit Surface Representations"
-    tags:
-      - vision
-      - implicit-representations
-  - url: https://arxiv.org/abs/2211.17192
-    slug: arxiv-2211-17192
-    title: "Accelerating Large Language Model Decoding with Speculative Sampling"
-    tags:
-      - language
-      - speculative-decoding
-  - url: https://arxiv.org/abs/2103.00020
-    slug: arxiv-2103-00020
-    title: "Learning Transferable Visual Models From Natural Language Supervision"
-    tags:
-      - vision
-      - transformers
-      - contrastive-learning
-  - url: https://arxiv.org/abs/2509.25164
-    slug: arxiv-2509-25164
-    title: "Real-Time Open-Vocabulary Object Detection"
-    tags:
-      - vision
-      - object-detection
-  - url: https://openaccess.thecvf.com/content_ICCV_2019/papers/Niemeyer_Occupancy_Flow_4D_Reconstruction_by_Learning_Particle_Dynamics_ICCV_2019_paper.pdf
-    slug: occupancy-flow-iccv-2019
-    title: "Occupancy Flow: 4D Reconstruction by Learning Particle Dynamics"
-    tags:
-      - vision
-      - 4d-reconstruction
-      - implicit-representations
-  - url: https://arxiv.org/abs/2604.22875
-    slug: arxiv-2604-22875
-    title: "Vision-Language Model Benchmark"
-    tags:
-      - vision
-      - vlm
-  - url: https://robotics-transformer2.github.io/assets/rt2.pdf
-    slug: rt-2
-    title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control"
-    tags:
-      - vision
-      - vlm
-      - robotics
-  - url: https://arxiv.org/abs/2603.19312
-    slug: arxiv-2603-19312
-    title: "Self-Supervised Learning with Joint Embedding Predictive Architecture"
-    tags:
-      - jepa
-  - url: https://arxiv.org/abs/2307.08691
-    slug: arxiv-2307-08691
-    title: "Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training"
-    tags:
-      - optimization
-      - transformers
-  - url: https://arxiv.org/abs/2407.08608
-    slug: arxiv-2407-08608
-    title: "Muon: An Optimizer for Hidden Layers in Neural Networks"
-    tags:
-      - optimization
-      - transformers
-  - url: https://arxiv.org/abs/2104.14294
-    slug: arxiv-2104-14294
-    title: "Emerging Properties in Self-Supervised Vision Transformers"
-    tags:
-      - vision
-      - transformers
-      - self-supervised-learning
-  - url: https://arxiv.org/abs/2504.13181
-    slug: arxiv-2504-13181
-    title: "Contrastive Vision-Language Pretraining"
-    tags:
-      - vision
-      - contrastive-learning
-  - url: https://arxiv.org/abs/2408.00714
-    slug: arxiv-2408-00714
-    title: "Mask DINO: Towards A Unified Transformer-based Framework for Object Detection and Segmentation"
-    tags:
-      - vision
-      - instance-segmentation
-  - url: https://arxiv.org/abs/2511.16719
-    slug: arxiv-2511-16719
-    title: "Instance Segmentation with Transformer Decoders"
-    tags:
-      - vision
-      - instance-segmentation
-  - url: https://arxiv.org/abs/1912.07372
-    slug: arxiv-1912-07372
-    title: "Local Implicit Grid Representations for 3D Scenes"
-    tags:
-      - vision
-      - implicit-representations
-      - neural-rendering
-  - url: https://arxiv.org/abs/2205.06230
-    slug: arxiv-2205-06230
-    title: "GLIP: Grounded Language-Image Pre-training"
-    tags:
-      - vision
-      - object-detection
-      - zero-shot
-  - url: https://arxiv.org/abs/2501.09898
-    slug: arxiv-2501-09898
-    title: "FoundationStereo: Zero-Shot Stereo Matching"
-    tags:
-      - vision
-      - stereo-matching
-      - zero-shot
-  - url: https://arxiv.org/abs/2401.10891
-    slug: arxiv-2401-10891
-    title: "Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data"
-    tags:
-      - vision
-      - depth-estimation
-  - url: https://arxiv.org/abs/2406.09414
-    slug: arxiv-2406-09414
-    title: "Depth Anything V2"
-    tags:
-      - vision
-      - depth-estimation
-  - url: https://arxiv.org/abs/2312.14635
-    slug: arxiv-2312-14635
-    title: "Flow Maps for Universal Local Neural Parameterization"
-    tags:
-      - vision
-      - implicit-representations
-      - flow-maps
-  - url: https://arxiv.org/abs/2311.12198
-    slug: arxiv-2311-12198
-    title: "3D Gaussian Splatting for Real-Time Radiance Field Rendering"
-    tags:
-      - vision
-      - gaussian-splatting
-  - url: https://arxiv.org/abs/2511.16624
-    slug: arxiv-2511-16624
-    title: "Large-Scale 3D Reconstruction"
-    tags:
-      - vision
-      - 3d-reconstruction
-  - url: https://arxiv.org/abs/2112.10752
-    slug: arxiv-2112-10752
-    title: "High-Resolution Image Synthesis with Latent Diffusion Models"
-    tags:
-      - vision
-      - diffusion
-  - url: https://arxiv.org/abs/2210.02747
-    slug: arxiv-2210-02747
-    title: "Flow Matching for Generative Modeling"
-    tags:
-      - vision
-      - flow-matching
-  - url: https://3dvar.com/Pandey2021Total.pdf
-    slug: total3d-understanding
-    title: "Total3DUnderstanding: Joint Layout, Object Pose and Mesh Reconstruction"
-    tags:
-      - vision
-      - neural-rendering
-  - url: https://files.is.tue.mpg.de/black/papers/SMPL2015.pdf
-    slug: smpl-2015
-    title: "SMPL: A Skinned Multi-Person Linear Model"
-    tags:
-      - vision
-      - human-body-modeling
-  - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
-    slug: neurips-2020-ntk-generalization
-    title: "Fine-Grained Analysis of Optimization and Generalization for Overparameterized Two-Layer Neural Networks"
-    tags:
-      - vision
-      - neural-tangent-kernels
-  - url: https://arxiv.org/abs/2604.13036
-    slug: arxiv-2604-13036
-    title: "Generative Scene Modeling"
-    tags:
-      - vision
-      - scene-generation
-  - url: https://arxiv.org/abs/2503.20020
-    slug: arxiv-2503-20020
-    title: "Robotics Foundation Model"
-    tags:
-      - robotics
+- url: https://arxiv.org/abs/2012.12877
+  slug: arxiv-2012-12877
+  title: Training data-efficient image transformers & distillation through attention
+- url: https://arxiv.org/abs/2103.14030
+  slug: arxiv-2103-14030
+  title: 'Swin Transformer: Hierarchical Vision Transformer using Shifted Windows'
+  concepts:
+  - slug: cyclic_shift
+    terms:
+    - cyclic shift
+- url: https://arxiv.org/abs/2410.24164
+  slug: arxiv-2410-24164
+  title: 'π₀: A Vision-Language-Action Flow Model for General Robot Control'
+  concepts:
+  - slug: conditional-flow-matching
+    terms:
+    - conditional flow matching
+    - conditional flow-matching
+  - slug: euler-integration
+    terms:
+    - Euler integration
+    - Euler action sampling
+- url: https://arxiv.org/abs/2304.02643
+  slug: arxiv-2304-02643
+  title: Segment Anything
+- url: https://arxiv.org/abs/2304.08069
+  slug: arxiv-2304-08069
+  title: DETRs Beat YOLOs on Real-time Object Detection
+  concepts:
+  - slug: ccff
+    terms:
+    - cross-scale feature fusion
+- url: https://arxiv.org/abs/2312.08344
+  slug: arxiv-2312-08344
+  title: 'FoundationPose: Unified 6D Pose Estimation and Model-Based Tracking'
+- url: https://arxiv.org/abs/2003.08934
+  slug: arxiv-2003-08934
+  title: 'NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis'
+- url: https://arxiv.org/abs/2111.06377
+  slug: arxiv-2111-06377
+  title: Masked Autoencoders Are Scalable Vision Learners
+- url: https://arxiv.org/abs/2511.09554
+  slug: arxiv-2511-09554
+  title: Efficient Neural Architecture Search for Object Detection
+- url: https://openaccess.thecvf.com/content_cvpr_2018/papers/Liao_Deep_Marching_Cubes_CVPR_2018_paper.pdf
+  slug: deep-marching-cubes-cvpr-2018
+  title: 'Deep Marching Cubes: Learning Explicit Surface Representations'
+- url: https://arxiv.org/abs/2211.17192
+  slug: arxiv-2211-17192
+  title: Accelerating Large Language Model Decoding with Speculative Sampling
+- url: https://arxiv.org/abs/2103.00020
+  slug: arxiv-2103-00020
+  title: Learning Transferable Visual Models From Natural Language Supervision
+- url: https://arxiv.org/abs/2509.25164
+  slug: arxiv-2509-25164
+  title: Real-Time Open-Vocabulary Object Detection
+- url: https://openaccess.thecvf.com/content_ICCV_2019/papers/Niemeyer_Occupancy_Flow_4D_Reconstruction_by_Learning_Particle_Dynamics_ICCV_2019_paper.pdf
+  slug: occupancy-flow-iccv-2019
+  title: 'Occupancy Flow: 4D Reconstruction by Learning Particle Dynamics'
+- url: https://arxiv.org/abs/2604.22875
+  slug: arxiv-2604-22875
+  title: Vision-Language Model Benchmark
+- url: https://robotics-transformer2.github.io/assets/rt2.pdf
+  slug: rt-2
+  title: 'RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control'
+- url: https://arxiv.org/abs/2603.19312
+  slug: arxiv-2603-19312
+  title: Self-Supervised Learning with Joint Embedding Predictive Architecture
+- url: https://arxiv.org/abs/2307.08691
+  slug: arxiv-2307-08691
+  title: 'Sophia: A Scalable Stochastic Second-order Optimizer for Language Model
+    Pre-training'
+- url: https://arxiv.org/abs/2407.08608
+  slug: arxiv-2407-08608
+  title: 'Muon: An Optimizer for Hidden Layers in Neural Networks'
+- url: https://arxiv.org/abs/2104.14294
+  slug: arxiv-2104-14294
+  title: Emerging Properties in Self-Supervised Vision Transformers
+- url: https://arxiv.org/abs/2504.13181
+  slug: arxiv-2504-13181
+  title: Contrastive Vision-Language Pretraining
+- url: https://arxiv.org/abs/2408.00714
+  slug: arxiv-2408-00714
+  title: 'Mask DINO: Towards A Unified Transformer-based Framework for Object Detection
+    and Segmentation'
+- url: https://arxiv.org/abs/2511.16719
+  slug: arxiv-2511-16719
+  title: Instance Segmentation with Transformer Decoders
+- url: https://arxiv.org/abs/1912.07372
+  slug: arxiv-1912-07372
+  title: Local Implicit Grid Representations for 3D Scenes
+- url: https://arxiv.org/abs/2205.06230
+  slug: arxiv-2205-06230
+  title: 'GLIP: Grounded Language-Image Pre-training'
+- url: https://arxiv.org/abs/2501.09898
+  slug: arxiv-2501-09898
+  title: 'FoundationStereo: Zero-Shot Stereo Matching'
+- url: https://arxiv.org/abs/2401.10891
+  slug: arxiv-2401-10891
+  title: 'Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data'
+- url: https://arxiv.org/abs/2406.09414
+  slug: arxiv-2406-09414
+  title: Depth Anything V2
+- url: https://arxiv.org/abs/2312.14635
+  slug: arxiv-2312-14635
+  title: Flow Maps for Universal Local Neural Parameterization
+- url: https://arxiv.org/abs/2311.12198
+  slug: arxiv-2311-12198
+  title: 3D Gaussian Splatting for Real-Time Radiance Field Rendering
+- url: https://arxiv.org/abs/2511.16624
+  slug: arxiv-2511-16624
+  title: Large-Scale 3D Reconstruction
+- url: https://arxiv.org/abs/2112.10752
+  slug: arxiv-2112-10752
+  title: High-Resolution Image Synthesis with Latent Diffusion Models
+- url: https://arxiv.org/abs/2210.02747
+  slug: arxiv-2210-02747
+  title: Flow Matching for Generative Modeling
+- url: https://3dvar.com/Pandey2021Total.pdf
+  slug: total3d-understanding
+  title: 'Total3DUnderstanding: Joint Layout, Object Pose and Mesh Reconstruction'
+- url: https://files.is.tue.mpg.de/black/papers/SMPL2015.pdf
+  slug: smpl-2015
+  title: 'SMPL: A Skinned Multi-Person Linear Model'
+- url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
+  slug: neurips-2020-ntk-generalization
+  title: Fine-Grained Analysis of Optimization and Generalization for Overparameterized
+    Two-Layer Neural Networks
+- url: https://arxiv.org/abs/2604.13036
+  slug: arxiv-2604-13036
+  title: Generative Scene Modeling
+- url: https://arxiv.org/abs/2503.20020
+  slug: arxiv-2503-20020
+  title: Robotics Foundation Model

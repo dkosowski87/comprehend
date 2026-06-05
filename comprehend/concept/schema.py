@@ -13,6 +13,7 @@ from comprehend.summary.schema import (
     linkify_refs,
     render_math_entry_lines,
 )
+from comprehend.summary.tags import validate_paper_tags
 
 
 CONCEPT_VISUAL_ID = "visual"
@@ -49,6 +50,13 @@ class ConceptSummary(BaseModel):
     math: list[MathEntry] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     visuals: list[VisualSpec] = Field(default_factory=list)
+
+    @field_validator("tags")
+    @classmethod
+    def validate_tags(cls, value: list[str]) -> list[str]:
+        validated = validate_paper_tags(value)
+
+        return validated
 
     @field_validator("visuals")
     @classmethod
