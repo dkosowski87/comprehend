@@ -11,7 +11,7 @@ from comprehend.summary.schema import (
     VisualSpec,
     default_asset_filename,
     linkify_refs,
-    normalize_wiki_latex,
+    render_math_entry_lines,
 )
 
 
@@ -79,10 +79,6 @@ def collect_concept_ref_ids(summary: ConceptSummary) -> set[str]:
     return ref_ids
 
 
-def _anchor(ref_id: str) -> str:
-    return f'<a id="{ref_id}"></a>'
-
-
 def render_concept_markdown(summary: ConceptSummary) -> str:
     """Assemble wiki markdown for a concept page.
 
@@ -118,17 +114,7 @@ def render_concept_markdown(summary: ConceptSummary) -> str:
     if summary.math:
         lines.extend(["", "## Math", ""])
         for entry in summary.math:
-            normalized_latex = normalize_wiki_latex(entry.latex)
-            lines.extend(
-                [
-                    _anchor(entry.id),
-                    "",
-                    f"**{entry.id}** {entry.label}:",
-                    "",
-                    f"$${normalized_latex}$$",
-                    "",
-                ],
-            )
+            lines.extend(render_math_entry_lines(entry))
 
     if summary.visuals:
         lines.extend(["", "## Visualisation", ""])

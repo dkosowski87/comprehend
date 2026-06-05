@@ -139,7 +139,14 @@ Agent-written `summary.json` follows this structure:
   "solution": ["Use **5a** for architecture, loss **4a**."],
   "key_concepts": ["..."],
   "math": [
-    {"id": "4a", "label": "soft distillation", "latex": "\\mathcal{L} = ..."}
+    {
+      "id": "4a",
+      "label": "soft distillation",
+      "latex": "\\mathcal{L} = ...",
+      "variables": [
+        {"symbol": "\\mathcal{L}", "meaning": "distillation loss"}
+      ]
+    }
   ],
   "visuals": [
     {

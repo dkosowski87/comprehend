@@ -6,6 +6,7 @@ import pytest
 
 from comprehend.summary.schema import (
     MathEntry,
+    MathVariable,
     PaperSummary,
     VisualSpec,
     VisualType,
@@ -59,6 +60,44 @@ def test_many_visuals_allowed() -> None:
     )
 
     assert len(summary.visuals) == 3
+
+
+def test_render_markdown_includes_variable_legend() -> None:
+    summary = PaperSummary(
+        title="Test Paper",
+        pdf_url="https://arxiv.org/pdf/2012.12877.pdf",
+        tags=[],
+        slug="test",
+        problem=[],
+        solution=[],
+        key_concepts=[],
+        math=[
+            MathEntry(
+                id="4a",
+                label="volume rendering",
+                latex=r"C(\mathbf{r}) = \int T(t)\,\sigma(\mathbf{r}(t))\,dt",
+                variables=[
+                    MathVariable(
+                        symbol=r"\mathbf{r}",
+                        meaning="3D spatial location",
+                    ),
+                    MathVariable(
+                        symbol=r"\sigma",
+                        meaning="volume density along the ray",
+                    ),
+                    MathVariable(symbol="T(t)", meaning="accumulated transmittance"),
+                ],
+            ),
+        ],
+        visuals=[],
+    )
+
+    markdown = render_markdown(summary)
+
+    assert "Where:" in markdown
+    assert r"$\mathbf{r}$ — 3D spatial location" in markdown
+    assert r"$\sigma$ — volume density along the ray" in markdown
+    assert "$T(t)$ — accumulated transmittance" in markdown
 
 
 def test_render_markdown_includes_sections(tmp_path: Path) -> None:

@@ -2,6 +2,7 @@
 
 from comprehend.summary.schema import (
     MathEntry,
+    MathVariable,
     PaperSummary,
     VisualSpec,
     VisualType,
@@ -14,6 +15,7 @@ from comprehend.summary.schema import (
 
 __all__ = [
     "MathEntry",
+    "MathVariable",
     "PaperSummary",
     "VisualSpec",
     "VisualType",

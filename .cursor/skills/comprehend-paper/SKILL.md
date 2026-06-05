@@ -82,7 +82,15 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
   "solution": ["bullet with cross-refs like 4a, 5a"],
   "key_concepts": ["theoretical explanations tied to this paper's contributions"],
   "math": [
-    {"id": "4a", "label": "soft distillation", "latex": "..."}
+    {
+      "id": "4a",
+      "label": "soft distillation",
+      "latex": "...",
+      "variables": [
+        {"symbol": "\\mathcal{L}", "meaning": "distillation loss"},
+        {"symbol": "p_t", "meaning": "teacher softmax probabilities"}
+      ]
+    }
   ],
   "visuals": [
     {
@@ -116,7 +124,26 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 1. **Problem** — what limitation or gap the paper addresses (2–4 bullets).
 2. **Solution** — how the paper solves it. Use cross-reference ids (`**4a**`, `(5a)`) where helpful; these become jump links in the wiki output.
 3. **Key concepts** — theoretical explanations aligned with *this paper's* contributions. Not a general ML primer. Include intuition (e.g. why attention helps long-range dependencies) when the paper relies on it.
-4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly).
+4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly). For each equation, add a `variables` legend listing non-obvious symbols and what they represent in *this paper's* notation.
+
+```json
+"math": [
+  {
+    "id": "4a",
+    "label": "volume rendering",
+    "latex": "C(\\mathbf{r}) = \\int T(t)\\,\\sigma(\\mathbf{r}(t))\\,\\mathbf{c}(\\mathbf{r}(t), \\mathbf{d})\\,dt",
+    "variables": [
+      {"symbol": "\\mathbf{r}", "meaning": "3D spatial location"},
+      {"symbol": "\\mathbf{d}", "meaning": "viewing direction"},
+      {"symbol": "\\sigma", "meaning": "volume density at a point"},
+      {"symbol": "T(t)", "meaning": "accumulated transmittance along the ray"},
+      {"symbol": "\\mathbf{c}", "meaning": "emitted RGB color"}
+    ]
+  }
+]
+```
+
+Include variables that a reader cannot infer from the label alone. Skip universal constants (`e`, `π`) and obvious indices unless the paper assigns them a specific role. Use LaTeX in `symbol` without `$` delimiters.
 5. **Visualisation** — one entry per included figure. Use sequential ids: `5a`, `5b`, `5c`, … Assign ids in figure order. No count limit — include every figure that passes the triage rules above.
 
 **Do not** include a key-results or benchmarks section.
@@ -194,6 +221,10 @@ Assembled pages follow this structure:
 
 **4a** soft distillation:
 $$...$$
+
+Where:
+- $\mathcal{L}$ — distillation loss
+- $p_t$ — teacher softmax probabilities
 
 ## 5. Visualisation
 

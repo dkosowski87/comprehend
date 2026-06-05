@@ -17,12 +17,20 @@ class VisualType(str, Enum):
     MANIM = "manim"
 
 
+class MathVariable(BaseModel):
+    """Definition of one symbol used in a math entry."""
+
+    symbol: str
+    meaning: str
+
+
 class MathEntry(BaseModel):
     """A labeled LaTeX equation block."""
 
     id: str
     label: str
     latex: str
+    variables: list[MathVariable] = Field(default_factory=list)
 
 
 class VisualSpec(BaseModel):
@@ -144,6 +152,36 @@ def normalize_wiki_latex(latex: str) -> str:
     return normalized
 
 
+def render_math_entry_lines(entry: MathEntry) -> list[str]:
+    """Build markdown lines for one math entry including an optional variable legend.
+
+    Args:
+        entry: Math entry with LaTeX and optional variable definitions.
+
+    Returns:
+        Markdown lines for the entry anchor, equation, and legend.
+    """
+    normalized_latex = normalize_wiki_latex(entry.latex)
+    lines = [
+        _anchor(entry.id),
+        "",
+        f"**{entry.id}** {entry.label}:",
+        "",
+        f"$${normalized_latex}$$",
+    ]
+
+    if entry.variables:
+        lines.append("")
+        lines.append("Where:")
+        for variable in entry.variables:
+            normalized_symbol = normalize_wiki_latex(variable.symbol)
+            lines.append(f"- ${normalized_symbol}$ — {variable.meaning}")
+
+    lines.append("")
+
+    return lines
+
+
 def render_markdown(summary: PaperSummary) -> str:
     """Assemble wiki markdown from a summary model.
 
@@ -183,17 +221,7 @@ def render_markdown(summary: PaperSummary) -> str:
     if summary.math:
         lines.extend(["", "## 4. Math", ""])
         for entry in summary.math:
-            normalized_latex = normalize_wiki_latex(entry.latex)
-            lines.extend(
-                [
-                    _anchor(entry.id),
-                    "",
-                    f"**{entry.id}** {entry.label}:",
-                    "",
-                    f"$${normalized_latex}$$",
-                    "",
-                ],
-            )
+            lines.extend(render_math_entry_lines(entry))
 
     if summary.visuals:
         lines.extend(["", "## 5. Visualisation", ""])
