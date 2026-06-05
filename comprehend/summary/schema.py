@@ -34,6 +34,7 @@ class VisualSpec(BaseModel):
     description: str
     refs: list[str] = Field(default_factory=list)
     page: int | None = None
+    figure_number: int | None = None
     xref: int | None = None
     clip: tuple[float, float, float, float] | None = None
     mermaid_source: str | None = None

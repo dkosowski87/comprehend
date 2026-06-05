@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from comprehend.pdf.extract import extract_figure_by_xref, render_page_region
+from comprehend.pdf.extract import render_page_region
+from comprehend.pdf.figures import resolve_figure_region
 from comprehend.summary.schema import VisualSpec, default_asset_filename
 
 
@@ -23,7 +24,8 @@ def render_extracted_figure(
 
     Args:
         pdf_path: Source PDF path.
-        visual: Visual specification with ``page``, optional ``xref`` or ``clip``.
+        visual: Visual specification with ``page`` and ``figure_number``,
+            ``xref``, or ``clip``.
         slug: Wiki slug for asset naming.
         output_dir: Directory for output PNG files.
 
@@ -33,7 +35,7 @@ def render_extracted_figure(
     Raises:
         FigureRenderError: If required fields are missing or rendering fails.
     """
-    if visual.page is None:
+    if visual.page is None and visual.xref is None and visual.clip is None:
         raise FigureRenderError(
             f"Visual {visual.id} requires 'page' for extract rendering",
         )
@@ -41,21 +43,20 @@ def render_extracted_figure(
     asset_name = visual.asset_filename or default_asset_filename(slug, visual.id)
     output_path = output_dir / asset_name
 
-    if visual.xref is not None:
-        rendered_path = extract_figure_by_xref(
-            pdf_path,
-            visual.xref,
-            output_path=output_path,
-        )
-
-        return rendered_path
-
     try:
-        rendered_path = render_page_region(
+        page, clip = resolve_figure_region(
             pdf_path,
             page=visual.page,
-            output_path=output_path,
+            figure_number=visual.figure_number,
+            xref=visual.xref,
             clip=visual.clip,
+        )
+
+        rendered_path = render_page_region(
+            pdf_path,
+            page=page,
+            output_path=output_path,
+            clip=clip,
         )
     except ValueError as exc:
         raise FigureRenderError(str(exc)) from exc

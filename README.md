@@ -157,7 +157,7 @@ Visual types:
 
 | Type | When to use |
 |------|-------------|
-| `extract` | Paper figure is clear — set `page`, optional `xref` or `clip` |
+| `extract` | Paper figure is clear — set `page` and `figure_number` (preferred), or `xref` |
 | `mermaid` | Flowcharts, token/data flow — set `mermaid_source` |
 | `manim` | Math-heavy diagrams — set `manim_scene_path` and `manim_scene_class` |
 

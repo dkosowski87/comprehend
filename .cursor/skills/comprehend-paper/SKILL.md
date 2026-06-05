@@ -67,7 +67,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
       "description": "...",
       "refs": ["3a"],
       "page": 4,
-      "xref": 42
+      "figure_number": 4
     }
   ]
 }
@@ -97,11 +97,13 @@ Read `summary.json` and `figures.json`. Render each visual (max 4):
 
 | type | when to use | how |
 |------|-------------|-----|
-| `extract` | paper figure is clear and needs no simplification | set `page`, `xref` or `clip` |
+| `extract` | paper figure is clear and needs no simplification | set `page` and `figure_number` (preferred), or `xref` |
 | `mermaid` | flowcharts, token/data flow, architecture simplified | write `.mmd` file, set `mermaid_source` in JSON or render separately |
 | `manim` | math-heavy layouts, matrices, coordinate diagrams | write scene `.py`, set `manim_scene_path` and `manim_scene_class` |
 
 **Decision rule:** extract when quality is good; generate when simplification or annotation is needed.
+
+For `extract` visuals, prefer `figure_number` from `figures.json` → `figure_regions`. Paper figures are usually composites of many embedded images and vector paths; extracting a single `xref` tile crops the figure. When only `xref` is available, rendering still resolves the full composite region automatically.
 
 Render all visuals:
 
@@ -116,7 +118,7 @@ Individual tools when iterating:
 ```bash
 uv run comprehend render mermaid diagram.mmd --output assets/<slug>-5a.png
 uv run comprehend render manim scene.py --scene-class MyScene --output assets/<slug>-5a.png
-uv run comprehend pdf crop paper.pdf --page 4 --xref 42 --output assets/<slug>-5a.png
+uv run comprehend pdf crop paper.pdf --page 4 --figure 4 --output assets/<slug>-5a.png
 ```
 
 Manim renders **static PNG only** (never video). For multi-step ideas, use multiple static frames as separate visuals (still max 4 total).

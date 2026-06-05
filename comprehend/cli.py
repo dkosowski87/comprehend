@@ -13,7 +13,8 @@ from comprehend.concept.triage import triage_concept, triage_result_to_dict
 from comprehend.concept.render import render_concept_visuals
 from comprehend.concept.schema import load_concept_summary, render_concept_markdown, save_concept_summary
 from comprehend.pdf.download import PaperDownloadError
-from comprehend.pdf.extract import extract_figure_by_xref, extract_paper, render_page_region
+from comprehend.pdf.extract import extract_paper, render_page_region
+from comprehend.pdf.figures import resolve_figure_region
 from comprehend.prepare import prepare_paper
 from comprehend.publish.github_wiki import (
     WikiConfig,
@@ -144,7 +145,14 @@ def pdf_extract(pdf_path: Path, output_dir: Path | None) -> None:
     "--xref",
     type=int,
     default=None,
-    help="Extract embedded image by xref instead of rendering page",
+    help="Resolve composite figure region from an embedded image xref",
+)
+@click.option(
+    "--figure",
+    "figure_number",
+    type=int,
+    default=None,
+    help="Detect clip from a numbered figure caption on the page",
 )
 @click.option(
     "--clip",
@@ -158,18 +166,27 @@ def pdf_crop(
     page: int,
     output: Path,
     xref: int | None,
+    figure_number: int | None,
     clip: tuple[float, float, float, float] | None,
 ) -> None:
-    """Extract a figure from a PDF page or by xref."""
-    if xref is not None:
-        rendered = extract_figure_by_xref(pdf_path, xref, output_path=output)
-    else:
-        rendered = render_page_region(
+    """Render a figure region from a PDF page."""
+    try:
+        resolved_page, resolved_clip = resolve_figure_region(
             pdf_path,
             page=page,
-            output_path=output,
+            figure_number=figure_number,
+            xref=xref,
             clip=clip,
         )
+    except ValueError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    rendered = render_page_region(
+        pdf_path,
+        page=resolved_page,
+        output_path=output,
+        clip=resolved_clip,
+    )
 
     click.echo(str(rendered))
 

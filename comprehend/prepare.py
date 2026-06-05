@@ -8,6 +8,7 @@ from pathlib import Path
 
 from comprehend.pdf.download import PaperDownloadError, download_paper, paper_cache_dir
 from comprehend.pdf.extract import ExtractedPaper, extract_paper, list_figures
+from comprehend.pdf.figures import list_figure_regions
 from comprehend.util import arxiv_slug, parse_arxiv_id, slugify
 
 
@@ -103,17 +104,28 @@ def prepare_paper(
 
     extracted = extract_paper(pdf_path, output_dir=cache_dir)
     figures = list_figures(pdf_path)
+    figure_regions = list_figure_regions(pdf_path)
     figures_json_path = cache_dir / "figures.json"
-    figures_payload = [
-        {
-            "page": figure.page,
-            "index": figure.index,
-            "width": figure.width,
-            "height": figure.height,
-            "xref": figure.xref,
-        }
-        for figure in figures
-    ]
+    figures_payload = {
+        "embedded_images": [
+            {
+                "page": figure.page,
+                "index": figure.index,
+                "width": figure.width,
+                "height": figure.height,
+                "xref": figure.xref,
+            }
+            for figure in figures
+        ],
+        "figure_regions": [
+            {
+                "page": region.page,
+                "number": region.number,
+                "clip": list(region.clip),
+            }
+            for region in figure_regions
+        ],
+    }
 
     figures_json_path.write_text(
         json.dumps(figures_payload, indent=2) + "\n",
