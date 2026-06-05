@@ -52,8 +52,7 @@ papers:
   title: Self-Supervised Learning with Joint Embedding Predictive Architecture
 - url: https://arxiv.org/abs/2307.08691
   slug: arxiv-2307-08691
-  title: 'Sophia: A Scalable Stochastic Second-order Optimizer for Language Model
-    Pre-training'
+  title: 'Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training'
 - url: https://arxiv.org/abs/2407.08608
   slug: arxiv-2407-08608
   title: 'Muon: An Optimizer for Hidden Layers in Neural Networks'
@@ -65,8 +64,7 @@ papers:
   title: Contrastive Vision-Language Pretraining
 - url: https://arxiv.org/abs/2408.00714
   slug: arxiv-2408-00714
-  title: 'Mask DINO: Towards A Unified Transformer-based Framework for Object Detection
-    and Segmentation'
+  title: 'Mask DINO: Towards A Unified Transformer-based Framework for Object Detection and Segmentation'
 - url: https://arxiv.org/abs/2511.16719
   slug: arxiv-2511-16719
   title: Instance Segmentation with Transformer Decoders
@@ -108,11 +106,319 @@ papers:
   title: 'SMPL: A Skinned Multi-Person Linear Model'
 - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
   slug: neurips-2020-ntk-generalization
-  title: Fine-Grained Analysis of Optimization and Generalization for Overparameterized
-    Two-Layer Neural Networks
+  title: Fine-Grained Analysis of Optimization and Generalization for Overparameterized Two-Layer Neural Networks
 - url: https://arxiv.org/abs/2604.13036
   slug: arxiv-2604-13036
   title: Generative Scene Modeling
 - url: https://arxiv.org/abs/2503.20020
   slug: arxiv-2503-20020
   title: Robotics Foundation Model
+- url: https://arxiv.org/abs/2605.13465
+  slug: arxiv-2605-13465
+  title: Z-Order Transformer for Feed-Forward Gaussian Splatting
+- url: https://arxiv.org/abs/2605.10204
+  slug: arxiv-2605-10204
+  title: '3DReflecNet: A Large-Scale Dataset for 3D Reconstruction of Reflective, Transparent, and Low-Texture Objects'
+- url: https://arxiv.org/abs/2605.07429
+  slug: arxiv-2605-07429
+  title: Towards Photorealistic and Efficient Bokeh Rendering via Diffusion Framework
+- url: https://arxiv.org/abs/2605.07308
+  slug: arxiv-2605-07308
+  title: 'AT-VLA: Adaptive Tactile Injection for Enhanced Feedback Reaction in Vision-Language-Action Models'
+- url: https://arxiv.org/abs/2604.26678
+  slug: arxiv-2604-26678
+  title: 'Hearing the Room Through the Shape of the Drum: Modal-Guided Sound Recovery from Multi-Point Surface Vibrations'
+- url: https://arxiv.org/abs/2604.26488
+  slug: arxiv-2604-26488
+  title: Featurising Pixels from Dynamic 3D Scenes with Linear In-Context Learners
+- url: https://arxiv.org/abs/2604.24024
+  slug: arxiv-2604-24024
+  title: Breaking the Scalability Limit of Multi-Projector Calibration with Embedded Cameras
+- url: https://arxiv.org/abs/2604.22310
+  slug: arxiv-2604-22310
+  title: Revisiting Geometric Obfuscation with Dual Convergent Lines for Privacy-Preserving Image Queries in Visual Localization
+- url: https://arxiv.org/abs/2604.19420
+  slug: arxiv-2604-19420
+  title: 'TESO: Online Tracking of Essential Matrix by Stochastic Optimization'
+- url: https://arxiv.org/abs/2604.18811
+  slug: arxiv-2604-18811
+  title: 'Rethinking Dataset Distillation: Hard Truths about Soft Labels'
+- url: https://arxiv.org/abs/2604.12113
+  slug: arxiv-2604-12113
+  title: 'PR-MaGIC: Prompt Refinement Via Mask Decoder Gradient Flow For In-Context Segmentation'
+- url: https://arxiv.org/abs/2604.10546
+  slug: arxiv-2604-10546
+  title: Differentiable Vector Quantization for Rate-Distortion Optimization of Generative Image Compression
+- url: https://arxiv.org/abs/2604.08924
+  slug: arxiv-2604-08924
+  title: 'Customized Fusion: A Closed-Loop Dynamic Network for Adaptive Multi-Task-Aware Infrared-Visible Image Fusion'
+- url: https://arxiv.org/abs/2604.08048
+  slug: arxiv-2604-08048
+  title: Guiding a Diffusion Model by Swapping Its Tokens
+- url: https://arxiv.org/abs/2603.26181
+  slug: arxiv-2603-26181
+  title: 'GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport'
+- url: https://arxiv.org/abs/2603.25706
+  slug: arxiv-2603-25706
+  title: 'Wan-Weaver: Interleaved Multi-modal Generation via Decoupled Training'
+- url: https://arxiv.org/abs/2603.19918
+  slug: arxiv-2603-19918
+  title: 'Learning Like Humans: Analogical Concept Learning for Generalized Category Discovery'
+- url: https://arxiv.org/abs/2603.14001
+  slug: arxiv-2603-14001
+  title: 'PhyGaP: Physically-Grounded Gaussians with Polarization Cues'
+- url: https://arxiv.org/abs/2603.13783
+  slug: arxiv-2603-13783
+  title: 'RetimeGS: Continuous-Time Reconstruction of 4D Gaussian Splatting'
+- url: https://arxiv.org/abs/2603.09285
+  slug: arxiv-2603-09285
+  title: Learning Convex Decomposition via Feature Fields
+- url: https://arxiv.org/abs/2603.09116
+  slug: arxiv-2603-09116
+  title: 'MetaSpectra+: A Compact Broadband Metasurface Camera for Snapshot Hyperspectral+ Imaging'
+- url: https://arxiv.org/abs/2603.03960
+  slug: arxiv-2603-03960
+  title: Structural Action Transformer for 3D Dexterous Manipulation
+- url: https://arxiv.org/abs/2603.03711
+  slug: arxiv-2603-03711
+  title: 'LDP-Slicing: Local Differential Privacy for Images via Randomized Bit-Plane Slicing'
+- url: https://arxiv.org/abs/2602.23574
+  slug: arxiv-2602-23574
+  title: Evidential Neural Radiance Fields
+- url: https://arxiv.org/abs/2602.22667
+  slug: arxiv-2602-22667
+  title: Monocular Open Vocabulary Occupancy Prediction for Indoor Scenes
+- url: https://arxiv.org/abs/2602.22639
+  slug: arxiv-2602-22639
+  title: 'QuadSync: Quadrifocal Tensor Synchronization via Tucker Decomposition'
+- url: https://arxiv.org/abs/2602.21963
+  slug: arxiv-2602-21963
+  title: Global-Aware Edge Prioritization for Pose Graph Initialization
+- url: https://arxiv.org/abs/2602.20630
+  slug: arxiv-2602-20630
+  title: 'From Pairs to Sequences: Track-Aware Policy Gradients for Keypoint Detection'
+- url: https://arxiv.org/abs/2602.19213
+  slug: arxiv-2602-19213
+  title: 'SegMoTE: Token-Level Mixture of Experts for Medical Image Segmentation'
+- url: https://arxiv.org/abs/2602.19134
+  slug: arxiv-2602-19134
+  title: Mapping Networks
+- url: https://arxiv.org/abs/2602.17535
+  slug: arxiv-2602-17535
+  title: 'LATA: Laplacian-Assisted Transductive Adaptation for Conformal Uncertainty in Medical VLMs'
+- url: https://arxiv.org/abs/2601.15408
+  slug: arxiv-2601-15408
+  title: 'CURE: Curriculum-guided Multi-task Training for Reliable Anatomy Grounded Report Generation'
+- url: https://arxiv.org/abs/2601.09265
+  slug: arxiv-2601-09265
+  title: 'GaussianFluent: Gaussian Simulation for Dynamic Scenes with Mixed Materials'
+- url: https://arxiv.org/abs/2601.08832
+  slug: arxiv-2601-08832
+  title: 'RAVEN: Erasing Invisible Watermarks via Novel View Synthesis'
+- url: https://arxiv.org/abs/2601.02141
+  slug: arxiv-2601-02141
+  title: Efficient Unrolled Networks for Large-Scale 3D Inverse Problems
+- url: https://arxiv.org/abs/2512.22501
+  slug: arxiv-2512-22501
+  title: 'NOWA: Null-space Optical Watermark for Invisible Capture Fingerprinting and Tamper Localization'
+- url: https://arxiv.org/abs/2512.13192
+  slug: arxiv-2512-13192
+  title: 'POLAR: A Portrait OLAT Dataset and Generative Framework for Illumination-Aware Face Modeling'
+- url: https://arxiv.org/abs/2512.09201
+  slug: arxiv-2512-09201
+  title: Residual Primitive Fitting of 3D Shapes with SuperFrusta
+- url: https://arxiv.org/abs/2512.05745
+  slug: arxiv-2512-05745
+  title: 'ARGUS: Defending Against Multimodal Indirect Prompt Injection via Steering Instruction-Following Behavior'
+- url: https://arxiv.org/abs/2512.01629
+  slug: arxiv-2512-01629
+  title: 'SPARK: Sim-ready Part-level Articulated Reconstruction with VLM Knowledge'
+- url: https://arxiv.org/abs/2512.00255
+  slug: arxiv-2512-00255
+  title: 'Relightable Holoported Characters: Capturing and Relighting Dynamic Human Performance from Sparse Views'
+- url: https://arxiv.org/abs/2511.22950
+  slug: arxiv-2511-22950
+  title: 'RobotSeg: A Model and Dataset for Segmenting Robots in Image and Video'
+- url: https://arxiv.org/abs/2511.22357
+  slug: arxiv-2511-22357
+  title: 'AnchorFlow: Training-Free 3D Editing via Latent Anchor-Aligned Flows'
+- url: https://arxiv.org/abs/2511.21145
+  slug: arxiv-2511-21145
+  title: 'TEAR: Temporal-aware Automated Red-teaming for Text-to-Video Models'
+- url: https://arxiv.org/abs/2511.21135
+  slug: arxiv-2511-21135
+  title: 'SocialNav: Training Human-Inspired Foundation Model for Socially-Aware Embodied Navigation'
+- url: https://arxiv.org/abs/2511.18787
+  slug: arxiv-2511-18787
+  title: Understanding Task Transfer in Vision-Language Models
+- url: https://arxiv.org/abs/2511.10979
+  slug: arxiv-2511-10979
+  title: 'PAS: A Training-Free Stabilizer for Temporal Encoding in Video LLMs'
+- url: https://arxiv.org/abs/2511.04029
+  slug: arxiv-2511-04029
+  title: 'Faithful Contouring: Near-Lossless 3D Voxel Representation Free from Iso-surface'
+- url: https://arxiv.org/abs/2510.10113
+  slug: arxiv-2510-10113
+  title: 'ImmerIris: A Large-Scale Dataset and Benchmark for Off-Axis and Unconstrained Iris Recognition in Immersive Applications'
+- url: https://arxiv.org/abs/2509.24421
+  slug: arxiv-2509-24421
+  title: 'Proxy-GS: Unified Occlusion Priors for Training and Inference in Structured 3D Gaussian Splatting'
+- url: https://arxiv.org/abs/2509.11334
+  slug: arxiv-2509-11334
+  title: 'Dual Band Thermal Videography: Separating Time-Varying Reflection and Emission Near Ambient Conditions'
+- url: https://arxiv.org/abs/2508.04728
+  slug: arxiv-2508-04728
+  title: Neural Field-Based 3D Surface Reconstruction of Microstructures from Multi-Detector Signals in Scanning Electron Microscopy
+- url: https://arxiv.org/abs/2507.12156
+  slug: arxiv-2507-12156
+  title: 'SmokeSVD: Smoke Reconstruction from A Single View via Progressive Novel View Synthesis and Refinement with Diffusion Models'
+- url: https://arxiv.org/abs/2506.07565
+  slug: arxiv-2506-07565
+  title: 'OpenDance: Multimodal Controllable 3D Dance Generation with Large-scale Internet Data'
+- url: https://arxiv.org/abs/2503.20184
+  slug: arxiv-2503-20184
+  title: 'Spectrum from Defocus: Fast Spectral Imaging with Chromatic Focal Stack'
+- url: https://arxiv.org/abs/2503.08703
+  slug: arxiv-2503-08703
+  title: 'SDTrack: A Baseline for Event-based Tracking via Spiking Neural Networks'
+- url: https://arxiv.org/abs/2304.02296
+  slug: arxiv-2304-02296
+  title: Data Leakage Detection and De-duplication in Large Scale Geospatial Image Datasets
+- url: https://arxiv.org/abs/2604.22334
+  slug: arxiv-2604-22334
+  title: 'FILTR: Extracting Topological Features from Pretrained 3D Models'
+- url: https://arxiv.org/abs/2604.18267
+  slug: arxiv-2604-18267
+  title: 'MARCO: Navigating the Unseen Space of Semantic Correspondence'
+- url: https://arxiv.org/abs/2604.17078
+  slug: arxiv-2604-17078
+  title: Understanding and Enforcing Weight Disentanglement in Task Arithmetic
+- url: https://arxiv.org/abs/2604.13596
+  slug: arxiv-2604-13596
+  title: 'VGGT-Segmentor: Geometry-Enhanced Cross-View Segmentation'
+- url: https://arxiv.org/abs/2604.12502
+  slug: arxiv-2604-12502
+  title: 'SEATrack: Simple, Efficient, and Adaptive Multimodal Tracker'
+- url: https://arxiv.org/abs/2603.28480
+  slug: arxiv-2603-28480
+  title: 'INSID3: Training-Free In-Context Segmentation with DINOv3'
+- url: https://arxiv.org/abs/2603.22650
+  slug: arxiv-2603-22650
+  title: 'MAGICIAN: Efficient Long-Term Planning with Imagined Gaussians for Active Mapping'
+- url: https://arxiv.org/abs/2603.21229
+  slug: arxiv-2603-21229
+  title: 'Plant Taxonomy Meets Plant Counting: A Fine-Grained, Taxonomic Dataset for Counting Hundreds of Plant Species'
+- url: https://arxiv.org/abs/2603.17684
+  slug: arxiv-2603-17684
+  title: Does YOLO Really Need to See Every Training Image in Every Epoch?
+- url: https://arxiv.org/abs/2603.17662
+  slug: arxiv-2603-17662
+  title: 'FINER: MLLMs Hallucinate under Fine-grained Negative Queries'
+- url: https://arxiv.org/abs/2509.03951
+  slug: arxiv-2509-03951
+  title: 'ANTS: Adaptive Negative Textual Space Shaping for OOD Detection via Test-Time MLLM Understanding and Reasoning'
+- url: https://arxiv.org/abs/2603.16732
+  slug: arxiv-2603-16732
+  title: Confusion-Aware Spectral Regularizer for Long-Tailed Recognition
+- url: https://arxiv.org/abs/2603.03907
+  slug: arxiv-2603-03907
+  title: 'Fine-grained Image Aesthetic Assessment: Learning Discriminative Scores from Relative Ranks'
+- url: https://arxiv.org/abs/2602.24208
+  slug: arxiv-2602-24208
+  title: 'SenCache: Accelerating Diffusion Model Inference via Sensitivity-Aware Caching'
+- url: https://arxiv.org/abs/2602.19083
+  slug: arxiv-2602-19083
+  title: 'ChordEdit: One-Step Low-Energy Transport for Image Editing'
+- url: https://arxiv.org/abs/2602.18993
+  slug: arxiv-2602-18993
+  title: 'SeaCache: Spectral-Evolution-Aware Cache for Accelerating Diffusion Models'
+- url: https://arxiv.org/abs/2602.15989
+  slug: arxiv-2602-15989
+  title: 'SAM 3D Body: Robust Full-Body Human Mesh Recovery'
+- url: https://arxiv.org/abs/2601.10611
+  slug: arxiv-2601-10611
+  title: 'Molmo2: Open Weights and Data for Vision-Language Models with Video Understanding and Grounding'
+- url: https://arxiv.org/abs/2601.02427
+  slug: arxiv-2601-02427
+  title: 'NitroGen: An Open Foundation Model for Generalist Gaming Agents'
+- url: https://arxiv.org/abs/2512.20770
+  slug: arxiv-2512-20770
+  title: 'OccuFly: A 3D Vision Benchmark for Semantic Scene Completion from the Aerial Perspective'
+- url: https://arxiv.org/abs/2512.17817
+  slug: arxiv-2512-17817
+  title: 'Chorus: Multi-Teacher Pretraining for Holistic 3D Gaussian Scene Encoding'
+- url: https://arxiv.org/abs/2512.14692
+  slug: arxiv-2512-14692
+  title: Native and Compact Structured Latents for 3D Generation
+- url: https://arxiv.org/abs/2512.10840
+  slug: arxiv-2512-10840
+  title: 'PoseGAM: Robust Unseen Object Pose Estimation via Geometry-Aware Multi-View Reasoning'
+- url: https://arxiv.org/abs/2512.11016
+  slug: arxiv-2512-11016
+  title: 'SoccerMaster: A Vision Foundation Model for Soccer Understanding'
+- url: https://arxiv.org/abs/2512.10958
+  slug: arxiv-2512-10958
+  title: 'WorldLens: Full-Spectrum Evaluations of Driving World Models in Real World'
+- url: https://arxiv.org/abs/2512.09583
+  slug: arxiv-2512-09583
+  title: 'UnReflectAnything: RGB-Only Highlight Removal by Rendering Synthetic Specular Supervision'
+- url: https://arxiv.org/abs/2512.08930
+  slug: arxiv-2512-08930
+  title: 'Selfi: Self Improving Reconstruction Engine via 3D Geometric Feature Alignment'
+- url: https://arxiv.org/abs/2512.08924
+  slug: arxiv-2512-08924
+  title: Efficiently Reconstructing Dynamic Scenes One D4RT at a Time
+- url: https://arxiv.org/abs/2512.06818
+  slug: arxiv-2512-06818
+  title: 'MeshSplatting: Differentiable Rendering with Opaque Meshes'
+- url: https://arxiv.org/abs/2511.18200
+  slug: arxiv-2511-18200
+  title: 'InfiniBench: Infinite Benchmarking for Visual Spatial Reasoning with Customizable Scene Complexity'
+- url: https://arxiv.org/abs/2512.05564
+  slug: arxiv-2512-05564
+  title: 'ProPhy: Progressive Physical Alignment for Dynamic World Simulation'
+- url: https://arxiv.org/abs/2512.02715
+  slug: arxiv-2512-02715
+  title: 'GeoViS: Geospatially Rewarded Visual Search for Remote Sensing Visual Grounding'
+- url: https://arxiv.org/abs/2512.01989
+  slug: arxiv-2512-01989
+  title: 'PAI-Bench: A Comprehensive Benchmark For Physical AI'
+- url: https://arxiv.org/abs/2512.00805
+  slug: arxiv-2512-00805
+  title: 'Thinking with Drafts: Speculative Temporal Reasoning for Efficient Long Video Understanding'
+- url: https://arxiv.org/abs/2511.23369
+  slug: arxiv-2511-23369
+  title: 'SimScale: Learning to Drive via Real-World Simulation at Scale'
+- url: https://arxiv.org/abs/2511.22039
+  slug: arxiv-2511-22039
+  title: 'SparseWorld-TC: Trajectory-Conditioned Sparse Occupancy World Model'
+- url: https://arxiv.org/abs/2511.20645
+  slug: arxiv-2511-20645
+  title: 'PixelDiT: Pixel Diffusion Transformers for Image Generation'
+- url: https://arxiv.org/abs/2511.19661
+  slug: arxiv-2511-19661
+  title: 'CodeV: Code with Images for Faithful Visual Reasoning via Tool-Aware Policy Optimization'
+- url: https://arxiv.org/abs/2511.15622
+  slug: arxiv-2511-15622
+  title: 'The SA-FARI Dataset: Segment Anything in Footage of Animals for Recognition and Identification'
+- url: https://arxiv.org/abs/2511.10555
+  slug: arxiv-2511-10555
+  title: 'A Style is Worth One Code: Unlocking Code-to-Style Image Generation with Discrete Style Space'
+- url: https://arxiv.org/abs/2511.09715
+  slug: arxiv-2511-09715
+  title: 'SliderEdit: Continuous Image Editing with Fine-Grained Instruction Control'
+- url: https://arxiv.org/abs/2511.02483
+  slug: arxiv-2511-02483
+  title: "OLATverse: A Large-scale Real-world Object Dataset with Precise Lighting\n  Control"
+- url: https://arxiv.org/abs/2509.14476
+  slug: arxiv-2509-14476
+  title: 'AToken: A Unified Tokenizer for Vision'
+- url: https://arxiv.org/abs/2509.00269
+  slug: arxiv-2509-00269
+  title: '3D-LATTE: Latent Space 3D Editing from Textual Instructions'
+- url: https://arxiv.org/abs/2506.02387
+  slug: arxiv-2506-02387
+  title: 'VS-Bench: Evaluating VLMs for Strategic Reasoning and Decision-Making in Multi-Agent Environments'
+- url: https://arxiv.org/abs/2505.20981v2
+  slug: arxiv-2505-20981
+  title: 'RefAV: Towards Planning-Centric Scenario Mining'
