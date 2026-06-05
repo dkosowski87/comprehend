@@ -8,9 +8,14 @@ from pathlib import Path
 
 import fitz
 
-FIGURE_CAPTION_PATTERN = re.compile(r"^Figure\s+(\d+)\s*[:.]")
+FIGURE_CAPTION_PATTERN = re.compile(r"^(?:Figure|Fig\.?)\s+(\d+)\s*[:.]")
 PAGE_TOP_MARGIN = 20.0
 REGION_PADDING = 5.0
+CAPTION_MAX_LINES = 6
+CAPTION_MAX_HEIGHT = 100.0
+LINE_GAP_THRESHOLD = 8.0
+MIN_CONTENT_SIZE = 8.0
+MIN_CLIPPED_AREA = 64.0
 
 
 @dataclass(frozen=True)
@@ -33,10 +38,79 @@ class FigureRegion:
     caption: str
 
 
-def _block_text(block: dict) -> str:
-    return "".join(
-        "".join(span["text"] for span in line["spans"])
-        for line in block["lines"]
+
+def _line_text(line: dict) -> str:
+    return "".join(span["text"] for span in line["spans"])
+
+
+def _rect_from_lines(lines: list[dict]) -> fitz.Rect:
+    rect = fitz.Rect(lines[0]["bbox"])
+    for line in lines[1:]:
+        rect |= fitz.Rect(line["bbox"])
+    return rect
+
+
+def _clip_rect_to_band(rect: fitz.Rect, top_y: float, bottom_y: float) -> fitz.Rect | None:
+    """Return ``rect`` intersected with a vertical band, or ``None`` if too small."""
+    clipped = fitz.Rect(
+        rect.x0,
+        max(top_y, rect.y0),
+        rect.x1,
+        min(bottom_y, rect.y1),
+    )
+    if clipped.is_empty or clipped.is_infinite:
+        return None
+
+    if clipped.width < MIN_CONTENT_SIZE or clipped.height < MIN_CONTENT_SIZE:
+        return None
+
+    if clipped.width * clipped.height < MIN_CLIPPED_AREA:
+        return None
+
+    return clipped
+
+
+def _caption_from_block(block: dict, *, page_number: int) -> FigureCaption | None:
+    """Extract a figure caption from a text block using line-level bounds.
+
+    PDF text blocks often merge the caption with unrelated body text in the
+    same column. We keep only the opening caption lines (small vertical gaps,
+    bounded line count and height) instead of the full block bbox.
+    """
+    caption_lines: list[dict] = []
+    figure_number: int | None = None
+
+    for line in block["lines"]:
+        text = _line_text(line).strip()
+        if figure_number is None:
+            match = FIGURE_CAPTION_PATTERN.match(text)
+            if match is None:
+                continue
+
+            figure_number = int(match.group(1))
+            caption_lines.append(line)
+            continue
+
+        previous_line = caption_lines[-1]
+        gap = line["bbox"][1] - previous_line["bbox"][3]
+        caption_height = line["bbox"][3] - caption_lines[0]["bbox"][1]
+        if (
+            gap > LINE_GAP_THRESHOLD
+            or len(caption_lines) >= CAPTION_MAX_LINES
+            or caption_height > CAPTION_MAX_HEIGHT
+        ):
+            break
+
+        caption_lines.append(line)
+
+    if figure_number is None or not caption_lines:
+        return None
+
+    return FigureCaption(
+        number=figure_number,
+        rect=_rect_from_lines(caption_lines),
+        page=page_number,
+        text="".join(_line_text(line) for line in caption_lines).strip(),
     )
 
 
@@ -57,18 +131,9 @@ def find_figure_captions(page: fitz.Page, *, page_number: int) -> list[FigureCap
         if block.get("type") != 0:
             continue
 
-        text = _block_text(block).strip()
-        match = FIGURE_CAPTION_PATTERN.match(text)
-        if match is None:
-            continue
-
-        caption = FigureCaption(
-            number=int(match.group(1)),
-            rect=fitz.Rect(block["bbox"]),
-            page=page_number,
-            text=text,
-        )
-        captions.append(caption)
+        caption = _caption_from_block(block, page_number=page_number)
+        if caption is not None:
+            captions.append(caption)
 
     captions.sort(key=lambda caption: caption.rect.y0)
 
@@ -76,22 +141,24 @@ def find_figure_captions(page: fitz.Page, *, page_number: int) -> list[FigureCap
 
 
 def _content_rects_in_band(page: fitz.Page, top_y: float, bottom_y: float) -> list[fitz.Rect]:
+    """Return image and vector rects clipped to a vertical band."""
     rects: list[fitz.Rect] = []
 
     for image in page.get_images(full=True):
         xref = image[0]
         for rect in page.get_image_rects(xref):
-            if rect.y1 >= top_y and rect.y0 <= bottom_y:
-                rects.append(rect)
+            clipped = _clip_rect_to_band(rect, top_y, bottom_y)
+            if clipped is not None:
+                rects.append(clipped)
 
     for drawing in page.get_drawings():
         rect = drawing.get("rect")
         if rect is None:
             continue
 
-        drawing_rect = fitz.Rect(rect)
-        if drawing_rect.y1 >= top_y and drawing_rect.y0 <= bottom_y:
-            rects.append(drawing_rect)
+        clipped = _clip_rect_to_band(fitz.Rect(rect), top_y, bottom_y)
+        if clipped is not None:
+            rects.append(clipped)
 
     return rects
 
@@ -145,7 +212,7 @@ def figure_clip_on_page(
         if caption.number == figure_number:
             target_caption = caption
             top_y = previous_bottom
-            bottom_y = caption.rect.y1 if include_caption else caption.rect.y0
+            content_bottom = caption.rect.y0
             break
 
         previous_bottom = caption.rect.y1
@@ -153,7 +220,7 @@ def figure_clip_on_page(
     if target_caption is None:
         return None
 
-    content_rects = _content_rects_in_band(page, top_y, bottom_y)
+    content_rects = _content_rects_in_band(page, top_y, content_bottom)
     union_rects = list(content_rects)
 
     if include_caption:
@@ -200,8 +267,7 @@ def _figure_band_for_anchor(
         content_bottom = caption.rect.y0
         anchor_center_y = (anchor_rect.y0 + anchor_rect.y1) / 2
         if content_top <= anchor_center_y <= content_bottom:
-            bottom_y = caption.rect.y1 if include_caption else caption.rect.y0
-            return caption, content_top, bottom_y
+            return caption, content_top, content_bottom
 
         previous_bottom = caption.rect.y1
 
@@ -241,13 +307,13 @@ def figure_clip_for_xref(
 
     page_number, anchor_rect = location
     page = document[page_number - 1]
-    caption, top_y, bottom_y = _figure_band_for_anchor(
+    caption, top_y, content_bottom = _figure_band_for_anchor(
         page,
         anchor_rect,
         include_caption=include_caption,
     )
 
-    content_rects = _content_rects_in_band(page, top_y, bottom_y)
+    content_rects = _content_rects_in_band(page, top_y, content_bottom)
     union_rects = list(content_rects)
 
     if caption is not None and include_caption:

@@ -76,6 +76,22 @@ def test_list_figure_regions_includes_numbered_figures() -> None:
     assert 5 in numbers
 
 
+def test_figure_clip_excludes_merged_body_text_block() -> None:
+    pdf_path = _require_pdf("arxiv-2312-08344")
+
+    clip = figure_clip(pdf_path, page=1, figure_number=1)
+
+    assert clip[3] - clip[1] < 550
+
+
+def test_figure_clip_tightens_vertical_bounds() -> None:
+    pdf_path = _require_pdf("arxiv-2304-02643")
+
+    clip = figure_clip(pdf_path, page=1, figure_number=1)
+
+    assert clip[3] - clip[1] < 250
+
+
 def test_render_extracted_figure_uses_composite_region_for_xref(tmp_path: Path) -> None:
     pdf_path = _require_pdf("arxiv-2304-08069")
     visual = VisualSpec(

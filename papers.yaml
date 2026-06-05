@@ -5,32 +5,15 @@ papers:
 - url: https://arxiv.org/abs/2103.14030
   slug: arxiv-2103-14030
   title: 'Swin Transformer: Hierarchical Vision Transformer using Shifted Windows'
-  concepts:
-  - slug: cyclic_shift
-    terms:
-    - cyclic shift
 - url: https://arxiv.org/abs/2410.24164
   slug: arxiv-2410-24164
   title: 'π₀: A Vision-Language-Action Flow Model for General Robot Control'
-  concepts:
-  - slug: conditional-flow-matching
-    terms:
-    - conditional flow matching
-    - conditional flow-matching
-  - slug: euler-integration
-    terms:
-    - Euler integration
-    - Euler action sampling
 - url: https://arxiv.org/abs/2304.02643
   slug: arxiv-2304-02643
   title: Segment Anything
 - url: https://arxiv.org/abs/2304.08069
   slug: arxiv-2304-08069
   title: DETRs Beat YOLOs on Real-time Object Detection
-  concepts:
-  - slug: ccff
-    terms:
-    - cross-scale feature fusion
 - url: https://arxiv.org/abs/2312.08344
   slug: arxiv-2312-08344
   title: 'FoundationPose: Unified 6D Pose Estimation and Model-Based Tracking'
