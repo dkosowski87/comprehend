@@ -15,6 +15,7 @@ from comprehend.concept.schema import load_concept_summary, render_concept_markd
 from comprehend.pdf.download import PaperDownloadError
 from comprehend.pdf.extract import extract_paper, render_page_region
 from comprehend.pdf.figures import resolve_figure_region
+from comprehend.prepare import prepare_paper
 from comprehend.pwc.client import PapersWithCodeClient, PapersWithCodeError
 from comprehend.pwc.import_queue import import_conference_papers
 from comprehend.pwc.models import PresentationFilter
