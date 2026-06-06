@@ -5,7 +5,7 @@ from comprehend.concept.linkify import (
     patch_first_concept_mention,
 )
 from comprehend.concept.prepare import ConceptPrepareError, PreparedConcept, prepare_concept
-from comprehend.concept.refs import ConceptRef, parse_concept_ref
+from comprehend.concept.refs import ConceptRef, default_concept_terms, parse_concept_ref, resolve_link_terms
 from comprehend.concept.render import render_concept_visuals
 from comprehend.concept.schema import (
     ConceptSummary,
@@ -21,6 +21,7 @@ __all__ = [
     "ConceptSummary",
     "PreparedConcept",
     "RelatedPaper",
+    "default_concept_terms",
     "load_concept_summary",
     "paper_links_to_concept",
     "parse_concept_ref",
@@ -28,5 +29,6 @@ __all__ = [
     "prepare_concept",
     "render_concept_markdown",
     "render_concept_visuals",
+    "resolve_link_terms",
     "save_concept_summary",
 ]

@@ -8,7 +8,8 @@ from pathlib import Path
 from comprehend.concept.linkify import paper_links_to_concept
 from comprehend.pdf.download import paper_cache_dir
 from comprehend.publish.github_wiki import WikiConfig, wiki_page_exists
-from comprehend.queue import find_concept_ref, find_paper_entry, load_paper_queue
+from comprehend.concept.refs import resolve_link_terms
+from comprehend.queue import find_paper_entry, load_paper_queue
 from comprehend.summary.schema import load_summary
 from comprehend.util import (
     concept_cache_dir,
@@ -50,15 +51,17 @@ def prepare_concept(
     papers_file: Path,
     wiki_config: WikiConfig,
     cache_root: Path | None = None,
+    terms: list[str] | None = None,
 ) -> PreparedConcept:
     """Validate prerequisites and paths for a concept explanation run.
 
     Args:
-        paper_slug: Published paper wiki slug.
-        concept_id: Concept id from ``papers.yaml``.
-        papers_file: Path to ``papers.yaml``.
+        paper_slug: Published paper wiki slug to link after publishing.
+        concept_id: Concept identifier such as ``cyclic_shift``.
+        papers_file: Path to ``papers.yaml`` (paper must be listed for PDF cache).
         wiki_config: Wiki configuration.
         cache_root: Optional cache root override.
+        terms: Optional link-search terms for patching the paper wiki page.
 
     Returns:
         Prepared concept metadata for agent work.
@@ -76,12 +79,7 @@ def prepare_concept(
             f"Paper slug '{paper_slug}' not found in {papers_file}",
         )
 
-    concept_ref = find_concept_ref(paper_entry, concept_id=concept_id)
-    if concept_ref is None:
-        raise ConceptPrepareError(
-            f"Concept '{concept_id}' not declared for paper '{paper_slug}' in {papers_file}",
-        )
-
+    resolved_terms = resolve_link_terms(concept_id, terms=terms)
     cache = cache_root or default_cache_dir()
     concept_slug = concept_wiki_slug(concept_id)
     concept_dir = concept_cache_dir(concept_id, cache_root=cache)
@@ -127,7 +125,7 @@ def prepare_concept(
         concept_id=concept_id,
         concept_slug=concept_slug,
         concept_name=concept_display_name(concept_id),
-        terms=list(concept_ref.terms),
+        terms=resolved_terms,
         paper_slug=paper_slug,
         paper_title=paper_title,
         paper_url=paper_entry.url,

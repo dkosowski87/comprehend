@@ -105,7 +105,7 @@ def test_render_markdown_includes_sections(tmp_path: Path) -> None:
     summary = PaperSummary(
         title="Test Paper",
         pdf_url="https://arxiv.org/pdf/2012.12877.pdf",
-        tags=["vision"],
+        tags=["transformers", "representation-learning"],
         slug="arxiv-2012-12877",
         problem=["Problem one"],
         solution=["Solution one"],

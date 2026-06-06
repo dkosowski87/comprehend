@@ -64,7 +64,6 @@ def test_find_paper_entry_by_explicit_slug(tmp_path: Path) -> None:
 def test_resolve_slug_falls_back_to_url(tmp_path: Path) -> None:
     entry = PaperQueueEntry(
         url="https://arxiv.org/abs/2103.14030",
-        concepts=[],
     )
 
     assert entry.resolve_slug() == "arxiv-2103-14030"

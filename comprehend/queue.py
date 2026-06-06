@@ -3,16 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 from enum import Enum
 from pathlib import Path
 
 import yaml
 
 from comprehend.prepare import infer_slug, prepare_paper
-
-if TYPE_CHECKING:
-    from comprehend.concept.refs import ConceptRef
 from comprehend.publish.github_wiki import WikiConfig, wiki_page_exists
 from comprehend.util import default_cache_dir
 
@@ -29,7 +25,6 @@ class PaperQueueEntry:
     """One paper entry from ``papers.yaml``."""
 
     url: str
-    concepts: list[ConceptRef]
     slug: str | None = None
     title: str | None = None
 
@@ -64,8 +59,6 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
     Returns:
         Parsed queue entries.
     """
-    from comprehend.concept.refs import ConceptRef, parse_concept_ref
-
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     papers = raw.get("papers", []) if isinstance(raw, dict) else []
     entries: list[PaperQueueEntry] = []
@@ -73,14 +66,6 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
     for item in papers:
         if not isinstance(item, dict) or "url" not in item:
             continue
-
-        raw_concepts = item.get("concepts", [])
-        concepts: list[ConceptRef] = []
-        if isinstance(raw_concepts, list):
-            for raw_concept in raw_concepts:
-                concept_ref = parse_concept_ref(raw_concept)
-                if concept_ref is not None:
-                    concepts.append(concept_ref)
 
         slug_value = item.get("slug")
         slug = str(slug_value) if slug_value is not None else None
@@ -90,7 +75,6 @@ def load_paper_queue(path: Path) -> list[PaperQueueEntry]:
 
         entry = PaperQueueEntry(
             url=str(item["url"]),
-            concepts=concepts,
             slug=slug,
             title=title,
         )
@@ -195,27 +179,6 @@ def find_paper_entry(
     return None
 
 
-def find_concept_ref(
-    entry: PaperQueueEntry,
-    *,
-    concept_id: str,
-) -> ConceptRef | None:  # noqa: F821
-    """Find a declared concept on a paper entry.
-
-    Args:
-        entry: Paper queue entry.
-        concept_id: Concept id such as ``cyclic_shift``.
-
-    Returns:
-        Matching concept reference, or ``None``.
-    """
-    for concept_ref in entry.concepts:
-        if concept_ref.concept_id == concept_id:
-            return concept_ref
-
-    return None
-
-
 def add_paper_to_queue(
     path: Path,
     *,
@@ -251,7 +214,6 @@ def add_paper_to_queue(
 
     new_entry = PaperQueueEntry(
         url=url,
-        concepts=[],
         slug=resolved_slug,
         title=title,
     )

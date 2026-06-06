@@ -93,9 +93,6 @@ papers:
   - url: https://arxiv.org/abs/2304.08069
     slug: arxiv-2304-08069
     title: DETRs Beat YOLOs on Real-time Object Detection
-    concepts:
-      - slug: ccff
-        terms: ["cross-scale feature fusion"]
 ```
 
 Each entry includes an explicit **`slug`** (wiki page id) and **`title`** (display name). **Tags** are inferred when the summary is written and stored in `summary.json` — see `uv run comprehend tags` for the allowed vocabulary (max 5).
@@ -255,38 +252,29 @@ Wiki pages are stored at `https://github.com/owner/repo/wiki`. An index of all s
 
 ## Concept explanations (manual)
 
-For concepts used in a paper but not fully explained (e.g. **cyclic shift** in Swin Transformer), declare them under that paper in `papers.yaml`:
-
-```yaml
-papers:
-  - url: https://arxiv.org/abs/2103.14030
-    slug: arxiv-2103-14030
-    concepts:
-      - slug: cyclic_shift
-        terms: ["cyclic shift", "shifted window"]
-```
-
-You do **not** need to pass the paper URL when running the concept agent — the URL is already in `papers.yaml`. Use the entry **`slug`** (`arxiv-2103-14030`) and **concept id** (`cyclic_shift`).
+For concepts used in a paper but not fully explained (e.g. **cyclic shift** in Swin Transformer), pass the paper wiki **slug** and **concept id** in the prompt — do **not** declare concepts in `papers.yaml`. The paper must still be listed in `papers.yaml` (for PDF cache and triage).
 
 ### Prerequisites
 
 1. **Paper summary published** — the wiki page `arxiv-2103-14030.md` must exist (run the comprehend-paper workflow first).
-2. **Concept declared** in `papers.yaml` under that paper (see above).
+2. **Paper listed** in `papers.yaml` (URL, slug, title).
 
 ### Running the agent (Cursor)
 
-Enable or invoke the **comprehend-concept** skill, then prompt with the slug and concept id — no URL required:
+Enable or invoke the **comprehend-concept** skill, then prompt with the slug and concept id:
 
 ```
 /comprehend-concept
 
-Add concept cyclic_shift for paper arxiv-2103-14030.
-Run prepare, write concept.json, render the visual, and publish.
+Explain cyclic_shift and link it from the Swin paper (arxiv-2103-14030).
+Run prepare, triage, write concept.json, render, and publish.
 ```
 
 Shorter prompt (when the skill is already attached):
 
 > Explain **cyclic_shift** for the Swin paper (`arxiv-2103-14030`).
+
+Optional link terms: pass `--term "cyclic shift"` on prepare/publish, or set `keywords` in `concept.json` (auto-bolded in the concept page and used as link-search terms at publish).
 
 ### CLI steps (agent runs these)
 
@@ -294,12 +282,16 @@ Shorter prompt (when the skill is already attached):
 # 1. Validate paths and create cache dir
 uv run comprehend concept prepare \
   --paper arxiv-2103-14030 \
-  --concept cyclic_shift
+  --concept cyclic_shift \
+  --term "cyclic shift" \
+  --term "shifted window"
 
 # 1b. Optional: check if the concept comes from a cited paper (PANet, CCFF, …)
 uv run comprehend concept triage \
   --paper arxiv-2304-08069 \
-  --concept ccff
+  --concept ccff \
+  --term "cross-scale feature fusion" \
+  --term "CCFF"
 
 # 2. Agent: web search + read paper wiki/summary → write concept.json
 #    → .comprehend/concepts/cyclic-shift/concept.json
@@ -358,7 +350,7 @@ comprehend/
 ├── pwc/          # paperswithcode.co API client + queue import
 ├── concept/      # concept schema, link patching, prepare
 └── cli.py        # click CLI
-papers.yaml       # paper queue + per-paper concepts
+papers.yaml       # paper queue
 .cursor/skills/comprehend-paper/SKILL.md
 .cursor/skills/comprehend-concept/SKILL.md
 .cursor/automations/daily-paper-summary.prompt.md

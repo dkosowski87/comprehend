@@ -53,6 +53,26 @@ def test_patch_first_concept_mention() -> None:
     assert "Later cyclic shift again." in patched
 
 
+def test_resolve_link_terms_prefers_explicit_terms() -> None:
+    from comprehend.concept.refs import resolve_link_terms
+
+    terms = resolve_link_terms(
+        "cyclic_shift",
+        terms=["shifted window"],
+        keywords=["cyclic shift"],
+    )
+
+    assert terms == ["shifted window"]
+
+
+def test_resolve_link_terms_falls_back_to_keywords() -> None:
+    from comprehend.concept.refs import resolve_link_terms
+
+    terms = resolve_link_terms("ccff", keywords=["cross-scale feature fusion", "CCFF"])
+
+    assert terms == ["cross-scale feature fusion", "CCFF"]
+
+
 def test_render_concept_markdown_structure() -> None:
     summary = ConceptSummary(
         name="Cyclic shift",
@@ -61,9 +81,10 @@ def test_render_concept_markdown_structure() -> None:
         related_papers=[
             RelatedPaper(slug="arxiv-2103-14030", title="Swin Transformer"),
         ],
-        what_it_is=["Defines window movement on a grid."],
-        how_it_works=["Shifts patch layout cyclically."],
-        tags=["vision"],
+        what_it_is=["Rolls the feature grid before windowing."],
+        how_it_works=["Uses cyclic shift to connect adjacent windows."],
+        tags=["transformers", "representation-learning"],
+        keywords=["cyclic shift", "shifted window"],
     )
 
     markdown = render_concept_markdown(summary)
@@ -72,6 +93,7 @@ def test_render_concept_markdown_structure() -> None:
     assert "## What it is" in markdown
     assert "## How it works" in markdown
     assert "Swin Transformer" in markdown
+    assert "**cyclic shift**" in markdown
     assert "Why it appears" not in markdown
 
 

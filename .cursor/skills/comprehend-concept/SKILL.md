@@ -3,7 +3,8 @@ name: comprehend-concept
 description: >-
   Explain ML concepts referenced in paper summaries: web research, short wiki
   page with up to two visuals, link first mention in the paper. Use with comprehend
-  concept prepare/triage/publish or when papers.yaml lists concepts for a paper.
+  concept prepare/triage/publish. Pass the paper slug in the prompt when linking
+  a concept to an existing paper summary.
 ---
 
 # Comprehend — Concept explanations
@@ -23,39 +24,40 @@ Use **triage** (below) to decide; when uncertain, prefer the simple path unless 
 
 ## Prerequisites
 
-1. Paper summary is **published** on the wiki.
-2. Concept is declared in `papers.yaml` under that paper:
+1. Paper summary is **published** on the wiki (when linking a concept to that paper).
+2. The paper is listed in `papers.yaml` (needed for PDF cache / triage).
+3. **Do not** declare concepts under `papers.yaml`. Pass the paper wiki **slug** in the user prompt and CLI (`--paper arxiv-2103-14030`).
 
-```yaml
-papers:
-  - url: https://arxiv.org/abs/2103.14030
-    slug: arxiv-2103-14030
-    title: "Swin Transformer: ..."
-    concepts:
-      - slug: cyclic_shift
-        terms: ["cyclic shift", "shifted window"]
+Example user prompt:
+
 ```
+/comprehend-concept
 
-3. Cached PDF text helps triage — run `uv run comprehend prepare <url>` or `queue next` for that paper if `paper.txt` is missing.
+Explain cyclic_shift and link it from the Swin paper (arxiv-2103-14030).
+Run prepare, triage, write concept.json, render, and publish.
+```
 
 ## Step 0 — Prepare
 
 ```bash
 uv run comprehend concept prepare \
   --paper arxiv-2103-14030 \
-  --concept cyclic_shift
+  --concept cyclic_shift \
+  --term "cyclic shift" \
+  --term "shifted window"
 ```
-
-Use the **`slug`** from `papers.yaml` (e.g. `arxiv-2304-08069`, with hyphens—not dots).
 
 | Output field | Meaning |
 |--------------|---------|
 | `concept_already_published` | Concept wiki page exists — skip writing page, only patch paper links |
 | `paper_already_links_concept` | Paper already links to concept — nothing to do |
 | `paper_summary_path` | Read for how the paper uses the term |
+| `terms` | Link-search terms for patching the paper wiki |
 | `cache_dir` | Write `concept.json` and `assets/` here |
 
 If `paper_already_links_concept` is true, **stop**.
+
+`--term` is optional; if omitted, terms fall back to `keywords` in `concept.json` at publish time, then the concept id with `_` → spaces.
 
 ## Step 0b — Triage (origin paper check)
 
@@ -64,10 +66,12 @@ Run **after** prepare, **before** writing `concept.json`:
 ```bash
 uv run comprehend concept triage \
   --paper arxiv-2304-08069 \
-  --concept ccff
+  --concept ccff \
+  --term "cross-scale feature fusion" \
+  --term "CCFF"
 ```
 
-Reads the cached PDF **References** section and matches concept `terms` from `papers.yaml`.
+Reads the cached PDF **References** section and matches concept terms.
 
 | `kind` | Meaning | Agent action |
 |--------|---------|--------------|
@@ -91,9 +95,8 @@ Reads the cached PDF **References** section and matches concept `terms` from `pa
 
 ```bash
 uv run comprehend queue add https://arxiv.org/abs/1406.4789 \
-  --slug arxiv-1406-4789 \
-  --title "Feature Pyramid Networks for Object Detection" \
-  --tag vision --tag object-detection
+  --slug arxiv-1406-0789 \
+  --title "Feature Pyramid Networks for Object Detection"
 ```
 
 Then remind them they can summarize that paper (`/comprehend-paper` or `queue next`) before or after the concept page.
@@ -120,6 +123,7 @@ Write `<cache_dir>/concept.json`:
   ],
   "what_it_is": ["2-4 bullets defining the concept"],
   "how_it_works": ["2-4 bullets on mechanism/intuition"],
+  "keywords": ["cyclic shift", "shifted window", "roll operation"],
   "math": [
     {
       "id": "m1",
@@ -131,7 +135,7 @@ Write `<cache_dir>/concept.json`:
       ]
     }
   ],
-  "tags": ["vision", "transformers"],
+  "tags": ["transformers", "representation-learning"],
   "visuals": [
     {
       "id": "visual",
@@ -149,11 +153,12 @@ Write `<cache_dir>/concept.json`:
 
 - **English only**
 - **No paper-specific context section** — do not add "Why it appears in Swin Transformer". Keep explanations general.
-- **Max 2 visuals** — use ids like `"visual-1"` and `"visual-2"` (not paper-style ids like `5a`)
+- **Max 1 visual** — use id `"visual"` (not paper-style ids like `5a`)
 - **No inline LaTeX** in bullets — GitHub wiki does not render `\(...\)`. Put equations in a **`math`** array and reference them with `**m1**`, `**m2**`, … (ids `m1`, `m2`, …). They become jump links to a **Math** section with `$$...$$` blocks, same as paper summaries. Add a `variables` legend for non-obvious symbols in each equation.
-- **Tags** in `concept.json` use the same allowed vocabulary as paper summaries (`uv run comprehend tags`, max 5).
+- **Tags** in `concept.json`: infer 1–5 from the concept and related papers (`uv run comprehend tags`, max 5). Tags from a related paper's summary are a reasonable starting point.
+- **Keywords**: 3–10 concept-specific terms, auto-bolded in **What it is** and **How it works** during assembly. Also used as link-search terms when patching the paper wiki (unless `--term` overrides at publish).
 - Sections: **What it is**, **How it works**, optional **Math**, optional **Visualisation**
-- Include the triggering paper in `related_papers`
+- Include the triggering paper in `related_papers` (slug from the user prompt / `--paper`)
 - Use `slug` from prepare output (`concept-*` prefix)
 
 ### Visual choice
@@ -190,8 +195,7 @@ Behavior:
 - **New concept** — writes `concept-*.md`, updates `Concepts.md` index, patches first mention in paper wiki
 - **Concept already on wiki** — skips concept page, **only patches** paper links
 - **`--force`** — overwrite existing concept page
-
-Link terms come from `papers.yaml` (default: concept id with `_` → spaces).
+- **`--term`** — optional override for link-search terms at publish time
 
 ## Wiki layout
 

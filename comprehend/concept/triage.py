@@ -74,15 +74,17 @@ def triage_concept(
     papers_file: Path,
     wiki_config: WikiConfig,
     cache_root: Path,
+    terms: list[str] | None = None,
 ) -> ConceptTriageResult:
     """Check whether a concept is defined in a cited origin paper.
 
     Args:
         paper_slug: Wiki slug of the paper being summarized.
-        concept_id: Concept id from ``papers.yaml``.
+        concept_id: Concept identifier such as ``cyclic_shift``.
         papers_file: Path to ``papers.yaml``.
         wiki_config: Wiki configuration.
         cache_root: Local cache root (``.comprehend``).
+        terms: Optional link-search terms for bibliography matching.
 
     Returns:
         Triage result with queue status and a user-facing message.
@@ -96,6 +98,7 @@ def triage_concept(
         papers_file=papers_file,
         wiki_config=wiki_config,
         cache_root=cache_root,
+        terms=terms,
     )
 
     entries = load_paper_queue(papers_file)

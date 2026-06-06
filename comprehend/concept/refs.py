@@ -1,4 +1,4 @@
-"""Concept reference parsing from papers.yaml."""
+"""Concept reference helpers for link patching and term resolution."""
 
 from __future__ import annotations
 
@@ -7,10 +7,35 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ConceptRef:
-    """A concept declared for a paper in ``papers.yaml``."""
+    """Legacy concept reference shape (no longer stored in ``papers.yaml``)."""
 
     concept_id: str
     terms: list[str]
+
+
+def default_concept_terms(concept_id: str) -> list[str]:
+    """Build default link-search terms from a concept id."""
+    return [concept_id.replace("_", " ")]
+
+
+def resolve_link_terms(
+    concept_id: str,
+    *,
+    terms: list[str] | None = None,
+    keywords: list[str] | None = None,
+) -> list[str]:
+    """Resolve terms used to patch first mentions in a paper wiki page.
+
+    Priority: explicit ``terms`` (CLI) → ``keywords`` from ``concept.json`` →
+    default phrase from ``concept_id``.
+    """
+    if terms:
+        return [term.strip() for term in terms if term.strip()]
+
+    if keywords:
+        return [keyword.strip() for keyword in keywords if keyword.strip()]
+
+    return default_concept_terms(concept_id)
 
 
 def parse_concept_ref(raw: object) -> ConceptRef | None:

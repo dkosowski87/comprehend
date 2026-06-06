@@ -10,6 +10,7 @@ from comprehend.summary.schema import (
     MathEntry,
     VisualSpec,
     default_asset_filename,
+    emphasize_keywords,
     linkify_refs,
     render_math_entry_lines,
 )
@@ -48,6 +49,7 @@ class ConceptSummary(BaseModel):
     what_it_is: list[str]
     how_it_works: list[str]
     math: list[MathEntry] = Field(default_factory=list)
+    keywords: list[str] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     visuals: list[VisualSpec] = Field(default_factory=list)
 
@@ -87,6 +89,15 @@ def collect_concept_ref_ids(summary: ConceptSummary) -> set[str]:
     return ref_ids
 
 
+def _format_concept_bullet(
+    text: str,
+    *,
+    ref_ids: set[str],
+    keywords: list[str],
+) -> str:
+    return linkify_refs(emphasize_keywords(text, keywords), ref_ids)
+
+
 def render_concept_markdown(summary: ConceptSummary) -> str:
     """Assemble wiki markdown for a concept page.
 
@@ -113,11 +124,15 @@ def render_concept_markdown(summary: ConceptSummary) -> str:
 
     lines.extend(["", "## What it is", ""])
     for item in summary.what_it_is:
-        lines.append(f"- {linkify_refs(item, ref_ids)}")
+        lines.append(
+            f"- {_format_concept_bullet(item, ref_ids=ref_ids, keywords=summary.keywords)}",
+        )
 
     lines.extend(["", "## How it works", ""])
     for item in summary.how_it_works:
-        lines.append(f"- {linkify_refs(item, ref_ids)}")
+        lines.append(
+            f"- {_format_concept_bullet(item, ref_ids=ref_ids, keywords=summary.keywords)}",
+        )
 
     if summary.math:
         lines.extend(["", "## Math", ""])

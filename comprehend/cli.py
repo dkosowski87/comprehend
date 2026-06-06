@@ -15,6 +15,7 @@ from comprehend.concept.schema import load_concept_summary, render_concept_markd
 from comprehend.pdf.download import PaperDownloadError
 from comprehend.pdf.extract import extract_paper, render_page_region
 from comprehend.pdf.figures import resolve_figure_region
+from comprehend.concept.refs import resolve_link_terms
 from comprehend.pwc.client import PapersWithCodeClient, PapersWithCodeError
 from comprehend.pwc.import_queue import import_conference_papers
 from comprehend.pwc.models import PresentationFilter
@@ -30,7 +31,6 @@ from comprehend.publish.github_wiki import (
 from comprehend.queue import (
     QueueStatus,
     add_paper_to_queue,
-    find_concept_ref,
     find_paper_entry,
     load_paper_queue,
     next_pending_item,
@@ -717,7 +717,13 @@ def concept() -> None:
     "--concept",
     "concept_id",
     required=True,
-    help="Concept id from papers.yaml, e.g. cyclic_shift",
+    help="Concept id, e.g. cyclic_shift",
+)
+@click.option(
+    "--term",
+    "terms",
+    multiple=True,
+    help="Link-search term for patching the paper wiki (repeatable)",
 )
 @click.option(
     "--papers-file",
@@ -740,6 +746,7 @@ def concept() -> None:
 def concept_prepare(
     paper_slug: str,
     concept_id: str,
+    terms: tuple[str, ...],
     papers_file: Path,
     repo: str | None,
     wiki_dir: Path | None,
@@ -754,6 +761,7 @@ def concept_prepare(
             concept_id=concept_id,
             papers_file=papers_file,
             wiki_config=config,
+            terms=list(terms) or None,
         )
     except ConceptPrepareError as exc:
         raise click.ClickException(str(exc)) from exc
@@ -792,7 +800,13 @@ def concept_prepare(
     "--concept",
     "concept_id",
     required=True,
-    help="Concept id from papers.yaml, e.g. ccff",
+    help="Concept id, e.g. ccff",
+)
+@click.option(
+    "--term",
+    "terms",
+    multiple=True,
+    help="Link-search term for bibliography matching (repeatable)",
 )
 @click.option(
     "--papers-file",
@@ -815,6 +829,7 @@ def concept_prepare(
 def concept_triage(
     paper_slug: str,
     concept_id: str,
+    terms: tuple[str, ...],
     papers_file: Path,
     repo: str | None,
     wiki_dir: Path | None,
@@ -830,6 +845,7 @@ def concept_triage(
             papers_file=papers_file,
             wiki_config=config,
             cache_root=default_cache_dir(),
+            terms=list(terms) or None,
         )
     except ConceptPrepareError as exc:
         raise click.ClickException(str(exc)) from exc
@@ -889,11 +905,17 @@ def concept_render(
     help="Directory with PNG assets (required when publishing a new concept page)",
 )
 @click.option(
+    "--term",
+    "terms",
+    multiple=True,
+    help="Link-search term for patching the paper wiki (repeatable; overrides concept.json keywords)",
+)
+@click.option(
     "--papers-file",
     type=click.Path(path_type=Path),
     default="papers.yaml",
     show_default=True,
-    help="Path to papers.yaml for link terms",
+    help="Path to papers.yaml (paper must be listed for validation)",
 )
 @click.option(
     "--repo",
@@ -916,6 +938,7 @@ def concept_publish(
     concept_json: Path,
     paper_slug: str,
     assets_dir: Path,
+    terms: tuple[str, ...],
     papers_file: Path,
     repo: str | None,
     wiki_dir: Path | None,
@@ -930,11 +953,11 @@ def concept_publish(
     if paper_entry is None:
         raise click.ClickException(f"Paper '{paper_slug}' not found in {papers_file}")
 
-    concept_ref = find_concept_ref(paper_entry, concept_id=summary.concept_id)
-    if concept_ref is None:
-        raise click.ClickException(
-            f"Concept '{summary.concept_id}' not declared for paper '{paper_slug}'",
-        )
+    link_terms = resolve_link_terms(
+        summary.concept_id,
+        terms=list(terms) or None,
+        keywords=summary.keywords,
+    )
 
     concept_exists = False
     if config.wiki_dir.is_dir():
@@ -981,7 +1004,7 @@ def concept_publish(
         linked = patch_paper_concept_links(
             paper_slug=paper_slug,
             concept_slug=summary.slug,
-            terms=concept_ref.terms,
+            terms=link_terms,
             config=config,
         )
     except WikiPublishError as exc:
