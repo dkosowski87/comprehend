@@ -23,12 +23,21 @@ papers:
 - url: https://arxiv.org/abs/2111.06377
   slug: arxiv-2111-06377
   title: Masked Autoencoders Are Scalable Vision Learners
+- url: https://proceedings.mlr.press/v97/rahaman19a/rahaman19a.pdf
+  slug: mlr-2019-rahaman
+  title: 'On the Spectral Bias of Neural Networks'
 - url: https://arxiv.org/abs/2511.09554
   slug: arxiv-2511-09554
   title: Efficient Neural Architecture Search for Object Detection
+- url: https://openaccess.thecvf.com/content_CVPR_2020/papers/Niemeyer_Differentiable_Volumetric_Rendering_Learning_Implicit_3D_Representations_Without_3D_Supervision_CVPR_2020_paper.pdf
+  slug: differentiable-volumetric-rendering-cvpr-2020
+  title: 'Differentiable Volumetric Rendering: Learning Implicit 3D Representations Without 3D Supervision'
 - url: https://openaccess.thecvf.com/content_cvpr_2018/papers/Liao_Deep_Marching_Cubes_CVPR_2018_paper.pdf
   slug: deep-marching-cubes-cvpr-2018
   title: 'Deep Marching Cubes: Learning Explicit Surface Representations'
+- url: https://openaccess.thecvf.com/content_CVPR_2019/papers/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.pdf
+  slug: occupancy-networks-cvpr-2019
+  title: 'Occupancy Networks: Learning 3D Reconstruction in Function Space'
 - url: https://arxiv.org/abs/2211.17192
   slug: arxiv-2211-17192
   title: Accelerating Large Language Model Decoding with Speculative Sampling
@@ -182,6 +191,9 @@ papers:
 - url: https://arxiv.org/abs/2603.03711
   slug: arxiv-2603-03711
   title: 'LDP-Slicing: Local Differential Privacy for Images via Randomized Bit-Plane Slicing'
+- url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
+  slug: neurips-2020-fourier-features
+  title: 'Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains'
 - url: https://arxiv.org/abs/2602.23574
   slug: arxiv-2602-23574
   title: Evidential Neural Radiance Fields
@@ -329,6 +341,9 @@ papers:
 - url: https://arxiv.org/abs/2602.19083
   slug: arxiv-2602-19083
   title: 'ChordEdit: One-Step Low-Energy Transport for Image Editing'
+- url: https://arxiv.org/pdf/2003.04618
+  slug: arxiv-2003-04618
+  title: 'Convolutional Occupancy Networks'
 - url: https://arxiv.org/abs/2602.18993
   slug: arxiv-2602-18993
   title: 'SeaCache: Spectral-Evolution-Aware Cache for Accelerating Diffusion Models'
