@@ -1,9 +1,13 @@
 """Tests for paper queue loading."""
 
+import json
+from types import SimpleNamespace
 from pathlib import Path
 
+from click.testing import CliRunner
 import yaml
 
+from comprehend import cli
 from comprehend.queue import (
     PaperQueueEntry,
     add_paper_to_queue,
@@ -89,3 +93,55 @@ def test_add_paper_to_queue(tmp_path: Path) -> None:
     assert entry.resolve_slug() == "arxiv-9999-99999"
     reloaded = load_paper_queue(papers_file)
     assert len(reloaded) == 2
+
+
+def test_queue_next_prepares_pending_paper(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    papers_file = tmp_path / "papers.yaml"
+    papers_file.write_text(
+        "papers:\n"
+        "  - url: https://arxiv.org/abs/2103.14030\n"
+        "    slug: arxiv-2103-14030\n"
+        "    title: Swin Transformer\n",
+        encoding="utf-8",
+    )
+    cache_dir = tmp_path / "cache" / "arxiv-2103-14030"
+    text_path = cache_dir / "text.txt"
+    figures_path = cache_dir / "figures.json"
+    pdf_path = cache_dir / "paper.pdf"
+
+    monkeypatch.setattr(cli, "_sync_wiki_for_status", lambda config: None)
+
+    def fake_prepare_paper(url: str, *, cache_root: Path, slug: str):
+        return SimpleNamespace(
+            url=url,
+            slug=slug,
+            pdf_url="https://arxiv.org/pdf/2103.14030.pdf",
+            title="Swin Transformer: Hierarchical Vision Transformer using Shifted Windows",
+            cache_dir=cache_dir,
+            pdf_path=pdf_path,
+            extracted=SimpleNamespace(text_path=text_path),
+            figures_json_path=figures_path,
+        )
+
+    monkeypatch.setattr(cli, "prepare_paper", fake_prepare_paper)
+
+    result = CliRunner().invoke(
+        cli.main,
+        [
+            "queue",
+            "next",
+            "--papers-file",
+            str(papers_file),
+            "--repo",
+            "owner/repo",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    payload = json.loads(result.output)
+    assert payload["slug"] == "arxiv-2103-14030"
+    assert payload["pdf_url"] == "https://arxiv.org/pdf/2103.14030.pdf"
+    assert payload["text_path"] == str(text_path)
