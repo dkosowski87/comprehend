@@ -157,6 +157,11 @@ def emphasize_keywords(text: str, keywords: list[str]) -> str:
     if not unique_keywords:
         return text
 
+    keyword_alternatives = "|".join(
+        re.escape(keyword)
+        for keyword in sorted(set(unique_keywords), key=len, reverse=True)
+    )
+    keyword_pattern = re.compile(rf"\b({keyword_alternatives})\b", re.IGNORECASE)
     parts = re.split(r"(\*\*[^*]+\*\*)", text)
     emphasized_parts: list[str] = []
 
@@ -165,12 +170,7 @@ def emphasize_keywords(text: str, keywords: list[str]) -> str:
             emphasized_parts.append(part)
             continue
 
-        emphasized = part
-        for keyword in sorted(set(unique_keywords), key=len, reverse=True):
-            escaped_keyword = re.escape(keyword)
-            pattern = re.compile(rf"\b({escaped_keyword})\b", re.IGNORECASE)
-            emphasized = pattern.sub(r"**\1**", emphasized)
-
+        emphasized = keyword_pattern.sub(r"**\1**", part)
         emphasized_parts.append(emphasized)
 
     emphasized_text = "".join(emphasized_parts)

@@ -148,6 +148,14 @@ def test_emphasize_keywords_skips_existing_bold() -> None:
     assert emphasized == "The **RT-DETR** decoder uses **cross-attention**."
 
 
+def test_emphasize_keywords_prefers_long_overlapping_terms() -> None:
+    text = "RF-DETR-Seg reuses RF-DETR detector features."
+
+    emphasized = emphasize_keywords(text, ["RF-DETR", "RF-DETR-Seg"])
+
+    assert emphasized == "**RF-DETR-Seg** reuses **RF-DETR** detector features."
+
+
 def test_render_markdown_emphasizes_keywords() -> None:
     summary = PaperSummary(
         title="Test Paper",
