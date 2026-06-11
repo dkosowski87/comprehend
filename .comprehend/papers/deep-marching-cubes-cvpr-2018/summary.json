@@ -160,7 +160,13 @@
         "4a"
       ],
       "page": 1,
-      "figure_number": 1
+      "figure_number": 1,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "deep-marching-cubes-cvpr-2018-5a.png"
     },
     {
       "id": "5b",
@@ -171,7 +177,13 @@
         "4b"
       ],
       "page": 3,
-      "figure_number": 2
+      "figure_number": 2,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "deep-marching-cubes-cvpr-2018-5b.png"
     },
     {
       "id": "5c",
@@ -183,7 +195,13 @@
         "4b"
       ],
       "page": 3,
-      "figure_number": 3
+      "figure_number": 3,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "deep-marching-cubes-cvpr-2018-5c.png"
     },
     {
       "id": "5d",
@@ -195,7 +213,13 @@
         "4d"
       ],
       "page": 5,
-      "figure_number": 4
+      "figure_number": 4,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "deep-marching-cubes-cvpr-2018-5d.png"
     }
   ]
 }
