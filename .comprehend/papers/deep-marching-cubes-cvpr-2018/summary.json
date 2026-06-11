@@ -1,0 +1,201 @@
+{
+  "title": "Deep Marching Cubes: Learning Explicit Surface Representations",
+  "pdf_url": "https://openaccess.thecvf.com/content_cvpr_2018/papers/Liao_Deep_Marching_Cubes_CVPR_2018_paper.pdf",
+  "tags": [
+    "3d-reconstruction",
+    "data-representation",
+    "optimization"
+  ],
+  "slug": "deep-marching-cubes-cvpr-2018",
+  "keywords": [
+    "Deep Marching Cubes",
+    "Differentiable Marching Cubes Layer",
+    "Marching Cubes",
+    "explicit surface prediction",
+    "occupancy probabilities",
+    "vertex displacement field",
+    "topology distribution",
+    "point-to-mesh loss",
+    "occupancy loss",
+    "grid pooling",
+    "singly connected topologies",
+    "surface-based supervision"
+  ],
+  "problem": [
+    "Learning-based 3D reconstruction methods often predict points, occupancy grids, or signed distance fields, then rely on a separate meshing step to obtain the actual surface.",
+    "Classical Marching Cubes is hard to train through: its interpolated vertex position has a singularity when adjacent signed distances match, and topology changes block useful gradients (**4a**).",
+    "Implicit targets such as TSDFs or occupancy grids require dense inside/outside supervision that is difficult or unreliable for sparse, noisy, incomplete, or non-watertight point clouds.",
+    "Auxiliary losses on intermediate representations do not directly constrain the final mesh geometry, so the learned model is not optimized for the surface that users care about."
+  ],
+  "solution": [
+    "Deep Marching Cubes replaces signed-distance prediction with an explicit surface representation: each grid voxel predicts an occupancy probability and each cell edge receives a vertex displacement, separating topology from geometry (5c).",
+    "The Differentiable Marching Cubes Layer treats the eight corner occupancies of each cell as Bernoulli variables and induces a probability distribution over cell topologies (**4b**), restricted in practice to singly connected cases (5b).",
+    "A point-cloud encoder uses grid pooling followed by a 3D encoder-decoder with skip connections; the decoder splits into occupancy and displacement heads whose outputs feed the Differentiable Marching Cubes Layer (5d).",
+    "Training minimizes expected point-to-mesh error under the topology distribution (**4c**) together with occupancy, smoothness, and curvature terms (**4d**), allowing direct surface-based supervision from sparse points.",
+    "The occupancy prior anchors the scene boundary as free space and encourages an interior sub-volume to be occupied (**4e**), helping the model infer inside versus outside without watertight ground-truth meshes."
+  ],
+  "key_concepts": [
+    "Explicit surface prediction in this paper means the network outputs local mesh parameters rather than an implicit field followed by post-processing; this is why the approach can optimize the final surface directly instead of a proxy representation (5a).",
+    "Topology distribution is the paper's differentiable substitute for the discrete Marching Cubes lookup: occupancies define probabilities over local face configurations, while vertex displacement field values define where the selected faces lie.",
+    "Separating topology from geometry avoids the zero-crossing singularity of classical Marching Cubes: topology can change through occupancy probabilities, and geometry can move through bounded edge displacements.",
+    "Grid pooling couples PointNet-style local feature extraction to the regular voxel lattice, preserving point-order invariance while producing features that a 3D convolutional decoder can process with skip connections (5d).",
+    "Surface-based supervision is central to the method: sparse observed points supervise distance to the predicted mesh, while priors and smoothness losses prevent trivial extra surfaces and propagate occupancy information away from observed cells."
+  ],
+  "math": [
+    {
+      "id": "4a",
+      "label": "classical Marching Cubes zero crossing",
+      "latex": "x = \\frac{d}{d - d'}",
+      "variables": [
+        {
+          "symbol": "x",
+          "meaning": "relative position of a mesh vertex along an edge between two cell corners"
+        },
+        {
+          "symbol": "d, d'",
+          "meaning": "signed distance values at the two adjacent corners of the edge"
+        }
+      ]
+    },
+    {
+      "id": "4b",
+      "label": "cell topology probability",
+      "latex": "p_n(T) = \\prod_{m \\in \\{0,1\\}^3} (o_{n+m})^{t_m}(1 - o_{n+m})^{1-t_m}",
+      "variables": [
+        {
+          "symbol": "p_n(T)",
+          "meaning": "probability of topology T in grid cell n"
+        },
+        {
+          "symbol": "o_{n+m}",
+          "meaning": "predicted occupancy probability at one of the eight cell corners"
+        },
+        {
+          "symbol": "t_m",
+          "meaning": "binary occupied/unoccupied state of corner m in topology T"
+        },
+        {
+          "symbol": "m \\in \\{0,1\\}^3",
+          "meaning": "offset indexing the eight corners of the cell"
+        }
+      ]
+    },
+    {
+      "id": "4c",
+      "label": "expected point-to-mesh loss",
+      "latex": "\\mathcal{L}^{\\mathrm{mesh}}_n(\\theta) = \\mathbb{E}_{p_n(T\\mid\\theta)}\\left[\\sum_{y \\in Y_n} \\Delta(M_n(T, X(\\theta)), y)\\right]",
+      "variables": [
+        {
+          "symbol": "\\theta",
+          "meaning": "parameters of the neural network"
+        },
+        {
+          "symbol": "Y_n",
+          "meaning": "observed 3D points falling inside cell n"
+        },
+        {
+          "symbol": "M_n(T, X(\\theta))",
+          "meaning": "mesh induced in cell n by topology T and predicted vertex displacement field X"
+        },
+        {
+          "symbol": "\\Delta(M,y)",
+          "meaning": "Euclidean point-to-mesh distance from point y to mesh M"
+        }
+      ]
+    },
+    {
+      "id": "4d",
+      "label": "training objective",
+      "latex": "\\mathcal{L}(\\theta) = w_1\\sum_n \\mathcal{L}^{\\mathrm{mesh}}_n(\\theta) + w_2\\mathcal{L}^{\\mathrm{occ}}(\\theta) + w_3\\sum_{n\\sim m}\\mathcal{L}^{\\mathrm{smooth}}_{n,m}(\\theta) + w_4\\sum_{n\\sim m}\\mathcal{L}^{\\mathrm{curve}}_{n,m}(\\theta)",
+      "variables": [
+        {
+          "symbol": "w_1, w_2, w_3, w_4",
+          "meaning": "weights balancing the mesh, occupancy, occupancy-smoothness, and curvature losses"
+        },
+        {
+          "symbol": "n \\sim m",
+          "meaning": "adjacent grid cells"
+        },
+        {
+          "symbol": "\\mathcal{L}^{\\mathrm{smooth}}_{n,m}",
+          "meaning": "loss encouraging neighboring occupancies to agree"
+        },
+        {
+          "symbol": "\\mathcal{L}^{\\mathrm{curve}}_{n,m}",
+          "meaning": "expected loss encouraging connected neighboring faces to have similar normals"
+        }
+      ]
+    },
+    {
+      "id": "4e",
+      "label": "occupancy prior",
+      "latex": "\\mathcal{L}^{\\mathrm{occ}}(\\theta) = \\frac{1}{|\\Gamma|}\\sum_{n\\in\\Gamma} o_n(\\theta) + w\\left(1 - \\frac{1}{|\\Omega|}\\sum_{n\\in\\Omega} o_n(\\theta)\\right)",
+      "variables": [
+        {
+          "symbol": "\\Gamma",
+          "meaning": "boundary voxels on the six faces of the scene cube, encouraged to be unoccupied"
+        },
+        {
+          "symbol": "\\Omega",
+          "meaning": "interior sub-volume encouraged to contain occupied voxels"
+        },
+        {
+          "symbol": "o_n(\\theta)",
+          "meaning": "predicted occupancy probability for voxel n"
+        },
+        {
+          "symbol": "w",
+          "meaning": "adaptive weight for the interior occupancy term"
+        }
+      ]
+    }
+  ],
+  "visuals": [
+    {
+      "id": "5a",
+      "caption": "Point prediction, implicit surface prediction, and explicit surface prediction",
+      "type": "extract",
+      "description": "Compares output representations and shows that only the proposed explicit surface pipeline is end-to-end trainable for surface prediction.",
+      "refs": [
+        "4a"
+      ],
+      "page": 1,
+      "figure_number": 1
+    },
+    {
+      "id": "5b",
+      "caption": "Marching Cubes mesh topology classes",
+      "type": "extract",
+      "description": "Shows the 256 local topologies grouped by rotational symmetry and highlights the singly connected topologies retained by the method.",
+      "refs": [
+        "4b"
+      ],
+      "page": 3,
+      "figure_number": 2
+    },
+    {
+      "id": "5c",
+      "caption": "Classical Marching Cubes versus Differentiable Marching Cubes representation",
+      "type": "extract",
+      "description": "Contrasts signed-distance interpolation with the proposed occupancy and vertex displacement parameterization.",
+      "refs": [
+        "4a",
+        "4b"
+      ],
+      "page": 3,
+      "figure_number": 3
+    },
+    {
+      "id": "5d",
+      "caption": "Deep Marching Cubes network architecture",
+      "type": "extract",
+      "description": "Shows grid pooling from point clouds, the 3D encoder-decoder with skip connections, and the two decoder heads for O and X.",
+      "refs": [
+        "4b",
+        "4d"
+      ],
+      "page": 5,
+      "figure_number": 4
+    }
+  ]
+}
