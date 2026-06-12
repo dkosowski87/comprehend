@@ -1,9 +1,13 @@
 """Tests for paper queue loading."""
 
+import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import yaml
+from click.testing import CliRunner
 
+from comprehend import cli
 from comprehend.queue import (
     PaperQueueEntry,
     add_paper_to_queue,
@@ -89,3 +93,48 @@ def test_add_paper_to_queue(tmp_path: Path) -> None:
     assert entry.resolve_slug() == "arxiv-9999-99999"
     reloaded = load_paper_queue(papers_file)
     assert len(reloaded) == 2
+
+
+def test_queue_next_prepares_pending_paper(tmp_path: Path, monkeypatch) -> None:
+    papers_file = tmp_path / "papers.yaml"
+    cache_root = tmp_path / "cache"
+    paper_cache = cache_root / "arxiv-9999-99999"
+    papers_file.write_text(
+        "papers:\n"
+        "  - url: https://arxiv.org/abs/9999.99999\n"
+        "    slug: arxiv-9999-99999\n"
+        "    title: Test Paper\n",
+        encoding="utf-8",
+    )
+
+    prepared = SimpleNamespace(
+        pdf_url="https://arxiv.org/pdf/9999.99999.pdf",
+        title="Prepared Test Paper",
+        cache_dir=paper_cache,
+        pdf_path=paper_cache / "paper.pdf",
+        figures_json_path=paper_cache / "figures.json",
+        extracted=SimpleNamespace(text_path=paper_cache / "text.txt"),
+    )
+
+    monkeypatch.setattr(cli, "_sync_wiki_for_status", lambda config: None)
+    monkeypatch.setattr(cli, "default_cache_dir", lambda: cache_root)
+    monkeypatch.setattr(cli, "prepare_paper", lambda *args, **kwargs: prepared)
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli.main,
+        [
+            "queue",
+            "next",
+            "--papers-file",
+            str(papers_file),
+            "--repo",
+            "owner/repo",
+        ],
+    )
+
+    assert result.exit_code == 0
+    payload = json.loads(result.output)
+    assert payload["slug"] == "arxiv-9999-99999"
+    assert payload["title"] == "Prepared Test Paper"
+    assert payload["text_path"] == str(paper_cache / "text.txt")
