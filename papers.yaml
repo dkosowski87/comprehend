@@ -80,6 +80,9 @@ papers:
 - url: https://arxiv.org/abs/1912.07372
   slug: arxiv-1912-07372
   title: Local Implicit Grid Representations for 3D Scenes
+- url: https://arxiv.org/abs/2406.03459
+  slug: arxiv-2406-03459
+  title: 'LW-DETR: A Transformer Replacement to YOLO for Real-Time Detection'
 - url: https://arxiv.org/abs/2205.06230
   slug: arxiv-2205-06230
   title: 'GLIP: Grounded Language-Image Pre-training'
@@ -92,9 +95,15 @@ papers:
 - url: https://arxiv.org/abs/2406.09414
   slug: arxiv-2406-09414
   title: Depth Anything V2
+- url: https://openaccess.thecvf.com/content/CVPR2023/papers/Woo_ConvNeXt_V2_Co-Designing_and_Scaling_ConvNets_With_Masked_Autoencoders_CVPR_2023_paper.pdf
+  slug: convnext-v2-cvpr-2023
+  title: 'ConvNeXt V2: Co-Designing and Scaling ConvNets with Masked Autoencoders'
 - url: https://arxiv.org/abs/2312.14635
   slug: arxiv-2312-14635
   title: Flow Maps for Universal Local Neural Parameterization
+- url: https://arxiv.org/abs/2503.11651
+  slug: arxiv-2503-11651
+  title: 'VGGT: Visual Geometry Grounded Transformer'
 - url: https://arxiv.org/abs/2311.12198
   slug: arxiv-2311-12198
   title: 3D Gaussian Splatting for Real-Time Radiance Field Rendering
@@ -107,6 +116,9 @@ papers:
 - url: https://arxiv.org/abs/2210.02747
   slug: arxiv-2210-02747
   title: Flow Matching for Generative Modeling
+- url: https://arxiv.org/abs/2506.11035
+  slug: arxiv-2506-11035
+  title: 'Tversky Neural Networks: Psychologically Plausible Deep Learning with Differentiable Tversky Similarity'
 - url: https://3dvar.com/Pandey2021Total.pdf
   slug: total3d-understanding
   title: 'Total3DUnderstanding: Joint Layout, Object Pose and Mesh Reconstruction'
@@ -116,6 +128,9 @@ papers:
 - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
   slug: neurips-2020-ntk-generalization
   title: Fine-Grained Analysis of Optimization and Generalization for Overparameterized Two-Layer Neural Networks
+- url: https://arxiv.org/pdf/2605.27365v2
+  slug: arxiv-2605-27365
+  title: 'LocateAnything: Fast and High-Quality Vision-Language Grounding with Parallel Box Decoding'
 - url: https://arxiv.org/abs/2604.13036
   slug: arxiv-2604-13036
   title: Generative Scene Modeling
@@ -128,6 +143,9 @@ papers:
 - url: https://arxiv.org/abs/2605.10204
   slug: arxiv-2605-10204
   title: '3DReflecNet: A Large-Scale Dataset for 3D Reconstruction of Reflective, Transparent, and Low-Texture Objects'
+- url: https://arxiv.org/abs/2401.17270
+  slug: arxiv-2401-17270
+  title: 'YOLO-World: Real-Time Open-Vocabulary Object Detection'
 - url: https://arxiv.org/abs/2605.07429
   slug: arxiv-2605-07429
   title: Towards Photorealistic and Efficient Bokeh Rendering via Diffusion Framework
@@ -140,6 +158,9 @@ papers:
 - url: https://arxiv.org/abs/2604.26488
   slug: arxiv-2604-26488
   title: Featurising Pixels from Dynamic 3D Scenes with Linear In-Context Learners
+- url: https://arxiv.org/pdf/2605.22344
+  slug: arxiv-2605-22344
+  title: 'Bernini: Latent Semantic Planning for Video Diffusion'
 - url: https://arxiv.org/abs/2604.24024
   slug: arxiv-2604-24024
   title: Breaking the Scalability Limit of Multi-Projector Calibration with Embedded Cameras
@@ -149,15 +170,24 @@ papers:
 - url: https://arxiv.org/abs/2604.19420
   slug: arxiv-2604-19420
   title: 'TESO: Online Tracking of Essential Matrix by Stochastic Optimization'
+- url: https://arxiv.org/pdf/2503.18783
+  slug: arxiv-2503-18783
+  title: 'Frequency Dynamic Convolution for Dense Image Prediction'
 - url: https://arxiv.org/abs/2604.18811
   slug: arxiv-2604-18811
   title: 'Rethinking Dataset Distillation: Hard Truths about Soft Labels'
 - url: https://arxiv.org/abs/2604.12113
   slug: arxiv-2604-12113
   title: 'PR-MaGIC: Prompt Refinement Via Mask Decoder Gradient Flow For In-Context Segmentation'
+- url: https://arxiv.org/abs/2605.26230
+  slug: arxiv-2605-26230
+  title: 'Geometry-Aware Representation Denoising for Robust Multi-view 3D Reconstruction'
 - url: https://arxiv.org/abs/2604.10546
   slug: arxiv-2604-10546
   title: Differentiable Vector Quantization for Rate-Distortion Optimization of Generative Image Compression
+- url: https://arxiv.org/abs/2412.01506
+  slug: arxiv-2412-01506
+  title: Structured 3D Latents for Scalable and Versatile 3D Generation
 - url: https://arxiv.org/abs/2604.08924
   slug: arxiv-2604-08924
   title: 'Customized Fusion: A Closed-Loop Dynamic Network for Adaptive Multi-Task-Aware Infrared-Visible Image Fusion'
@@ -170,6 +200,12 @@ papers:
 - url: https://arxiv.org/abs/2603.25706
   slug: arxiv-2603-25706
   title: 'Wan-Weaver: Interleaved Multi-modal Generation via Decoupled Training'
+- url: https://arxiv.org/abs/2504.02259
+  slug: arxiv-2504-02259
+  title: 'T*: Re-thinking Temporal Search for Long-Form Video Understanding'
+- url: https://arxiv.org/abs/2405.07992v3
+  slug: arxiv-2405-07992
+  title: 'MambaOut: Do We Really Need Mamba for Vision?'
 - url: https://arxiv.org/abs/2603.19918
   slug: arxiv-2603-19918
   title: 'Learning Like Humans: Analogical Concept Learning for Generalized Category Discovery'
@@ -194,6 +230,9 @@ papers:
 - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
   slug: neurips-2020-fourier-features
   title: 'Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains'
+- url: https://arxiv.org/abs/2503.16591
+  slug: arxiv-2503-16591
+  title: "UniK3D: Universal Camera Monocular 3D Estimation"
 - url: https://arxiv.org/abs/2602.23574
   slug: arxiv-2602-23574
   title: Evidential Neural Radiance Fields
@@ -212,12 +251,18 @@ papers:
 - url: https://arxiv.org/abs/2602.19213
   slug: arxiv-2602-19213
   title: 'SegMoTE: Token-Level Mixture of Experts for Medical Image Segmentation'
+- url: https://arxiv.org/abs/2605.30280
+  slug: arxiv-2605-30280
+  title: 'Qwen-VLA: Unifying Vision-Language-Action Modeling across Tasks, Environments, and Robot Embodiments'
 - url: https://arxiv.org/abs/2602.19134
   slug: arxiv-2602-19134
   title: Mapping Networks
 - url: https://arxiv.org/abs/2602.17535
   slug: arxiv-2602-17535
   title: 'LATA: Laplacian-Assisted Transductive Adaptation for Conformal Uncertainty in Medical VLMs'
+- url: https://arxiv.org/abs/2411.13383
+  slug: arxiv-2411-13383
+  title: 'Adversarial Diffusion Compression for Real-World Image Super-Resolution'
 - url: https://arxiv.org/abs/2601.15408
   slug: arxiv-2601-15408
   title: 'CURE: Curriculum-guided Multi-task Training for Reliable Anatomy Grounded Report Generation'
@@ -260,6 +305,9 @@ papers:
 - url: https://arxiv.org/abs/2511.21135
   slug: arxiv-2511-21135
   title: 'SocialNav: Training Human-Inspired Foundation Model for Socially-Aware Embodied Navigation'
+- url: https://arxiv.org/abs/2412.09401
+  slug: arxiv-2412-09401
+  title: 'SLAM3R: Real-Time Dense Scene Reconstruction from Monocular RGB Videos'
 - url: https://arxiv.org/abs/2511.18787
   slug: arxiv-2511-18787
   title: Understanding Task Transfer in Vision-Language Models
@@ -269,9 +317,9 @@ papers:
 - url: https://arxiv.org/abs/2511.04029
   slug: arxiv-2511-04029
   title: 'Faithful Contouring: Near-Lossless 3D Voxel Representation Free from Iso-surface'
-- url: https://arxiv.org/abs/2510.10113
-  slug: arxiv-2510-10113
-  title: 'ImmerIris: A Large-Scale Dataset and Benchmark for Off-Axis and Unconstrained Iris Recognition in Immersive Applications'
+- url: https://arxiv.org/abs/2503.14880
+  slug: arxiv-2503-14880
+  title: 'DPFlow: Adaptive Optical Flow Estimation with a Dual-Pyramid Framework'
 - url: https://arxiv.org/abs/2509.24421
   slug: arxiv-2509-24421
   title: 'Proxy-GS: Unified Occlusion Priors for Training and Inference in Structured 3D Gaussian Splatting'
@@ -299,6 +347,9 @@ papers:
 - url: https://arxiv.org/abs/2604.22334
   slug: arxiv-2604-22334
   title: 'FILTR: Extracting Topological Features from Pretrained 3D Models'
+- url: https://arxiv.org/abs/2405.14325v4
+  slug: arxiv-2405-14325
+  title: 'Dinomaly: The Less Is More Philosophy in Multi-Class Unsupervised Anomaly Detection'
 - url: https://arxiv.org/abs/2604.18267
   slug: arxiv-2604-18267
   title: 'MARCO: Navigating the Unseen Space of Semantic Correspondence'
@@ -317,9 +368,9 @@ papers:
 - url: https://arxiv.org/abs/2603.22650
   slug: arxiv-2603-22650
   title: 'MAGICIAN: Efficient Long-Term Planning with Imagined Gaussians for Active Mapping'
-- url: https://arxiv.org/abs/2603.21229
-  slug: arxiv-2603-21229
-  title: 'Plant Taxonomy Meets Plant Counting: A Fine-Grained, Taxonomic Dataset for Counting Hundreds of Plant Species'
+- url: https://arxiv.org/abs/2303.14158
+  slug: arxiv-2303-14158
+  title: 'BundleSDF: Neural 6-DoF Tracking and 3D Reconstruction of Unknown Objects'
 - url: https://arxiv.org/abs/2603.17684
   slug: arxiv-2603-17684
   title: Does YOLO Really Need to See Every Training Image in Every Epoch?
@@ -362,6 +413,9 @@ papers:
 - url: https://arxiv.org/abs/2512.17817
   slug: arxiv-2512-17817
   title: 'Chorus: Multi-Teacher Pretraining for Holistic 3D Gaussian Scene Encoding'
+- url: https://arxiv.org/abs/2605.26115
+  slug: arxiv-2605-26115
+  title: 'TriSplat: Simulation-Ready Feed-Forward 3D Scene Reconstruction'
 - url: https://arxiv.org/abs/2512.14692
   slug: arxiv-2512-14692
   title: Native and Compact Structured Latents for 3D Generation
@@ -383,6 +437,9 @@ papers:
 - url: https://arxiv.org/abs/2512.08924
   slug: arxiv-2512-08924
   title: Efficiently Reconstructing Dynamic Scenes One D4RT at a Time
+- url: https://research.nvidia.com/labs/toronto-ai/GET3D/assets/paper.pdf
+  slug: get3d
+  title: 'GET3D: A Generative Model of High Quality 3D Textured Shapes Learned from Images'
 - url: https://arxiv.org/abs/2512.06818
   slug: arxiv-2512-06818
   title: 'MeshSplatting: Differentiable Rendering with Opaque Meshes'
@@ -392,6 +449,9 @@ papers:
 - url: https://arxiv.org/abs/2512.05564
   slug: arxiv-2512-05564
   title: 'ProPhy: Progressive Physical Alignment for Dynamic World Simulation'
+- url: https://arxiv.org/abs/2412.08486
+  slug: arxiv-2412-08486
+  title: 'Learning Flow Fields in Attention for Controllable Person Image Generation'
 - url: https://arxiv.org/abs/2512.02715
   slug: arxiv-2512-02715
   title: 'GeoViS: Geospatially Rewarded Visual Search for Remote Sensing Visual Grounding'
@@ -410,6 +470,9 @@ papers:
 - url: https://arxiv.org/abs/2511.20645
   slug: arxiv-2511-20645
   title: 'PixelDiT: Pixel Diffusion Transformers for Image Generation'
+- url: https://openaccess.thecvf.com/content/CVPR2021/papers/Tosi_SMD-Nets_Stereo_Mixture_Density_Networks_CVPR_2021_paper.pdf
+  slug: smd-nets-cvpr-2021
+  title: 'SMD-Nets: Stereo Mixture Density Networks'
 - url: https://arxiv.org/abs/2511.19661
   slug: arxiv-2511-19661
   title: 'CodeV: Code with Images for Faithful Visual Reasoning via Tool-Aware Policy Optimization'
@@ -425,6 +488,9 @@ papers:
 - url: https://arxiv.org/abs/2511.02483
   slug: arxiv-2511-02483
   title: "OLATverse: A Large-scale Real-world Object Dataset with Precise Lighting\n  Control"
+- url: https://arxiv.org/abs/2604.20841
+  slug: arxiv-2604-20841
+  title: 'DeVI: Physics-based Dexterous Human-Object Interaction via Synthetic Video Imitation'
 - url: https://arxiv.org/abs/2509.14476
   slug: arxiv-2509-14476
   title: 'AToken: A Unified Tokenizer for Vision'
@@ -437,3 +503,12 @@ papers:
 - url: https://arxiv.org/abs/2505.20981v2
   slug: arxiv-2505-20981
   title: 'RefAV: Towards Planning-Centric Scenario Mining'
+- url: https://arxiv.org/abs/2504.04834
+  slug: arxiv-2504-04834
+  title: 'Learning Affine Correspondences by Integrating Geometric Constraints'
+- url: https://arxiv.org/pdf/2502.20087v2
+  slug: arxiv-2502-20087
+  title: 'OverLoCK: An Overview-first-Look-Closely-next ConvNet with Context-Mixing Dynamic Kernels'
+- url: https://arxiv.org/abs/2505.04410
+  slug: arxiv-2505-04410
+  title: 'DeCLIP: Decoupled Learning for Open-Vocabulary Dense Perception'
