@@ -241,9 +241,9 @@ def test_normalize_wiki_latex_rewrites_bm() -> None:
     normalized_latex = normalize_wiki_latex(latex)
 
     assert r"\bm{" not in normalized_latex
-    assert r"\boldsymbol{q}_i" in normalized_latex
-    assert r"\boldsymbol{Q}\boldsymbol{K}^\top" in normalized_latex
-    assert r"\boldsymbol{V}" in normalized_latex
+    assert r"\mathbf{q}_i" in normalized_latex
+    assert r"\mathbf{Q}\mathbf{K}^{\mathrm{T}}" in normalized_latex
+    assert r"\mathbf{V}" in normalized_latex
 
 
 def test_normalize_wiki_latex_rewrites_nested_operatorname_and_bm() -> None:
@@ -258,9 +258,18 @@ def test_normalize_wiki_latex_rewrites_nested_operatorname_and_bm() -> None:
 
     assert r"\bm{" not in normalized_latex
     assert r"\operatorname{" not in normalized_latex
-    assert r"\boldsymbol{q}=\mathrm{Q\text{-}FC}(\boldsymbol{O})" in normalized_latex
-    assert r"\boldsymbol{k},\boldsymbol{v}=\mathrm{Q\text{-}FC}(\boldsymbol{E})" in normalized_latex
-    assert r"Q_a(\boldsymbol{q})_i" in normalized_latex
+    assert r"\mathbf{q}=\mathrm{Q\text{-}FC}(\mathbf{O})" in normalized_latex
+    assert r"\mathbf{k},\mathbf{v}=\mathrm{Q\text{-}FC}(\mathbf{E})" in normalized_latex
+    assert r"Q_a(\mathbf{q})_i" in normalized_latex
+
+
+def test_normalize_wiki_latex_rewrites_transpose() -> None:
+    latex = r"\mathbf{K}^\top \mathbf{q}"
+
+    normalized_latex = normalize_wiki_latex(latex)
+
+    assert r"^\top" not in normalized_latex
+    assert r"\mathbf{K}^{\mathrm{T}} \mathbf{q}" in normalized_latex
 
 
 def test_normalize_wiki_latex_braces_nested_superscripts() -> None:

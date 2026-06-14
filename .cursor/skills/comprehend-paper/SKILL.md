@@ -125,28 +125,43 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 1. **Problem** — what limitation or gap the paper addresses (2–4 bullets).
 2. **Solution** — how the paper solves it. Use cross-reference ids (`**4a**`, `(5a)`) where helpful; these become jump links in the wiki output.
 3. **Key concepts** — theoretical explanations aligned with *this paper's* contributions. Not a general ML primer. Include intuition (e.g. why attention helps long-range dependencies) when the paper relies on it.
-4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly). For each equation, add a `variables` legend listing non-obvious symbols and what they represent in *this paper's* notation. Use GitHub-wiki-compatible macros only: `\boldsymbol{}` for bold vectors/matrices (not `\bm{}`), `\mathrm{}` for operator/module names (not `\operatorname{}`), `\mathbf{}` only for upright bold symbols such as indicator functions (`\mathbf{1}`). Hyphenated names belong inside `\mathrm{}`, e.g. `\mathrm{Q\text{-}FC}`. Brace nested superscripts inside `^{...}` (e.g. `^{\mathcal{S}^{\ast}}`, not `^{\mathcal{S}^*}`); assembly rewrites common cases but prefer the braced form.
+4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly). For each equation, add a `variables` legend listing non-obvious symbols and what they represent in *this paper's* notation.
+
+**Notation (Bishop, *Pattern Recognition and Machine Learning*):** follow PRML conventions and GitHub-wiki-compatible macros.
+
+| Entity | LaTeX | Example |
+|--------|-------|---------|
+| Vector (column) | `\mathbf{}` lowercase bold Roman | `\mathbf{x} = (x_1,\ldots,x_D)^{\mathrm{T}}` |
+| Matrix | `\mathbf{}` uppercase bold Roman | `\mathbf{X}`; row `n` is `\mathbf{x}_n^{\mathrm{T}}` |
+| Scalar / element | italic, not bold | `x_i`, `\sigma` |
+| Transpose | `^{\mathrm{T}}` (not `^\top`) | `\mathbf{q}^{\mathrm{T}}` |
+| Expectation | `\mathbb{E}[\cdot]` | `\mathbb{E}[\mathbf{x}]` |
+| Operators | `\mathrm{}` (not `\operatorname{}`) | `\mathrm{var}`, `\mathrm{cov}`, `\mathrm{clip}` |
+| Module names | `\mathrm{}` with `\text{-}` for hyphens | `\mathrm{Q\text{-}FC}` |
+
+- Rewrite paper `\bm{}` → `\mathbf{}` at assembly; do not use `\bm{}` in `summary.json`.
+- Brace nested superscripts inside `^{...}` (e.g. `^{\mathcal{S}^{\ast}}`, not `^{\mathcal{S}^*}`).
 
 ```json
 "math": [
   {
     "id": "4a",
     "label": "volume rendering",
-    "latex": "C(\\boldsymbol{r}) = \\int T(t)\\,\\sigma(\\boldsymbol{r}(t))\\,\\boldsymbol{c}(\\boldsymbol{r}(t), \\boldsymbol{d})\\,dt",
+    "latex": "C(\\mathbf{r}) = \\int T(t)\\,\\sigma(\\mathbf{r}(t))\\,\\mathbf{c}(\\mathbf{r}(t), \\mathbf{d})\\,dt",
     "variables": [
-      {"symbol": "\\boldsymbol{r}", "meaning": "3D spatial location"},
-      {"symbol": "\\boldsymbol{d}", "meaning": "viewing direction"},
+      {"symbol": "\\mathbf{r}", "meaning": "3D spatial location"},
+      {"symbol": "\\mathbf{d}", "meaning": "viewing direction"},
       {"symbol": "\\sigma", "meaning": "volume density at a point"},
       {"symbol": "T(t)", "meaning": "accumulated transmittance along the ray"},
-      {"symbol": "\\boldsymbol{c}", "meaning": "emitted RGB color"}
+      {"symbol": "\\mathbf{c}", "meaning": "emitted RGB color"}
     ]
   },
   {
     "id": "4b",
     "label": "quantized FC projection",
-    "latex": "\\boldsymbol{q}=\\mathrm{Q\\text{-}FC}(\\boldsymbol{O}),\\quad \\boldsymbol{k},\\boldsymbol{v}=\\mathrm{Q\\text{-}FC}(\\boldsymbol{E})",
+    "latex": "\\mathbf{q}=\\mathrm{Q\\text{-}FC}(\\mathbf{O}),\\quad \\mathbf{k},\\mathbf{v}=\\mathrm{Q\\text{-}FC}(\\mathbf{E})",
     "variables": [
-      {"symbol": "\\boldsymbol{q}", "meaning": "quantized query vector"},
+      {"symbol": "\\mathbf{q}", "meaning": "quantized query vector"},
       {"symbol": "\\mathrm{Q\\text{-}FC}", "meaning": "quantized fully-connected layer"}
     ]
   }

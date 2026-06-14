@@ -154,7 +154,7 @@ Write `<cache_dir>/concept.json`:
 - **English only**
 - **No paper-specific context section** — do not add "Why it appears in Swin Transformer". Keep explanations general.
 - **Max 1 visual** — use id `"visual"` (not paper-style ids like `5a`)
-- **No inline LaTeX** in bullets — GitHub wiki does not render `\(...\)`. Put equations in a **`math`** array and reference them with `**m1**`, `**m2**`, … (ids `m1`, `m2`, …). They become jump links to a **Math** section with `$$...$$` blocks, same as paper summaries. Add a `variables` legend for non-obvious symbols in each equation.
+- **No inline LaTeX** in bullets — GitHub wiki does not render `\(...\)`. Put equations in a **`math`** array and reference them with `**m1**`, `**m2**`, … (ids `m1`, `m2`, …). They become jump links to a **Math** section with `$$...$$` blocks, same as paper summaries. Add a `variables` legend for non-obvious symbols in each equation. Follow the Bishop PRML notation table in the comprehend-paper skill (`\mathbf{}` vectors/matrices, `^{\mathrm{T}}` transpose, `\mathbb{E}[\cdot]` expectation, `\mathrm{}` operators).
 - **Tags** in `concept.json`: infer 1–5 from the concept and related papers (`uv run comprehend tags`, max 5). Tags from a related paper's summary are a reasonable starting point.
 - **Keywords**: 3–10 concept-specific terms, auto-bolded in **What it is** and **How it works** during assembly. Also used as link-search terms when patching the paper wiki (unless `--term` overrides at publish).
 - Sections: **What it is**, **How it works**, optional **Math**, optional **Visualisation**
