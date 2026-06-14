@@ -125,7 +125,7 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
 1. **Problem** — what limitation or gap the paper addresses (2–4 bullets).
 2. **Solution** — how the paper solves it. Use cross-reference ids (`**4a**`, `(5a)`) where helpful; these become jump links in the wiki output.
 3. **Key concepts** — theoretical explanations aligned with *this paper's* contributions. Not a general ML primer. Include intuition (e.g. why attention helps long-range dependencies) when the paper relies on it.
-4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly). For each equation, add a `variables` legend listing non-obvious symbols and what they represent in *this paper's* notation.
+4. **Math** — only equations central to understanding. LaTeX without `$` delimiters (added during assembly). For each equation, add a `variables` legend listing non-obvious symbols and what they represent in *this paper's* notation. Use GitHub-wiki-compatible macros only: `\mathbf{}` for bold vectors/matrices (not `\bm{}`), `\mathrm{}` for operator/module names (not `\operatorname{}`). Hyphenated names belong inside `\mathrm{}`, e.g. `\mathrm{Q\text{-}FC}`. Brace nested superscripts inside `^{...}` (e.g. `^{\mathcal{S}^{\ast}}`, not `^{\mathcal{S}^*}`); assembly rewrites common cases but prefer the braced form.
 
 ```json
 "math": [
@@ -139,6 +139,15 @@ Write `.comprehend/papers/<slug>/summary.json` matching this schema:
       {"symbol": "\\sigma", "meaning": "volume density at a point"},
       {"symbol": "T(t)", "meaning": "accumulated transmittance along the ray"},
       {"symbol": "\\mathbf{c}", "meaning": "emitted RGB color"}
+    ]
+  },
+  {
+    "id": "4b",
+    "label": "quantized FC projection",
+    "latex": "\\mathbf{q}=\\mathrm{Q\\text{-}FC}(\\mathbf{O}),\\quad \\mathbf{k},\\mathbf{v}=\\mathrm{Q\\text{-}FC}(\\mathbf{E})",
+    "variables": [
+      {"symbol": "\\mathbf{q}", "meaning": "quantized query vector"},
+      {"symbol": "\\mathrm{Q\\text{-}FC}", "meaning": "quantized fully-connected layer"}
     ]
   }
 ]

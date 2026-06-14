@@ -193,11 +193,132 @@ def _anchor(ref_id: str) -> str:
     return f'<a id="{ref_id}"></a>'
 
 
+def _replace_braced_macro(latex: str, *, source: str, target: str) -> str:
+    """Replace ``\\source{...}`` with ``\\target{...}``, including nested braces.
+
+    Args:
+        latex: Equation string that may contain the macro.
+        source: Macro name to replace (without a leading backslash).
+        target: Replacement macro name (without a leading backslash).
+
+    Returns:
+        Equation string with matching braced macro calls rewritten.
+    """
+    needle = f"\\{source}"
+    result: list[str] = []
+    index = 0
+
+    while index < len(latex):
+        start = latex.find(needle, index)
+        if start == -1:
+            result.append(latex[index:])
+            break
+
+        brace_start = start + len(needle)
+        while brace_start < len(latex) and latex[brace_start].isspace():
+            brace_start += 1
+
+        if brace_start >= len(latex) or latex[brace_start] != "{":
+            result.append(latex[index : start + len(needle)])
+            index = start + len(needle)
+            continue
+
+        depth = 0
+        position = brace_start
+        while position < len(latex):
+            character = latex[position]
+            if character == "{":
+                depth += 1
+            elif character == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            position += 1
+
+        if depth != 0:
+            result.append(latex[index:])
+            break
+
+        inner = latex[brace_start + 1 : position]
+        result.append(latex[index:start])
+        result.append(f"\\{target}{{{inner}}}")
+        index = position + 1
+
+    normalized = "".join(result)
+
+    return normalized
+
+
+def _brace_inner_superscripts(inner: str) -> str:
+    """Brace ``^`` operators inside an existing superscript group.
+
+    GitHub wiki math rejects forms like ``^{\\mathcal{S}^*}`` where the inner
+    ``^*`` is not wrapped in braces.
+
+    Args:
+        inner: Superscript content (text inside the outer ``^{...}``).
+
+    Returns:
+        Superscript content with nested superscripts braced.
+    """
+    normalized = re.sub(r"\^\*", r"^{\\ast}", inner)
+    normalized = re.sub(r"\^([^{])", r"^{\1}", normalized)
+
+    return normalized
+
+
+def _fix_nested_superscripts(latex: str) -> str:
+    """Brace nested superscripts inside ``^{...}`` groups for wiki math parsers.
+
+    Args:
+        latex: Equation string that may contain nested superscripts.
+
+    Returns:
+        Equation string with nested superscripts braced.
+    """
+    result: list[str] = []
+    index = 0
+
+    while index < len(latex):
+        caret = latex.find("^{", index)
+        if caret == -1:
+            result.append(latex[index:])
+            break
+
+        result.append(latex[index:caret])
+        brace_start = caret + 1
+        depth = 0
+        position = brace_start
+        while position < len(latex):
+            character = latex[position]
+            if character == "{":
+                depth += 1
+            elif character == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            position += 1
+
+        if depth != 0:
+            result.append(latex[caret:])
+            break
+
+        inner = latex[brace_start + 1 : position]
+        fixed_inner = _brace_inner_superscripts(inner)
+        result.append(f"^{{{fixed_inner}}}")
+        index = position + 1
+
+    normalized = "".join(result)
+
+    return normalized
+
+
 def normalize_wiki_latex(latex: str) -> str:
     """Normalize LaTeX for GitHub wiki math rendering.
 
-    GitHub wiki math can reject some macros (for example ``\\operatorname``).
-    This rewrites known unsupported macros to compatible forms before emitting
+    GitHub wiki math can reject some macros (for example ``\\operatorname``,
+    ``\\bm``) and nested superscripts (for example ``^{\\mathcal{S}^*}``).
+    This rewrites known unsupported forms to compatible ones before emitting
     ``$$...$$`` blocks.
 
     Args:
@@ -206,7 +327,9 @@ def normalize_wiki_latex(latex: str) -> str:
     Returns:
         Equation string with wiki-compatible macros.
     """
-    normalized = re.sub(r"\\operatorname\s*\{([^{}]+)\}", r"\\mathrm{\1}", latex)
+    normalized = _replace_braced_macro(latex, source="operatorname", target="mathrm")
+    normalized = _replace_braced_macro(normalized, source="bm", target="mathbf")
+    normalized = _fix_nested_superscripts(normalized)
 
     return normalized
 

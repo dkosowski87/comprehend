@@ -235,6 +235,46 @@ def test_normalize_wiki_latex_rewrites_operatorname() -> None:
     assert r"\mathrm{IoU}" in normalized_latex
 
 
+def test_normalize_wiki_latex_rewrites_bm() -> None:
+    latex = r"\bm{q}_i = \mathrm{softmax}\left(\frac{\bm{Q}\bm{K}^\top}{\sqrt{d}}\right)\bm{V}"
+
+    normalized_latex = normalize_wiki_latex(latex)
+
+    assert r"\bm{" not in normalized_latex
+    assert r"\mathbf{q}_i" in normalized_latex
+    assert r"\mathbf{Q}\mathbf{K}^\top" in normalized_latex
+    assert r"\mathbf{V}" in normalized_latex
+
+
+def test_normalize_wiki_latex_rewrites_nested_operatorname_and_bm() -> None:
+    latex = (
+        r"\bm{q}=\operatorname{Q\text{-}FC}(\bm{O}),\quad \bm{k},\bm{v}"
+        r"=\operatorname{Q\text{-}FC}(\bm{E}),\quad \bm{A}_i=\mathrm{softmax}"
+        r"\left(Q_a(\bm{q})_i Q_a(\bm{k})_i^\top/\sqrt{d}\right),\quad"
+        r" \bm{D}_i=Q_a(\bm{A})_i Q_a(\bm{v})_i"
+    )
+
+    normalized_latex = normalize_wiki_latex(latex)
+
+    assert r"\bm{" not in normalized_latex
+    assert r"\operatorname{" not in normalized_latex
+    assert r"\mathbf{q}=\mathrm{Q\text{-}FC}(\mathbf{O})" in normalized_latex
+    assert r"\mathbf{k},\mathbf{v}=\mathrm{Q\text{-}FC}(\mathbf{E})" in normalized_latex
+    assert r"Q_a(\mathbf{q})_i" in normalized_latex
+
+
+def test_normalize_wiki_latex_braces_nested_superscripts() -> None:
+    latex = (
+        r"\mathcal{L}_{DRD}(\tilde{\mathbf{q}}^{\mathcal{S}^*}, \tilde{\mathbf{q}}^{\mathcal{T}})"
+        r" = \mathbb{E}\left[\left\|\tilde{\mathbf{D}}^{\mathcal{S}^*} - \tilde{\mathbf{D}}^{\mathcal{T}}\right\|_2\right]"
+    )
+
+    normalized_latex = normalize_wiki_latex(latex)
+
+    assert r"^{\mathcal{S}^*}" not in normalized_latex
+    assert normalized_latex.count(r"^{\mathcal{S}^{\ast}}") == 2
+
+
 def test_render_markdown_normalizes_operatorname_in_math() -> None:
     summary = PaperSummary(
         title="Test Paper",
