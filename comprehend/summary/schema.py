@@ -318,8 +318,8 @@ def normalize_wiki_latex(latex: str) -> str:
 
     GitHub wiki math can reject some macros (for example ``\\operatorname``,
     ``\\bm``) and nested superscripts (for example ``^{\\mathcal{S}^*}``).
-    This rewrites known unsupported forms to compatible ones before emitting
-    ``$$...$$`` blocks.
+    This rewrites ``\\bm`` to ``\\boldsymbol`` and other unsupported forms to
+    compatible ones before emitting ``$$...$$`` blocks.
 
     Args:
         latex: Raw equation string from summary JSON.
@@ -328,7 +328,7 @@ def normalize_wiki_latex(latex: str) -> str:
         Equation string with wiki-compatible macros.
     """
     normalized = _replace_braced_macro(latex, source="operatorname", target="mathrm")
-    normalized = _replace_braced_macro(normalized, source="bm", target="mathbf")
+    normalized = _replace_braced_macro(normalized, source="bm", target="boldsymbol")
     normalized = _fix_nested_superscripts(normalized)
 
     return normalized
