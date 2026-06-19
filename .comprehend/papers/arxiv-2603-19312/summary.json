@@ -195,7 +195,13 @@
         "4d"
       ],
       "page": 1,
-      "figure_number": 1
+      "figure_number": 1,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2603-19312-5a.png"
     },
     {
       "id": "5b",
@@ -207,7 +213,13 @@
         "4d"
       ],
       "page": 2,
-      "figure_number": 2
+      "figure_number": 2,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2603-19312-5b.png"
     },
     {
       "id": "5c",
@@ -219,7 +231,13 @@
         "4f"
       ],
       "page": 4,
-      "figure_number": 4
+      "figure_number": 4,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2603-19312-5c.png"
     }
   ]
 }
