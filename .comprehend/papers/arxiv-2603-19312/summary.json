@@ -1,0 +1,225 @@
+{
+  "title": "LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels",
+  "pdf_url": "https://arxiv.org/pdf/2603.19312.pdf",
+  "tags": [
+    "jepa",
+    "world-simulation",
+    "representation-learning",
+    "self-supervised-learning",
+    "robotics"
+  ],
+  "slug": "arxiv-2603-19312",
+  "keywords": [
+    "LeWorldModel",
+    "LeWM",
+    "Joint Embedding Predictive Architecture",
+    "JEPA",
+    "latent world model",
+    "SIGReg",
+    "Sketched-Isotropic-Gaussian Regularizer",
+    "next-embedding prediction",
+    "representation collapse",
+    "isotropic Gaussian",
+    "random univariate projections",
+    "Epps-Pulley test",
+    "latent planning",
+    "model predictive control",
+    "Cross-Entropy Method"
+  ],
+  "problem": [
+    "Joint Embedding Predictive Architectures can learn compact latent world models, but a plain future-embedding prediction loss admits a collapsed solution where the encoder maps many observations to nearly identical representations.",
+    "Existing anti-collapse recipes often depend on stop-gradient targets, exponential moving averages, frozen pretrained encoders, reconstruction losses, reward signals, privileged state, or many hand-balanced loss terms.",
+    "Reward-free offline control from raw pixels needs a latent space that is both predictable enough for dynamics modeling and compact enough for fast planning, without depending on task-specific supervision.",
+    "Prior end-to-end latent dynamics models make hyperparameter tuning and stability difficult, especially when the encoder and predictor are trained jointly from pixels."
+  ],
+  "solution": [
+    "LeWM trains an encoder and action-conditioned transformer predictor jointly from offline pixel-action trajectories: frames become compact latent embeddings, and the predictor forecasts the next latent state rather than reconstructing pixels (**4a**, **4b**, 5a).",
+    "To prevent collapse, the method adds SIGReg, which projects batches of latent embeddings onto random one-dimensional directions and applies a differentiable Epps-Pulley normality statistic so the latent distribution approaches an isotropic Gaussian (**4c**, 5a).",
+    "The full training objective is only next-embedding prediction plus a weighted SIGReg term, so the design removes pretrained target encoders, EMA, stop-gradient updates, reward prediction, and reconstruction losses (**4d**, 5a, 5b).",
+    "For decision making, LeWM encodes the current observation and goal observation, rolls out candidate action sequences in latent space, and uses CEM/MPC to minimize the terminal latent distance to the goal (**4e**, **4f**, 5c).",
+    "Because planning operates over a compact learned embedding rather than high-resolution visual tokens, the same latent world model can support task-agnostic control while keeping the inference loop simple."
+  ],
+  "key_concepts": [
+    "Prediction alone is not enough for a JEPA world model: if every observation shares the same embedding, the next-embedding loss can be small while the representation contains no useful physical state. LeWM makes anti-collapse an explicit distributional constraint instead of relying on target-network heuristics.",
+    "SIGReg turns high-dimensional Gaussian matching into many one-dimensional normality tests. The Cramer-Wold perspective makes this meaningful: if all projected marginals match the standard normal, the joint latent distribution is pushed toward an isotropic Gaussian, encouraging feature diversity without covariance-specific loss engineering.",
+    "The encoder is a ViT that uses a projected [CLS] token as the compact state, while the predictor is an action-conditioned transformer. AdaLN injects actions progressively, so latent dynamics can be learned from sequences of raw observations and actions without reconstructing images.",
+    "The complete LeWM loss leaves one effective balance parameter, the SIGReg weight. This is the paper's main simplification over multi-term end-to-end alternatives: stable joint training comes from a prediction term for dynamics and a principled normality regularizer for representation support.",
+    "Latent planning treats the learned representation as the control state. The terminal goal-matching cost is meaningful only if the latent geometry preserves controllable physical structure, so the training objective and planning procedure are tightly coupled."
+  ],
+  "math": [
+    {
+      "id": "4a",
+      "label": "latent encoder and action-conditioned predictor",
+      "latex": "\\mathbf{z}_t = \\mathrm{enc}_{\\theta}(\\mathbf{o}_t), \\quad \\hat{\\mathbf{z}}_{t+1} = \\mathrm{pred}_{\\phi}(\\mathbf{z}_t, \\mathbf{a}_t)",
+      "variables": [
+        {
+          "symbol": "\\mathbf{o}_t",
+          "meaning": "raw pixel observation at time step t"
+        },
+        {
+          "symbol": "\\mathbf{a}_t",
+          "meaning": "action applied at time step t"
+        },
+        {
+          "symbol": "\\mathbf{z}_t",
+          "meaning": "encoder latent embedding for observation \\mathbf{o}_t"
+        },
+        {
+          "symbol": "\\hat{\\mathbf{z}}_{t+1}",
+          "meaning": "predictor estimate of the next latent embedding"
+        },
+        {
+          "symbol": "\\theta, \\phi",
+          "meaning": "encoder and predictor parameters"
+        }
+      ]
+    },
+    {
+      "id": "4b",
+      "label": "next-embedding prediction loss",
+      "latex": "\\mathcal{L}_{\\mathrm{pred}} = \\left\\|\\hat{\\mathbf{z}}_{t+1} - \\mathbf{z}_{t+1}\\right\\|_2^2",
+      "variables": [
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{pred}}",
+          "meaning": "teacher-forced loss that trains latent dynamics by matching the encoded next observation"
+        },
+        {
+          "symbol": "\\mathbf{z}_{t+1}",
+          "meaning": "target embedding produced by the same jointly trained encoder"
+        }
+      ]
+    },
+    {
+      "id": "4c",
+      "label": "SIGReg random-projection normality regularizer",
+      "latex": "\\mathbf{h}^{(m)} = \\mathbf{Z}\\mathbf{u}^{(m)}, \\quad \\mathrm{SIGReg}(\\mathbf{Z}) = \\frac{1}{M}\\sum_{m=1}^{M}\\int_{-\\infty}^{\\infty} w(t)\\left|\\varphi_N(t;\\mathbf{h}^{(m)}) - \\varphi_0(t)\\right|^2\\,dt",
+      "variables": [
+        {
+          "symbol": "\\mathbf{Z}",
+          "meaning": "collection of latent embeddings over the batch and history used for regularization"
+        },
+        {
+          "symbol": "\\mathbf{u}^{(m)}",
+          "meaning": "m-th random unit-norm projection direction"
+        },
+        {
+          "symbol": "\\mathbf{h}^{(m)}",
+          "meaning": "one-dimensional projected latent samples for projection m"
+        },
+        {
+          "symbol": "M",
+          "meaning": "number of random projections"
+        },
+        {
+          "symbol": "\\varphi_N",
+          "meaning": "empirical characteristic function of the projected latent samples"
+        },
+        {
+          "symbol": "\\varphi_0",
+          "meaning": "characteristic function of the standard normal target"
+        },
+        {
+          "symbol": "w(t)",
+          "meaning": "weighting function in the Epps-Pulley statistic"
+        }
+      ]
+    },
+    {
+      "id": "4d",
+      "label": "complete LeWM training objective",
+      "latex": "\\mathcal{L}_{\\mathrm{LeWM}} = \\mathcal{L}_{\\mathrm{pred}} + \\lambda\\,\\mathrm{SIGReg}(\\mathbf{Z})",
+      "variables": [
+        {
+          "symbol": "\\lambda",
+          "meaning": "weight balancing anti-collapse regularization against next-embedding prediction"
+        },
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{LeWM}}",
+          "meaning": "two-term objective optimized end-to-end through the encoder and predictor"
+        }
+      ]
+    },
+    {
+      "id": "4e",
+      "label": "latent rollout and terminal goal cost",
+      "latex": "\\hat{\\mathbf{z}}_1 = \\mathrm{enc}_{\\theta}(\\mathbf{o}_1), \\quad \\hat{\\mathbf{z}}_{t+1} = \\mathrm{pred}_{\\phi}(\\hat{\\mathbf{z}}_t, \\mathbf{a}_t), \\quad C(\\hat{\\mathbf{z}}_H) = \\left\\|\\hat{\\mathbf{z}}_H - \\mathbf{z}_g\\right\\|_2^2, \\quad \\mathbf{z}_g = \\mathrm{enc}_{\\theta}(\\mathbf{o}_g)",
+      "variables": [
+        {
+          "symbol": "\\mathbf{o}_1",
+          "meaning": "initial observation for planning"
+        },
+        {
+          "symbol": "\\mathbf{o}_g",
+          "meaning": "goal observation"
+        },
+        {
+          "symbol": "\\mathbf{z}_g",
+          "meaning": "latent embedding of the goal observation"
+        },
+        {
+          "symbol": "H",
+          "meaning": "planning horizon"
+        },
+        {
+          "symbol": "C(\\hat{\\mathbf{z}}_H)",
+          "meaning": "terminal latent goal-matching cost"
+        }
+      ]
+    },
+    {
+      "id": "4f",
+      "label": "finite-horizon latent action optimization",
+      "latex": "\\mathbf{a}_{1:H}^{\\ast} = \\arg\\min_{\\mathbf{a}_{1:H}} C(\\hat{\\mathbf{z}}_H)",
+      "variables": [
+        {
+          "symbol": "\\mathbf{a}_{1:H}",
+          "meaning": "candidate sequence of actions optimized by the planning solver"
+        },
+        {
+          "symbol": "\\mathbf{a}_{1:H}^{\\ast}",
+          "meaning": "optimized action sequence before receding-horizon execution"
+        }
+      ]
+    }
+  ],
+  "visuals": [
+    {
+      "id": "5a",
+      "caption": "LeWorldModel training pipeline",
+      "type": "extract",
+      "description": "Shows raw observations mapped by the encoder to latent states, action-conditioned prediction of the next latent state, MSE prediction loss, and SIGReg anti-collapse regularization through random projected normality tests.",
+      "refs": [
+        "4a",
+        "4b",
+        "4c",
+        "4d"
+      ],
+      "page": 1,
+      "figure_number": 1
+    },
+    {
+      "id": "5b",
+      "caption": "Characteristics of latent world model approaches",
+      "type": "extract",
+      "description": "Positions LeWM in the latent world model design space by contrasting end-to-end, foundation-based, and task-specific approaches and highlighting the method's end-to-end, task-agnostic, pixel-based, reward-free, reconstruction-free design.",
+      "refs": [
+        "4c",
+        "4d"
+      ],
+      "page": 2,
+      "figure_number": 2
+    },
+    {
+      "id": "5c",
+      "caption": "Latent planning with LeWorldModel",
+      "type": "extract",
+      "description": "Shows inference-time planning: encode the initial and goal observations, roll out predicted latent states over candidate actions, compute a terminal latent cost, and iteratively update actions with a solver.",
+      "refs": [
+        "4e",
+        "4f"
+      ],
+      "page": 4,
+      "figure_number": 4
+    }
+  ]
+}
