@@ -71,6 +71,9 @@ papers:
 - url: https://arxiv.org/abs/2504.13181
   slug: arxiv-2504-13181
   title: Contrastive Vision-Language Pretraining
+- url: https://proceedings.neurips.cc/paper_files/paper/2018/file/69386f6bb1dfed68692a24c8686939b9-Paper.pdf
+  slug: neurips-2018-neural-ordinary-differential-equations
+  title: Neural Ordinary Differential Equations
 - url: https://arxiv.org/abs/2408.00714
   slug: arxiv-2408-00714
   title: 'Mask DINO: Towards A Unified Transformer-based Framework for Object Detection and Segmentation'
