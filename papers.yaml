@@ -188,6 +188,9 @@ papers:
 - url: https://arxiv.org/abs/2604.10546
   slug: arxiv-2604-10546
   title: Differentiable Vector Quantization for Rate-Distortion Optimization of Generative Image Compression
+- url: https://arxiv.org/pdf/2305.18565
+  slug: arxiv-2305-18565
+  title: "PaLI-X: On Scaling up a Multilingual Vision and Language Model"
 - url: https://arxiv.org/abs/2412.01506
   slug: arxiv-2412-01506
   title: Structured 3D Latents for Scalable and Versatile 3D Generation
