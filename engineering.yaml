@@ -1,14 +1,107 @@
 engineering:
+  # --- CUDA ---
   - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
     slug: engineering-cuda-programming-guide
     title: CUDA C Programming Guide
     topic: cuda
 
+  # --- PyTorch (learning order) ---
   - url: https://pytorch.org/docs/stable/notes/cuda.html
     slug: engineering-pytorch-cuda-semantics
     title: PyTorch CUDA Semantics
     topic: pytorch
 
+  - url: https://pytorch.org/docs/stable/notes/autograd.html
+    slug: engineering-pytorch-autograd
+    title: PyTorch Autograd
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/func.whirlwind_tour.html
+    slug: engineering-pytorch-torch-func
+    title: torch.func Transforms (vmap, grad, jacrev)
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/fx.html
+    slug: engineering-pytorch-torch-fx
+    title: torch.fx Graph Capture
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler.html
+    slug: engineering-pytorch-torch-compile
+    title: torch.compile Compiler Stack
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler_ir.html
+    slug: engineering-pytorch-torchinductor
+    title: TorchInductor IR and Kernel Lowering
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler_dynamic_shapes.html
+    slug: engineering-pytorch-dynamic-shapes
+    title: torch.compile Dynamic Shapes
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/torch.compiler_cudagraph_trees.html
+    slug: engineering-pytorch-cuda-graph-trees
+    title: CUDA Graph Trees
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/export.html
+    slug: engineering-pytorch-export
+    title: torch.export
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler_aot_inductor.html
+    slug: engineering-pytorch-aot-inductor
+    title: AOT Inductor
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/notes/extending.html
+    slug: engineering-pytorch-custom-autograd
+    title: Custom Autograd Functions (Python)
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/library.html
+    slug: engineering-pytorch-torch-library
+    title: torch.library Custom Operators
+    topic: pytorch
+
+  - url: https://pytorch.org/tutorials/advanced/cpp_extension.html
+    slug: engineering-pytorch-cpp-extension
+    title: PyTorch C++ Extensions
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/nested.html
+    slug: engineering-pytorch-nested-tensors
+    title: Nested Tensors
+    topic: pytorch
+
+  - url: https://pytorch.org/tutorials/intermediate/parametrizations.html
+    slug: engineering-pytorch-parametrizations
+    title: Module Parametrizations
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/notes/multiprocessing.html
+    slug: engineering-pytorch-multiprocessing-shared-memory
+    title: Multiprocessing and Shared Memory
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/cond.html
+    slug: engineering-pytorch-torch-cond
+    title: torch.cond and Control Flow
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/distributed.fsdp.fully_shard.html
+    slug: engineering-pytorch-fsdp-fully-shard
+    title: FSDP2 (fully_shard)
+    topic: pytorch
+
+  - url: https://pytorch.org/docs/stable/profiler.html
+    slug: engineering-pytorch-profiler
+    title: torch.profiler
+    topic: pytorch
+
+  # --- Other stacks (to curate) ---
   - url: https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html
     slug: engineering-tensorrt-developer-guide
     title: TensorRT Developer Guide
