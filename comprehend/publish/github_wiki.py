@@ -149,6 +149,67 @@ def publish_wiki_page(
     return page_url_path
 
 
+def publish_engineering_page(
+    *,
+    slug: str,
+    markdown: str,
+    assets: dict[str, Path],
+    config: WikiConfig,
+    title: str,
+    topic: str,
+    tags: list[str],
+) -> str:
+    """Publish or update an engineering wiki page and its assets.
+
+    Args:
+        slug: Wiki page slug.
+        markdown: Page markdown body.
+        assets: Mapping of asset filename to local PNG path.
+        config: Wiki configuration.
+        title: Summary title for the Engineering index page.
+        topic: Primary topic slug for the Engineering index page.
+        tags: Summary tags for the Engineering index page.
+
+    Returns:
+        Published wiki page URL path (without domain).
+
+    Raises:
+        WikiPublishError: If git operations fail.
+    """
+    wiki_dir = ensure_wiki_checkout(config)
+    page_path = wiki_dir / f"{slug}.md"
+    assets_dir = wiki_dir / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+
+    page_path.write_text(markdown, encoding="utf-8")
+
+    for asset_name, asset_path in assets.items():
+        if not asset_path.is_file():
+            raise WikiPublishError(f"Asset not found: {asset_path}")
+
+        destination = assets_dir / asset_name
+        destination.write_bytes(asset_path.read_bytes())
+
+    _update_engineering_index(
+        wiki_dir=wiki_dir,
+        slug=slug,
+        title=title,
+        topic=topic,
+        tags=tags,
+    )
+
+    _run_git(["add", page_path.name, "assets", "Engineering.md"], cwd=wiki_dir)
+
+    if _git_has_changes(wiki_dir):
+        message = f"Add engineering summary: {title}"
+        _run_git(["commit", "-m", message], cwd=wiki_dir)
+        _run_git(["push", "origin", "HEAD"], cwd=wiki_dir)
+
+    page_url_path = f"/{config.repo}/wiki/{slug}"
+
+    return page_url_path
+
+
 def publish_concept_page(
     *,
     slug: str,
@@ -320,6 +381,34 @@ def _update_papers_index(
 
     content += entry + "\n"
     papers_path.write_text(content, encoding="utf-8")
+
+
+def _update_engineering_index(
+    *,
+    wiki_dir: Path,
+    slug: str,
+    title: str,
+    topic: str,
+    tags: list[str],
+) -> None:
+    engineering_path = wiki_dir / "Engineering.md"
+    tag_text = ", ".join(f"`{tag}`" for tag in tags)
+    timestamp = datetime.now(tz=UTC).strftime("%Y-%m-%d")
+    entry = f"- [{title}]({slug}) — `{topic}` — {tag_text} — {timestamp}"
+
+    if engineering_path.is_file():
+        content = engineering_path.read_text(encoding="utf-8")
+    else:
+        content = "# Engineering\n\n"
+
+    if re.search(rf"\]\({re.escape(slug)}\)", content):
+        return
+
+    if not content.endswith("\n"):
+        content += "\n"
+
+    content += entry + "\n"
+    engineering_path.write_text(content, encoding="utf-8")
 
 
 def _run_git(args: list[str], *, cwd: Path | None = None) -> None:

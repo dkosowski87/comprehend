@@ -12,6 +12,21 @@ from comprehend.concept.prepare import ConceptPrepareError, prepare_concept
 from comprehend.concept.triage import triage_concept, triage_result_to_dict
 from comprehend.concept.render import render_concept_visuals
 from comprehend.concept.schema import load_concept_summary, render_concept_markdown, save_concept_summary
+from comprehend.engineering.prepare import EngineeringPrepareError, prepare_engineering
+from comprehend.engineering.queue import (
+    EngineeringQueueStatus,
+    add_engineering_to_queue,
+    engineering_queue_items,
+    load_engineering_queue,
+    next_pending_engineering,
+    prepare_engineering_queue_entry,
+)
+from comprehend.engineering.schema import (
+    load_engineering_summary,
+    render_markdown as render_engineering_markdown,
+    save_engineering_summary,
+)
+from comprehend.engineering.tags import ALLOWED_ENGINEERING_TOPICS, MAX_ENGINEERING_TAGS
 from comprehend.pdf.download import PaperDownloadError
 from comprehend.pdf.extract import extract_paper, render_page_region
 from comprehend.pdf.figures import resolve_figure_region
@@ -26,9 +41,11 @@ from comprehend.publish.github_wiki import (
     ensure_wiki_checkout,
     patch_paper_concept_links,
     publish_concept_page,
+    publish_engineering_page,
     publish_wiki_page,
     wiki_page_exists,
 )
+from comprehend.render.engineering_visuals import render_engineering_visuals
 from comprehend.queue import (
     QueueStatus,
     add_paper_to_queue,
@@ -1170,6 +1187,470 @@ def pwc_import(
             {"title": item.title, "url": item.url, "reason": item.reason}
             for item in result.skipped
         ],
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@main.group()
+def engineering() -> None:
+    """Engineering documentation summary commands."""
+
+
+@engineering.command("topics")
+def engineering_topics() -> None:
+    """List allowed engineering topic slugs."""
+    payload = {
+        "max_tags": MAX_ENGINEERING_TAGS,
+        "allowed_topics": sorted(ALLOWED_ENGINEERING_TOPICS),
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@engineering.command("prepare")
+@click.argument("url")
+@click.option(
+    "--topic",
+    required=True,
+    help="Primary topic slug (cuda, pytorch, tensorrt, triton, onnx, algorithms)",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name for wiki deduplication",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+@click.option(
+    "--slug",
+    default=None,
+    help="Explicit wiki slug override",
+)
+@click.option(
+    "--title",
+    default=None,
+    help="Display title override",
+)
+def engineering_prepare_cmd(
+    url: str,
+    topic: str,
+    repo: str | None,
+    wiki_dir: Path | None,
+    slug: str | None,
+    title: str | None,
+) -> None:
+    """Fetch documentation and report whether the summary is already on the wiki."""
+    cache_root = default_cache_dir()
+    config = _wiki_config(repo, wiki_dir)
+    _sync_wiki_for_status(config)
+
+    try:
+        prepared = prepare_engineering(
+            url,
+            cache_root=cache_root,
+            slug=slug,
+            title=title,
+            topic=topic,
+        )
+    except EngineeringPrepareError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    if config.wiki_dir.is_dir():
+        already_published = wiki_page_exists(prepared.slug, wiki_dir=config.wiki_dir)
+    else:
+        already_published = False
+
+    payload = {
+        "url": prepared.url,
+        "slug": prepared.slug,
+        "topic": prepared.topic,
+        "source_url": prepared.source_url,
+        "title": prepared.title,
+        "cache_dir": str(prepared.cache_dir),
+        "html_path": str(prepared.html_path),
+        "text_path": str(prepared.text_path),
+        "already_published": already_published,
+        "wiki_repo": config.repo,
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@engineering.command("assemble")
+@click.argument("summary_json", type=click.Path(path_type=Path, exists=True))
+@click.option(
+    "--output",
+    type=click.Path(path_type=Path),
+    required=True,
+    help="Output markdown path",
+)
+def engineering_assemble_cmd(summary_json: Path, output: Path) -> None:
+    """Assemble wiki markdown from an engineering summary JSON file."""
+    summary = load_engineering_summary(summary_json)
+    markdown = render_engineering_markdown(summary)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(markdown, encoding="utf-8")
+    click.echo(str(output))
+
+
+@engineering.command("render")
+@click.argument("summary_json", type=click.Path(path_type=Path, exists=True))
+@click.option(
+    "--assets-dir",
+    type=click.Path(path_type=Path),
+    required=True,
+    help="Directory for rendered PNG assets",
+)
+def engineering_render_cmd(summary_json: Path, assets_dir: Path) -> None:
+    """Render all visuals defined in an engineering summary JSON file."""
+    summary = load_engineering_summary(summary_json)
+
+    try:
+        rendered = render_engineering_visuals(
+            summary,
+            output_dir=assets_dir,
+        )
+    except VisualRenderError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    save_engineering_summary(summary, summary_json)
+    payload = {visual_id: str(path) for visual_id, path in rendered.items()}
+    click.echo(json.dumps(payload, indent=2))
+
+
+@engineering.group("wiki")
+def engineering_wiki() -> None:
+    """Engineering GitHub wiki commands."""
+
+
+@engineering_wiki.command("publish")
+@click.argument("summary_json", type=click.Path(path_type=Path, exists=True))
+@click.option(
+    "--assets-dir",
+    type=click.Path(path_type=Path),
+    required=True,
+    help="Directory containing rendered PNG assets",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+@click.option(
+    "--skip-if-exists/--force",
+    default=True,
+    show_default=True,
+    help="Skip publishing when the wiki page already exists",
+)
+def engineering_wiki_publish(
+    summary_json: Path,
+    assets_dir: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+    skip_if_exists: bool,
+) -> None:
+    """Publish an engineering summary JSON and assets to the GitHub wiki."""
+    summary = load_engineering_summary(summary_json)
+    config = _wiki_config(repo, wiki_dir)
+
+    if skip_if_exists and config.wiki_dir.is_dir():
+        if wiki_page_exists(summary.slug, wiki_dir=config.wiki_dir):
+            click.echo(f"Skipped: wiki page already exists for slug '{summary.slug}'")
+            return
+
+    markdown = render_engineering_markdown(summary)
+    assets: dict[str, Path] = {}
+
+    for visual in summary.visuals:
+        asset_name = visual.asset_filename
+        if asset_name is None:
+            raise click.ClickException(
+                f"Visual {visual.id} has no asset_filename; run engineering render first",
+            )
+
+        asset_path = assets_dir / asset_name
+        if not asset_path.is_file():
+            raise click.ClickException(f"Missing asset: {asset_path}")
+
+        assets[asset_name] = asset_path
+
+    try:
+        page_path = publish_engineering_page(
+            slug=summary.slug,
+            markdown=markdown,
+            assets=assets,
+            config=config,
+            title=summary.title,
+            topic=summary.topic,
+            tags=summary.tags,
+        )
+    except WikiPublishError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    click.echo(page_path)
+
+
+@engineering.group("queue")
+def engineering_queue() -> None:
+    """Engineering resource queue commands."""
+
+
+@engineering_queue.command("status")
+@click.option(
+    "--engineering-file",
+    type=click.Path(path_type=Path),
+    default="engineering.yaml",
+    show_default=True,
+    help="Path to engineering.yaml",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+def engineering_queue_status(
+    engineering_file: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+) -> None:
+    """List engineering queue entries with pending/published status."""
+    if not engineering_file.is_file():
+        raise click.ClickException(f"Engineering file not found: {engineering_file}")
+
+    config = _wiki_config(repo, wiki_dir)
+    _sync_wiki_for_status(config)
+    entries = load_engineering_queue(engineering_file)
+    items = engineering_queue_items(entries, wiki_config=config)
+    payload = [
+        {
+            "url": item.url,
+            "slug": item.slug,
+            "title": item.title,
+            "topic": item.topic,
+            "status": item.status.value,
+        }
+        for item in items
+    ]
+    click.echo(json.dumps(payload, indent=2))
+
+
+@engineering_queue.command("next")
+@click.option(
+    "--engineering-file",
+    type=click.Path(path_type=Path),
+    default="engineering.yaml",
+    show_default=True,
+    help="Path to engineering.yaml",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+@click.option(
+    "--prepare/--no-prepare",
+    default=True,
+    show_default=True,
+    help="Fetch and extract the next pending resource",
+)
+def engineering_queue_next(
+    engineering_file: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+    prepare: bool,
+) -> None:
+    """Return the next pending engineering resource and optionally prepare artifacts."""
+    if not engineering_file.is_file():
+        raise click.ClickException(f"Engineering file not found: {engineering_file}")
+
+    config = _wiki_config(repo, wiki_dir)
+    _sync_wiki_for_status(config)
+    entries = load_engineering_queue(engineering_file)
+    items = engineering_queue_items(entries, wiki_config=config)
+    pending = next_pending_engineering(items)
+
+    if pending is None:
+        click.echo(json.dumps({"status": "empty"}, indent=2))
+        return
+
+    payload: dict[str, object] = {
+        "url": pending.url,
+        "slug": pending.slug,
+        "title": pending.title,
+        "topic": pending.topic,
+        "status": pending.status.value,
+    }
+
+    if prepare:
+        entry = next(
+            (entry for entry in entries if entry.resolve_slug() == pending.slug),
+            None,
+        )
+        if entry is None:
+            raise click.ClickException(f"Queue entry not found for slug '{pending.slug}'")
+
+        try:
+            prepared = prepare_engineering(
+                pending.url,
+                cache_root=default_cache_dir(),
+                slug=entry.slug,
+                title=entry.title,
+                topic=entry.topic,
+            )
+        except EngineeringPrepareError as exc:
+            raise click.ClickException(str(exc)) from exc
+
+        payload.update(
+            {
+                "source_url": prepared.source_url,
+                "title": prepared.title,
+                "cache_dir": str(prepared.cache_dir),
+                "html_path": str(prepared.html_path),
+                "text_path": str(prepared.text_path),
+            },
+        )
+
+    click.echo(json.dumps(payload, indent=2))
+
+
+@engineering_queue.command("run")
+@click.option(
+    "--engineering-file",
+    type=click.Path(path_type=Path),
+    default="engineering.yaml",
+    show_default=True,
+    help="Path to engineering.yaml",
+)
+@click.option(
+    "--repo",
+    default=None,
+    help="GitHub repo owner/name",
+)
+@click.option(
+    "--wiki-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Local wiki checkout path",
+)
+def engineering_queue_run(
+    engineering_file: Path,
+    repo: str | None,
+    wiki_dir: Path | None,
+) -> None:
+    """Prepare all pending engineering resources and list those needing summaries."""
+    if not engineering_file.is_file():
+        raise click.ClickException(f"Engineering file not found: {engineering_file}")
+
+    config = _wiki_config(repo, wiki_dir)
+    _sync_wiki_for_status(config)
+    entries = load_engineering_queue(engineering_file)
+    items = engineering_queue_items(entries, wiki_config=config)
+    pending_items = [item for item in items if item.status == EngineeringQueueStatus.PENDING]
+    entry_by_slug = {entry.resolve_slug(): entry for entry in entries}
+
+    prepared_items: list[dict[str, object]] = []
+    for item in pending_items:
+        entry = entry_by_slug.get(item.slug)
+        if entry is None:
+            continue
+
+        try:
+            cache_dir = prepare_engineering_queue_entry(entry)
+        except EngineeringPrepareError as exc:
+            prepared_items.append(
+                {
+                    "url": item.url,
+                    "slug": item.slug,
+                    "topic": item.topic,
+                    "error": str(exc),
+                },
+            )
+            continue
+
+        prepared_items.append(
+            {
+                "url": item.url,
+                "slug": item.slug,
+                "topic": item.topic,
+                "cache_dir": str(cache_dir),
+            },
+        )
+
+    payload = {
+        "pending_count": len(pending_items),
+        "engineering": prepared_items,
+    }
+    click.echo(json.dumps(payload, indent=2))
+
+
+@engineering_queue.command("add")
+@click.argument("url")
+@click.option(
+    "--topic",
+    required=True,
+    help="Primary topic slug (cuda, pytorch, tensorrt, triton, onnx, algorithms)",
+)
+@click.option(
+    "--engineering-file",
+    type=click.Path(path_type=Path),
+    default="engineering.yaml",
+    show_default=True,
+    help="Path to engineering.yaml",
+)
+@click.option(
+    "--slug",
+    default=None,
+    help="Explicit wiki slug override",
+)
+@click.option(
+    "--title",
+    default=None,
+    help="Display title override",
+)
+def engineering_queue_add(
+    url: str,
+    topic: str,
+    engineering_file: Path,
+    slug: str | None,
+    title: str | None,
+) -> None:
+    """Append an engineering resource to engineering.yaml."""
+    try:
+        entry = add_engineering_to_queue(
+            engineering_file,
+            url=url,
+            topic=topic,
+            slug=slug,
+            title=title,
+        )
+    except ValueError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    payload = {
+        "url": entry.url,
+        "slug": entry.resolve_slug(),
+        "title": entry.title,
+        "topic": entry.resolve_topic(),
     }
     click.echo(json.dumps(payload, indent=2))
 

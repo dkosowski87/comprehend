@@ -1,0 +1,30 @@
+engineering:
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
+    slug: engineering-cuda-programming-guide
+    title: CUDA C Programming Guide
+    topic: cuda
+
+  - url: https://pytorch.org/docs/stable/notes/cuda.html
+    slug: engineering-pytorch-cuda-semantics
+    title: PyTorch CUDA Semantics
+    topic: pytorch
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html
+    slug: engineering-tensorrt-developer-guide
+    title: TensorRT Developer Guide
+    topic: tensorrt
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html
+    slug: engineering-triton-vector-add
+    title: Triton Vector Add Tutorial
+    topic: triton
+
+  - url: https://onnx.ai/onnx/intro/
+    slug: engineering-onnx-introduction
+    title: ONNX Introduction
+    topic: onnx
+
+  - url: https://docs.nvidia.com/cuda/cublas/index.html
+    slug: engineering-cublas-library
+    title: cuBLAS Library Documentation
+    topic: algorithms

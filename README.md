@@ -143,6 +143,11 @@ Presentation filters: `all`, `oral`, `spotlight`, `outstanding`.
 | `comprehend render manim <scene.py> --scene-class Name --output out.png` | Render a Manim scene to PNG |
 | `comprehend render summary <summary.json> --assets-dir <dir>` | Render all visuals in a summary |
 | `comprehend queue add <url>` | Append a paper URL to papers.yaml |
+| `comprehend engineering topics` | List allowed engineering topic slugs |
+| `comprehend engineering prepare <url> --topic <topic>` | Fetch docs, extract text, check wiki dedup |
+| `comprehend engineering render <summary.json> --assets-dir <dir>` | Render engineering visuals (Mermaid/Manim) |
+| `comprehend engineering wiki publish <summary.json> --assets-dir <dir>` | Push engineering page to wiki |
+| `comprehend engineering queue {status,next,run,add}` | Engineering resource queue |
 | `comprehend pwc conferences` | List conferences on paperswithcode.co |
 | `comprehend pwc papers <slug>` | List papers for a conference (`--presentation oral`) |
 | `comprehend pwc import <slug>` | Import conference papers into papers.yaml |
@@ -238,6 +243,46 @@ A scheduled automation can process one paper per day from `papers.yaml` and post
 
 If the queue is empty or the paper is already published, the automation posts a short Slack status and exits.
 
+## Engineering queue
+
+Summarize MLE library documentation and tutorials (CUDA, PyTorch, TensorRT, Triton, ONNX, algorithms) into the wiki **Engineering** section. Shorter than paper summaries: Problem / Solution / Key concepts, plus **code examples** and **generated diagrams** (no Math section, no figure extraction).
+
+Maintain a curated list in `engineering.yaml`:
+
+```yaml
+engineering:
+  - url: https://pytorch.org/docs/stable/notes/cuda.html
+    slug: engineering-pytorch-cuda-semantics
+    title: PyTorch CUDA Semantics
+    topic: pytorch
+```
+
+Each entry requires **`url`**, **`slug`**, **`title`**, and **`topic`**. Topics must be one of: `cuda`, `pytorch`, `tensorrt`, `triton`, `onnx`, `algorithms` (`uv run comprehend engineering topics`).
+
+```bash
+uv run comprehend engineering queue status
+uv run comprehend engineering queue next      # fetch + extract next pending doc
+uv run comprehend engineering queue run
+uv run comprehend engineering prepare <url> --topic pytorch
+uv run comprehend engineering render <summary.json> --assets-dir <dir>
+uv run comprehend engineering wiki publish <summary.json> --assets-dir <dir>
+```
+
+Use the [comprehend-engineering skill](.cursor/skills/comprehend-engineering/SKILL.md) in Cursor. Cache lives under `.comprehend/engineering/<slug-without-prefix>/`.
+
+### Daily engineering automation
+
+**Prompt:** [`.cursor/automations/daily-engineering-summary.prompt.md`](.cursor/automations/daily-engineering-summary.prompt.md)
+
+| Setting | Value |
+|---------|-------|
+| Schedule | Daily (offset from papers — e.g. `30 8 * * *`) |
+| Repository | `dkosowski87/comprehend`, branch `main` |
+| Tools | Post to Slack |
+| Skill | Enable **comprehend-engineering** |
+
+Published summaries are indexed in `Engineering.md`. Add `[Engineering](Engineering)` to wiki `Home.md` alongside Papers and Concepts.
+
 ## Wiki setup
 
 1. Enable wikis: **Repository → Settings → Features → Wikis**
@@ -248,7 +293,7 @@ If the queue is empty or the paper is already published, the automation posts a 
    git ls-remote git@github.com:owner/repo.wiki.git
    ```
 
-Wiki pages are stored at `https://github.com/owner/repo/wiki`. `Home.md` is the top-level hub linking to section indexes. Paper summaries are listed in `Papers.md` (updated on each publish). Concept pages use the `concept-*` prefix and are listed in `Concepts.md`.
+Wiki pages are stored at `https://github.com/owner/repo/wiki`. `Home.md` is the top-level hub linking to section indexes. Paper summaries are listed in `Papers.md`. Engineering summaries are listed in `Engineering.md`. Concept pages use the `concept-*` prefix and are listed in `Concepts.md`.
 
 **One-time wiki migration:** copy existing entries from `Home.md` into a new `Papers.md` page, then replace `Home.md` with hub links, for example:
 
@@ -256,6 +301,7 @@ Wiki pages are stored at `https://github.com/owner/repo/wiki`. `Home.md` is the 
 # Comprehend
 
 - [Papers](Papers)
+- [Engineering](Engineering)
 - [Concepts](Concepts)
 ```
 

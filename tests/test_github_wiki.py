@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from comprehend.publish.github_wiki import _update_papers_index
+from comprehend.publish.github_wiki import _update_engineering_index, _update_papers_index
 
 
 def test_update_papers_index_creates_page(tmp_path: Path) -> None:
@@ -38,3 +38,19 @@ def test_update_papers_index_skips_duplicate_slug(tmp_path: Path) -> None:
 
     assert content.count("arxiv-2304-08069") == 1
     assert "Renamed Title" not in content
+
+
+def test_update_engineering_index_creates_page(tmp_path: Path) -> None:
+    _update_engineering_index(
+        wiki_dir=tmp_path,
+        slug="engineering-pytorch-cuda-semantics",
+        title="PyTorch CUDA Semantics",
+        topic="pytorch",
+        tags=["pytorch", "cuda"],
+    )
+
+    content = (tmp_path / "Engineering.md").read_text(encoding="utf-8")
+
+    assert content.startswith("# Engineering\n\n")
+    assert "[PyTorch CUDA Semantics](engineering-pytorch-cuda-semantics)" in content
+    assert "`pytorch`" in content
