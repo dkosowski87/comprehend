@@ -1,6 +1,6 @@
 # Daily engineering summary — automation instructions
 
-You run once per day to summarize **one** pending MLE tooling resource from `engineering.yaml`, publish it to the GitHub wiki **Engineering** section, and notify Slack.
+You run once per day to summarize **one** pending MLE tooling resource from `engineering.yaml` and publish it to the GitHub wiki **Engineering** section.
 
 **Scope:** advanced MLE libraries and runtimes — CUDA, PyTorch, TensorRT, Triton, ONNX, and related algorithms/APIs. Sources are official documentation and tutorials (not papers).
 
@@ -19,17 +19,9 @@ That skill is the **authoritative source** for:
 - CLI commands for render and publish
 - Retry policy (3 attempts, no partial publish)
 
-This file only adds **automation-specific** steps: which resource to pick, when to stop, and the Slack message. Do not invent alternate summary formats.
+This file only adds **automation-specific** steps: which resource to pick and when to stop. Do not invent alternate summary formats.
 
 Ensure the **comprehend-engineering** skill is enabled for this automation in the editor.
-
-## Communication boundary
-
-This automation requires **exactly one** Slack message per run.
-
-You are the **orchestrating agent**. Reader/Writer and Visualizer are internal pipeline steps — delegate to them **without** granting Slack or other notification tools. Their completion reports come back to you only.
-
-**You** post to Slack only in **Step 5** below, or on **early exit** in Step 1 (empty queue, already published). Do not post while Steps 2–4 run.
 
 ## Runtime
 
@@ -49,7 +41,7 @@ Parse the JSON output:
 
 | Output | Action |
 |--------|--------|
-| `"status": "empty"` | Slack: *"Engineering queue empty — no summaries published today."* **Stop.** |
+| `"status": "empty"` | **Stop.** |
 | Resource returned | Continue. `queue next` already fetches and extracts when `--prepare` is default. |
 
 Double-check deduplication:
@@ -58,7 +50,7 @@ Double-check deduplication:
 uv run comprehend engineering prepare <url> --topic <topic> --repo dkosowski87/comprehend
 ```
 
-If `"already_published": true` — Slack: *"Skipped `<slug>` — already on wiki."* **Stop.**
+If `"already_published": true` — **Stop.**
 
 Otherwise keep `url`, `slug`, `topic`, `cache_dir`, `text_path`.
 
@@ -73,21 +65,3 @@ Execute the skill workflow for this resource:
 Use `topic` and `tags` from `summary.json`. Do **not** use `--force` unless explicitly instructed.
 
 On failure after 3 retries (per skill), **stop without publishing**.
-
-## Step 5 — Notify Slack (automation-only)
-
-Post to the configured Slack channel:
-
-- Summary title (from `summary.json`)
-- Wiki link: `https://github.com/dkosowski87/comprehend/wiki/<slug>`
-- Source link (from `summary.json`)
-- Topic and tags
-
-Example:
-
-> **New engineering summary:** PyTorch CUDA Semantics  
-> Wiki: https://github.com/dkosowski87/comprehend/wiki/engineering-pytorch-cuda-semantics  
-> Source: https://pytorch.org/docs/stable/notes/cuda.html  
-> Topic: `pytorch` — Tags: `cuda`, `pytorch`
-
-If the run failed, post what failed and confirm nothing was published.
