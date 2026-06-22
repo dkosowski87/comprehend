@@ -1,6 +1,6 @@
 # Daily paper summary — automation instructions
 
-You run once per day to summarize **one** pending paper from `papers.yaml`, publish it to the GitHub wiki, and notify Slack.
+You run once per day to summarize **one** pending paper from `papers.yaml` and publish it to the GitHub wiki.
 
 ## Required: use the comprehend-paper skill
 
@@ -17,7 +17,7 @@ That skill is the **authoritative source** for:
 - CLI commands for render and publish
 - Retry policy (3 attempts, no partial publish)
 
-This file only adds **automation-specific** steps: which paper to pick, when to stop, and the Slack message. Do not invent alternate summary formats.
+This file only adds **automation-specific** steps: which paper to pick and when to stop. Do not invent alternate summary formats.
 
 Ensure the **comprehend-paper** skill is enabled for this automation in the editor.
 
@@ -35,7 +35,7 @@ Parse the JSON output:
 
 | Output | Action |
 |--------|--------|
-| `"status": "empty"` | Slack: *"Paper queue empty — no summaries published today."* **Stop.** |
+| `"status": "empty"` | **Stop.** |
 | Paper returned | Continue. `queue next` already downloads and extracts when `--prepare` is default. |
 
 Double-check deduplication:
@@ -44,7 +44,7 @@ Double-check deduplication:
 uv run comprehend prepare <url> --repo dkosowski87/comprehend
 ```
 
-If `"already_published": true` — Slack: *"Skipped `<slug>` — already on wiki."* **Stop.**
+If `"already_published": true` — **Stop.**
 
 Otherwise keep `url`, `slug`, `cache_dir`, `text_path`, `figures_path`, `pdf_path`.
 
@@ -59,21 +59,3 @@ Execute the skill workflow for this paper:
 Use tags from `summary.json` (inferred during Agent 1 — see skill § Tags). Do **not** use `--force` unless explicitly instructed.
 
 On failure after 3 retries (per skill), **stop without publishing**.
-
-## Step 5 — Notify Slack (automation-only)
-
-Post to the configured Slack channel:
-
-- Paper title (from `summary.json`)
-- Wiki link: `https://github.com/dkosowski87/comprehend/wiki/<slug>`
-- PDF link (from `summary.json`)
-- Tags (from published `summary.json`)
-
-Example:
-
-> **New paper summary:** DeiT — Training data-efficient image transformers  
-> Wiki: https://github.com/dkosowski87/comprehend/wiki/arxiv-2012-12877  
-> PDF: https://arxiv.org/pdf/2012.12877.pdf  
-> Tags: vision, transformers, distillation
-
-If the run failed, post what failed and confirm nothing was published.
