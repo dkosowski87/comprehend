@@ -236,23 +236,387 @@ engineering:
     title: torch.profiler
     topic: pytorch
 
-  # --- Other stacks (to curate) ---
-  - url: https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html
-    slug: engineering-tensorrt-developer-guide
-    title: TensorRT Developer Guide
+  # --- TensorRT (learning order) ---
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/architecture/how-trt-works.html
+    slug: engineering-tensorrt-how-it-works
+    title: How TensorRT Works (Build vs Runtime)
     topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/capabilities.html
+    slug: engineering-tensorrt-capabilities
+    title: TensorRT Capabilities and Programming Model
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/quick-start-guide.html
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/c-api-docs.html#importing-onnx
+    slug: engineering-tensorrt-onnx-import
+    title: ONNX Import and Parser
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/capabilities.html
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/c-api-docs.html#building-an-engine
+    slug: engineering-tensorrt-building-engines
+    title: Building TensorRT Engines
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/c-api-docs.html#running-inference
+    slug: engineering-tensorrt-running-inference
+    title: Running Inference (Runtime and Execution Context)
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/architecture/how-trt-works.html
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#strongly-typed-networks
+    slug: engineering-tensorrt-strongly-typed-networks
+    title: Strongly Typed Networks
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-with-quantized-types.html
+    slug: engineering-tensorrt-quantization
+    title: Quantization (Q/DQ and INT8/FP8)
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/accuracy-considerations.html
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/precision-control.html
+    slug: engineering-tensorrt-precision-control
+    title: Precision Control
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-with-dynamic-shapes.html
+    slug: engineering-tensorrt-dynamic-shapes
+    title: Dynamic Shapes and Optimization Profiles
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/best-practices.html#enabling-layer-fusion
+    slug: engineering-tensorrt-layer-fusion
+    title: Layer Fusion and Kernel Selection
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#algorithm-selection-and-reproducible-builds
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/plugins-cpp.html
+    slug: engineering-tensorrt-plugins
+    title: Custom Plugins (IPluginV3)
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-with-dla.html
+    slug: engineering-tensorrt-dla
+    title: Deep Learning Accelerator (DLA)
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#i-o-formats
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/best-practices.html#inference-with-cuda-graphs
+    slug: engineering-tensorrt-cuda-graphs
+    title: TensorRT Inference with CUDA Graphs
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/weight-streaming.html
+    slug: engineering-tensorrt-weight-streaming
+    title: Weight Streaming
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/refitting-engines.html
+    slug: engineering-tensorrt-refitting
+    title: Engine Refitting
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#version-compatibility
+    slug: engineering-tensorrt-version-compatibility
+    title: Version and Hardware Compatibility
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#lean-runtime
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#i-o-formats
+    slug: engineering-tensorrt-io-formats
+    title: Tensor Layouts and I/O Formats
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html
+    slug: engineering-tensorrt-benchmarking-trtexec
+    title: Benchmarking and trtexec
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/best-practices.html
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#engine-inspector
+    slug: engineering-tensorrt-engine-inspector
+    title: Engine Inspector and Debugging
+    topic: tensorrt
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/capture-replay.html
+
+  - url: https://github.com/NVIDIA/TensorRT/blob/main/tools/Polygraphy/README.md
+    slug: engineering-tensorrt-polygraphy
+    title: Polygraphy Debugging Toolkit
+    topic: tensorrt
+
+  - url: https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-with-transformers.html
+    slug: engineering-tensorrt-transformers
+    title: Transformer Optimizations (Attention, KV Cache)
+    topic: tensorrt
+
+  # --- Triton (OpenAI Triton language, learning order) ---
+  - url: https://triton-lang.org/main/programming-guide/chapter-1/introduction.html
+    slug: engineering-triton-introduction
+    title: Triton Programming Model (Blocked SPMD)
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/programming-guide/chapter-2/related-work.html
+
+  - url: https://triton-lang.org/main/programming-guide/chapter-2/related-work.html
+    slug: engineering-triton-related-work
+    title: Triton vs CUDA, TVM, and Library Kernels
+    topic: triton
 
   - url: https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html
     slug: engineering-triton-vector-add
-    title: Triton Vector Add Tutorial
+    title: Vector Add Tutorial (First Kernel)
     topic: triton
 
+  - url: https://triton-lang.org/main/python-api/generated/triton.jit.html
+    slug: engineering-triton-jit
+    title: triton.jit and Kernel Launch
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html
+
+  - url: https://triton-lang.org/main/python-api/triton.language.html
+    slug: engineering-triton-language
+    title: triton.language Tile Operations
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html
+    slug: engineering-triton-matrix-multiplication
+    title: Blocked Matrix Multiplication
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/python-api/generated/triton.autotune.html
+      - https://triton-lang.org/main/python-api/generated/triton.Config.html
+
+  - url: https://triton-lang.org/main/python-api/generated/triton.autotune.html
+    slug: engineering-triton-autotune
+    title: triton.autotune
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/python-api/generated/triton.Config.html
+
+  - url: https://triton-lang.org/main/python-api/generated/triton.heuristics.html
+    slug: engineering-triton-heuristics
+    title: triton.heuristics (Lightweight Tuning)
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/02-fused-softmax.html
+    slug: engineering-triton-fused-softmax
+    title: Fused Softmax
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/05-layer-norm.html
+    slug: engineering-triton-layer-norm
+    title: Layer Normalization Kernel
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/06-fused-attention.html
+    slug: engineering-triton-fused-attention
+    title: Fused Attention (Flash-Style)
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/07-extern-functions.html
+    slug: engineering-triton-extern-functions
+    title: Extern Functions (cuBLAS and Library Interop)
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/08-grouped-gemm.html
+    slug: engineering-triton-grouped-gemm
+    title: Grouped GEMM
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/09-persistent-matmul.html
+    slug: engineering-triton-persistent-matmul
+    title: Persistent Matrix Multiplication
+    topic: triton
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/10-block-scaled-matmul.html
+    slug: engineering-triton-block-scaled-matmul
+    title: Block-Scaled Matrix Multiplication (FP8)
+    topic: triton
+
+  - url: https://triton-lang.org/main/programming-guide/chapter-3/debugging.html
+    slug: engineering-triton-debugging
+    title: Debugging Triton Kernels
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/programming-guide/chapter-3/fpsan.html
+
+  - url: https://triton-lang.org/main/python-api/generated/triton.testing.do_bench.html
+    slug: engineering-triton-benchmarking
+    title: Benchmarking Kernels (do_bench)
+    topic: triton
+    secondary_urls:
+      - https://triton-lang.org/main/python-api/generated/triton.testing.Benchmark.html
+
+  - url: https://triton-lang.org/main/getting-started/tutorials/gluon/intro.html
+    slug: engineering-triton-gluon
+    title: Gluon (Lower-Level GPU Control)
+    topic: triton
+
+  # --- NVIDIA libs (learning order) ---
+  - url: https://docs.nvidia.com/cuda/cublas/index.html#cublas-api
+    slug: engineering-cublas-api
+    title: cuBLAS API (BLAS on GPU)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cublas/index.html#tensor-operations
+
+  - url: https://docs.nvidia.com/cuda/cublas/index.html#using-the-cublaslt-api
+    slug: engineering-cublaslt-api
+    title: cuBLASLt API (Flexible GEMM)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cublas/index.html#cublaslt-matmul
+      - https://docs.nvidia.com/cuda/cublas/index.html#cublaslt-epilogue
+      - https://docs.nvidia.com/cuda/cublas/index.html#cublaslt-heuristics
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/latest/developer/overview.html
+    slug: engineering-cudnn-overview
+    title: cuDNN Developer Overview
+    topic: nvidia
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/latest/developer/graph-api.html
+    slug: engineering-cudnn-graph-api
+    title: cuDNN Graph API (Operation Fusion)
+    topic: nvidia
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/latest/operations/Convolutions.html
+    slug: engineering-cudnn-convolutions
+    title: cuDNN Convolutions
+    topic: nvidia
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/latest/operations/Matmul.html
+    slug: engineering-cudnn-matmul
+    title: cuDNN Matrix Multiplication
+    topic: nvidia
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/latest/operations/Attention.html
+    slug: engineering-cudnn-attention
+    title: cuDNN Scaled Dot-Product Attention
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/cudnn/frontend/latest/fe-oss-apis/attention/attention.html
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/latest/operations/Normalizations.html
+    slug: engineering-cudnn-normalizations
+    title: cuDNN Normalization Layers
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/cudnn/latest/operations/Pointwise.html
+
+  - url: https://docs.nvidia.com/deeplearning/cudnn/frontend/latest/fe-oss-apis/gemm_fusions/gemm_fusions.html
+    slug: engineering-cudnn-gemm-fusions
+    title: cuDNN Frontend GEMM Fusions
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/cudnn/frontend/latest/developer/overview.html
+
+  - url: https://docs.nvidia.com/cuda/cusparselt/index.html
+    slug: engineering-cusparselt
+    title: cuSPARSELt (Structured Sparse GEMM)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cusparselt/index.html#cusparselt-spmm
+
+  - url: https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/quickstart.md
+    slug: engineering-cutlass-quickstart
+    title: CUTLASS Quickstart
+    topic: nvidia
+    secondary_urls:
+      - https://nvidia.github.io/cutlass/
+
+  - url: https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/gemm_api.md
+    slug: engineering-cutlass-gemm-api
+    title: CUTLASS GEMM API and Tiling
+    topic: nvidia
+    secondary_urls:
+      - https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/efficient_gemm.md
+      - https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/cute/00_quickstart.md
+
+  - url: https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-tile-kernels.html
+    slug: engineering-cuda-tile-kernels
+    title: Writing CUDA Tile Kernels
+    topic: nvidia
+    secondary_urls:
+      - https://developer.nvidia.com/blog/develop-high-performance-gpu-kernels-in-cpp-with-nvidia-cuda-tile/
+
+  - url: https://docs.nvidia.com/cuda/cuda-tile-cpp-api-reference/general_principles.html
+    slug: engineering-cuda-tile-cpp-api
+    title: CUDA Tile C++ API
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cuda-tile-cpp-api-reference/tile.html
+      - https://docs.nvidia.com/cuda/cutile-python/quickstart.html
+
+  - url: https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/communicators.html
+    slug: engineering-nccl-communicators
+    title: NCCL Communicators and Setup
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/collectives.html
+      - https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/p2p.html
+
+  - url: https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/cudagraph.html
+    slug: engineering-nccl-cuda-graphs
+    title: NCCL with CUDA Graphs
+    topic: nvidia
+
+  - url: https://docs.nvidia.com/cuda/nvjpeg/index.html#nvjpeg-decoder
+    slug: engineering-nvjpeg-decoder
+    title: nvJPEG GPU JPEG Decode
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/nvjpeg/index.html#nvjpeg-encoder
+
+  - url: https://docs.nvidia.com/cuda/nvimagecodec/index.html#overview
+    slug: engineering-nvimagecodec
+    title: nvImageCodec (Multi-Format GPU Decode)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/nvimagecodec/index.html#decoding-api
+
+  - url: https://developer.nvidia.com/video-codec-sdk
+    slug: engineering-nvidia-video-codec-sdk
+    title: NVIDIA Video Codec SDK (NVDEC/NVENC)
+    topic: nvidia
+
+  - url: https://docs.nvidia.com/datacenter/tesla/mig-user-guide/index.html#overview
+    slug: engineering-mig-overview
+    title: Multi-Instance GPU (MIG)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/datacenter/tesla/mig-user-guide/index.html#mig-profiles
+      - https://docs.nvidia.com/datacenter/tesla/mig-user-guide/index.html#cuda-mig
+
+  - url: https://docs.nvidia.com/nsight-systems/UserGuide/index.html
+    slug: engineering-nsight-systems
+    title: Nsight Systems (Timeline Profiling)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/nsight-systems/UserGuide/index.html#cuda-activity
+
+  - url: https://docs.nvidia.com/nsight-compute/NsightCompute/index.html#profiling-guide
+    slug: engineering-nsight-compute
+    title: Nsight Compute (Kernel Profiling)
+    topic: nvidia
+    secondary_urls:
+      - https://docs.nvidia.com/nsight-compute/NsightCompute/index.html#roofline
+
+  # --- Other stacks (to curate) ---
   - url: https://onnx.ai/onnx/intro/
     slug: engineering-onnx-introduction
     title: ONNX Introduction
     topic: onnx
-
-  - url: https://docs.nvidia.com/cuda/cublas/index.html
-    slug: engineering-cublas-library
-    title: cuBLAS Library Documentation
-    topic: nvidia
