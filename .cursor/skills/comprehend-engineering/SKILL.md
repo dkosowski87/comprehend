@@ -46,6 +46,27 @@ Save outputs under `.comprehend/engineering/<slug-without-prefix>/`:
 
 Read `.comprehend/engineering/<dir>/text.txt` (extracted documentation body).
 
+If `queue next` returned `secondary_urls`, read those pages too (fetch in browser or via shell) before writing. They supplement — do not replace — the primary source.
+
+### Primary source and supplementation
+
+Every summary has a **primary URL** from `engineering.yaml` (`source_url` in `summary.json`). The prepare step extracts text from that URL only.
+
+You may **supplement** with broader knowledge when it improves high-level understanding, especially for:
+
+- Architecture / interaction diagrams (e.g. how streams, copy engines, and SMs relate)
+- **When to use** guidance for inference platforms (datacenter GPU vs Jetson vs CPU)
+- Links between adjacent official docs (cuBLAS under GEMM, TensorRT under CUDA graphs)
+
+**Rules:**
+
+1. **Anchor Problem/Solution in the primary doc** — read `text.txt` first; do not invent features absent from NVIDIA/PyTorch/vendor docs.
+2. **`secondary_urls`** from the queue (when present) are approved extra reading — prefer them over ad-hoc search.
+3. **Mark synthesis** — suffix bullets that are not directly from the primary page with *(synthesis)* or cite a secondary URL in the bullet.
+4. **Official sources only** for factual claims (nvidia.com, pytorch.org, onnx.ai, triton-lang.org, apple.com, etc.). No blog posts unless listed in the queue.
+5. **Diagrams** may combine ideas from multiple official sources; caption should reflect the mental model, not verbatim doc text.
+6. If the primary page is too narrow, propose a better `url` in the queue — do not rely on synthesis for core definitions.
+
 ### Writing style
 
 Engineering summaries are **shorter than paper summaries**. Prefer one clear sentence per bullet when that is enough. Do not pad sections to match paper length.
@@ -77,38 +98,39 @@ Write `.comprehend/engineering/<dir>/summary.json`:
 
 ```json
 {
-  "title": "PyTorch CUDA Semantics",
-  "source_url": "https://pytorch.org/docs/stable/notes/cuda.html",
-  "topic": "pytorch",
-  "tags": ["pytorch", "cuda"],
-  "slug": "engineering-pytorch-cuda-semantics",
-  "keywords": ["CUDA stream", "device", "non-blocking", "pin_memory"],
+  "title": "CUDA Streams and Concurrent Execution",
+  "source_url": "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#asynchronous-concurrent-execution",
+  "topic": "cuda",
+  "tags": ["cuda"],
+  "slug": "engineering-cuda-streams",
+  "keywords": ["CUDA stream", "cudaStream_t", "default stream", "concurrent kernels"],
   "problem": [
-    "CPU and GPU execution are asynchronous; naive timing and copies hide real bottlenecks."
+    "Sequential kernel launches underutilize the GPU when copies and compute could overlap."
   ],
   "solution": [
-    "PyTorch exposes **device** placement, **streams**, and explicit **synchronize** points so host code can overlap transfers and kernels (see **4a**)."
+    "CUDA **streams** queue host operations and device work so independent sequences run concurrently (see **4a**)."
   ],
   "key_concepts": [
-    "**CUDA stream** — ordered queue of GPU work issued from the host.",
-    "**non-blocking** copies require pinned host memory to overlap safely with compute."
+    "**CUDA stream** — FIFO queue of device work issued from a host thread.",
+    "Operations on different streams may overlap if resources allow *(synthesis)*.",
+    "The default stream has legacy synchronization semantics; per-thread default stream avoids some implicit sync."
   ],
   "code_examples": [
     {
       "id": "3a",
-      "title": "Move a tensor to GPU and synchronize",
-      "language": "python",
-      "code": "import torch\n\ndevice = torch.device(\"cuda\")\nx = torch.randn(1024, device=device)\ntorch.cuda.synchronize()"
+      "title": "Create streams and enqueue async memcpy",
+      "language": "cpp",
+      "code": "cudaStream_t s1, s2;\ncudaStreamCreate(&s1);\ncudaStreamCreate(&s2);\ncudaMemcpyAsync(d_a, h_a, nbytes, cudaMemcpyHostToDevice, s1);\ncudaMemcpyAsync(d_b, h_b, nbytes, cudaMemcpyHostToDevice, s2);"
     }
   ],
   "visuals": [
     {
       "id": "4a",
-      "caption": "Host issues kernels and copies on a CUDA stream",
+      "caption": "Two streams overlapping H2D copies and kernels",
       "type": "mermaid",
-      "description": "CPU thread enqueues copy and matmul; GPU executes asynchronously",
+      "description": "Stream s1 and s2 interleave copy and compute on the GPU timeline",
       "refs": ["3a"],
-      "mermaid_source": "sequenceDiagram\n  participant CPU\n  participant GPU\n  CPU->>GPU: copy_(host to device)\n  CPU->>GPU: matmul kernel\n  CPU->>GPU: synchronize()"
+      "mermaid_source": "sequenceDiagram\n  participant H as Host\n  participant S1 as Stream 1\n  participant S2 as Stream 2\n  participant G as GPU\n  H->>S1: memcpyAsync\n  H->>S2: memcpyAsync\n  S1->>G: kernel A\n  S2->>G: kernel B"
     }
   ]
 }
@@ -120,9 +142,9 @@ Write `.comprehend/engineering/<dir>/summary.json`:
 
 **Slug:** use the slug from `comprehend engineering prepare` or `queue next` (prefix `engineering-`).
 
-**Topic:** primary topic from `engineering.yaml` — one of: `cuda`, `pytorch`, `tensorrt`, `triton`, `onnx`, `algorithms`. Must match the queue entry.
+**Topic:** primary topic from `engineering.yaml` — one of: `cuda`, `nvidia`, `apple`, `memory`, `camera`, `tensorrt`, `triton`, `algorithms`, `jetson`, `onnx`, `pytorch`. Must match the queue entry.
 
-**Tags:** infer 1–5 tags from the allowed topic vocabulary when writing `summary.json`. Run `uv run comprehend engineering topics` to list valid slugs. Include the primary `topic` in `tags`. Do not invent new tag slugs.
+**Tags:** infer 1–5 tags from the allowed topic vocabulary (`uv run comprehend engineering topics`). Include the primary `topic`. You may add a **related** topic tag when the page clearly spans areas (e.g. `memory` for pinned host memory, `pytorch` + `cuda` for torch CUDA semantics). Do not invent tag slugs.
 
 **Keywords:** add 5–12 tool-specific terms (API names, classes, flags). Auto-bolded in Problem/Solution/Key concepts during assembly.
 

@@ -1,9 +1,144 @@
 engineering:
-  # --- CUDA ---
-  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
-    slug: engineering-cuda-programming-guide
-    title: CUDA C Programming Guide
+  # --- CUDA (programming model, learning order) ---
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#thread-hierarchy
+    slug: engineering-cuda-thread-hierarchy
+    title: CUDA Thread Hierarchy (Grid, Block, Threads)
     topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#simt-architecture
+    slug: engineering-cuda-simt-warps
+    title: SIMT Architecture and Warps
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#streaming-multiprocessors
+    slug: engineering-cuda-streaming-multiprocessors
+    title: Streaming Multiprocessors
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#hardware-implementation
+    slug: engineering-cuda-hardware-schedulers
+    title: Hardware Implementation and Warp Schedulers
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#preemption
+    slug: engineering-cuda-preemption-time-slicing
+    title: Preemption and Time-Slicing
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#asynchronous-concurrent-execution
+    slug: engineering-cuda-streams
+    title: CUDA Streams and Concurrent Execution
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#synchronization-functions
+    slug: engineering-cuda-synchronization
+    title: CUDA Synchronization
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-synchronization-domains
+    slug: engineering-cuda-events-sync-domains
+    title: CUDA Events and Memory Synchronization Domains
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory
+    slug: engineering-cuda-shared-memory
+    title: CUDA Shared Memory
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#device-memory-accesses
+    slug: engineering-cuda-memory-coalescing
+    title: Global Memory Access and Coalescing
+    topic: cuda
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#coalesced-access-to-global-memory
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#data-transfer-between-host-and-device
+    slug: engineering-cuda-host-device-transfer
+    title: Host-Device Transfer, DMA, and PCIe
+    topic: cuda
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#asynchronous-transfers-and-overlap
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#pinned-memory
+    slug: engineering-cuda-pinned-memory
+    title: Pinned (Page-Locked) Memory
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#device-memory
+    slug: engineering-cuda-device-memory-allocations
+    title: Device Memory Allocations
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-pools
+    slug: engineering-cuda-memory-pools
+    title: CUDA Memory Pools and Async Allocation
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#unified-memory-programming-hd
+    slug: engineering-cuda-unified-memory
+    title: Unified Memory
+    topic: cuda
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#virtual-memory-management
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#nvlink
+    slug: engineering-cuda-nvlink
+    title: NVLink
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multi-device-system
+    slug: engineering-cuda-multi-gpu-peer-access
+    title: Multi-GPU Systems and Peer Access
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cuda-graphs
+    slug: engineering-cuda-graphs
+    title: CUDA Graphs
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#maximal-occupancy
+    slug: engineering-cuda-occupancy
+    title: Occupancy and Resource Limits
+    topic: cuda
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#occupancy-calculator
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#advanced-kernel-launches
+    slug: engineering-cuda-kernel-launch-config
+    title: Kernel Launch Configuration
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-shuffle-functions
+    slug: engineering-cuda-warp-shuffle
+    title: Warp Shuffle Functions
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-matrix-functions
+    slug: engineering-cuda-wmma-tensor-cores
+    title: WMMA and Tensor Cores
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#atomic-functions
+    slug: engineering-cuda-atomic-operations
+    title: CUDA Atomic Operations
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cooperative-groups
+    slug: engineering-cuda-cooperative-groups
+    title: Cooperative Groups
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__ERROR.html
+    slug: engineering-cuda-error-handling
+    title: CUDA Error Handling
+    topic: cuda
+
+  - url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#nvtx
+    slug: engineering-cuda-nvtx
+    title: NVTX Range Markers
+    topic: cuda
+    secondary_urls:
+      - https://docs.nvidia.com/cuda/profiler-users-guide/index.html#nvtx
 
   # --- PyTorch (learning order) ---
   - url: https://pytorch.org/docs/stable/notes/cuda.html
@@ -120,4 +255,4 @@ engineering:
   - url: https://docs.nvidia.com/cuda/cublas/index.html
     slug: engineering-cublas-library
     title: cuBLAS Library Documentation
-    topic: algorithms
+    topic: nvidia

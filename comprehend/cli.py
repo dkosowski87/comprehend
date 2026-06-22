@@ -1211,7 +1211,7 @@ def engineering_topics() -> None:
 @click.option(
     "--topic",
     required=True,
-    help="Primary topic slug (cuda, pytorch, tensorrt, triton, onnx, algorithms)",
+    help="Primary topic slug (cuda, nvidia, apple, memory, camera, pytorch, tensorrt, triton, onnx, algorithms, jetson)",
 )
 @click.option(
     "--repo",
@@ -1501,11 +1501,14 @@ def engineering_queue_next(
         "status": pending.status.value,
     }
 
+    entry = next(
+        (queue_entry for queue_entry in entries if queue_entry.resolve_slug() == pending.slug),
+        None,
+    )
+    if entry is not None and entry.secondary_urls:
+        payload["secondary_urls"] = list(entry.secondary_urls)
+
     if prepare:
-        entry = next(
-            (entry for entry in entries if entry.resolve_slug() == pending.slug),
-            None,
-        )
         if entry is None:
             raise click.ClickException(f"Queue entry not found for slug '{pending.slug}'")
 
@@ -1608,7 +1611,7 @@ def engineering_queue_run(
 @click.option(
     "--topic",
     required=True,
-    help="Primary topic slug (cuda, pytorch, tensorrt, triton, onnx, algorithms)",
+    help="Primary topic slug (cuda, nvidia, apple, memory, camera, pytorch, tensorrt, triton, onnx, algorithms, jetson)",
 )
 @click.option(
     "--engineering-file",

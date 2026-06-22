@@ -37,6 +37,8 @@ Run on **local** compute when possible (wiki git push over SSH, Mermaid/Manim re
 
 **Wiki access:** the target repo is `dkosowski87/comprehend`. Omit `--repo` when running from a clone (inferred from `git remote`), or pass `--repo dkosowski87/comprehend`.
 
+**Sources:** each queue entry has a primary `url` (extracted by prepare). When `queue next` returns `secondary_urls`, the agent may read those official docs too — see comprehend-engineering skill § Primary source and supplementation.
+
 ## Step 1 — Pick the next resource (automation-only)
 
 ```bash

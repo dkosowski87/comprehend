@@ -4,12 +4,17 @@ from __future__ import annotations
 
 ALLOWED_ENGINEERING_TOPICS: frozenset[str] = frozenset(
     {
+        "algorithms",
+        "apple",
+        "camera",
         "cuda",
+        "jetson",
+        "memory",
+        "nvidia",
+        "onnx",
         "pytorch",
         "tensorrt",
         "triton",
-        "onnx",
-        "algorithms",
     },
 )
 

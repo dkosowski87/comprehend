@@ -29,6 +29,7 @@ class EngineeringQueueEntry:
     slug: str | None = None
     title: str | None = None
     topic: str | None = None
+    secondary_urls: tuple[str, ...] = ()
 
     def resolve_slug(self) -> str:
         """Return the wiki slug for this entry."""
@@ -92,11 +93,17 @@ def load_engineering_queue(path: Path) -> list[EngineeringQueueEntry]:
         topic_value = item.get("topic")
         topic = str(topic_value) if topic_value is not None else None
 
+        secondary_raw = item.get("secondary_urls")
+        secondary_urls: tuple[str, ...] = ()
+        if isinstance(secondary_raw, list):
+            secondary_urls = tuple(str(url) for url in secondary_raw)
+
         entry = EngineeringQueueEntry(
             url=str(item["url"]),
             slug=slug,
             title=title,
             topic=topic,
+            secondary_urls=secondary_urls,
         )
         entries.append(entry)
 

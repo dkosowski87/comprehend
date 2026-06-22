@@ -257,7 +257,9 @@ engineering:
     topic: pytorch
 ```
 
-Each entry requires **`url`**, **`slug`**, **`title`**, and **`topic`**. Topics must be one of: `cuda`, `pytorch`, `tensorrt`, `triton`, `onnx`, `algorithms` (`uv run comprehend engineering topics`).
+Each entry requires **`url`**, **`slug`**, **`title`**, and **`topic`**. Topics must be one of: `cuda`, `nvidia`, `apple`, `memory`, `camera`, `pytorch`, `tensorrt`, `triton`, `onnx`, `algorithms`, `jetson` (`uv run comprehend engineering topics`).
+
+Optional **`secondary_urls`** list extra official docs the agent may read (primary URL is still extracted by `prepare`).
 
 ```bash
 uv run comprehend engineering queue status
