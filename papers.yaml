@@ -149,6 +149,9 @@ papers:
 - url: https://arxiv.org/abs/2401.17270
   slug: arxiv-2401-17270
   title: 'YOLO-World: Real-Time Open-Vocabulary Object Detection'
+- url: https://arxiv.org/abs/2106.09685
+  slug: arxiv-2106-09685
+  title: 'LoRA: Low-Rank Adaptation of Large Language Models'
 - url: https://arxiv.org/abs/2605.07429
   slug: arxiv-2605-07429
   title: Towards Photorealistic and Efficient Bokeh Rendering via Diffusion Framework
@@ -161,6 +164,9 @@ papers:
 - url: https://arxiv.org/abs/2604.26488
   slug: arxiv-2604-26488
   title: Featurising Pixels from Dynamic 3D Scenes with Linear In-Context Learners
+- url: https://openreview.net/pdf?id=3d5CIRG1n2
+  slug: openreview-3d5CIRG1n2
+  title: 'DoRA: Weight-Decomposed Low-Rank Adaptation'
 - url: https://arxiv.org/pdf/2605.22344
   slug: arxiv-2605-22344
   title: 'Bernini: Latent Semantic Planning for Video Diffusion'
@@ -401,6 +407,9 @@ papers:
 - url: https://arxiv.org/pdf/2003.04618
   slug: arxiv-2003-04618
   title: 'Convolutional Occupancy Networks'
+- url: https://arxiv.org/abs/2604.24833
+  slug: arxiv-2604-24833
+  title: 'MotionBricks: Scalable Real-Time Motions with Modular Latent Generative Model and Smart Primitives'
 - url: https://arxiv.org/abs/2602.18993
   slug: arxiv-2602-18993
   title: 'SeaCache: Spectral-Evolution-Aware Cache for Accelerating Diffusion Models'
