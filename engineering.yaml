@@ -614,9 +614,3 @@ engineering:
     topic: nvidia
     secondary_urls:
       - https://docs.nvidia.com/nsight-compute/NsightCompute/index.html#roofline
-
-  # --- Other stacks (to curate) ---
-  - url: https://onnx.ai/onnx/intro/
-    slug: engineering-onnx-introduction
-    title: ONNX Introduction
-    topic: onnx
