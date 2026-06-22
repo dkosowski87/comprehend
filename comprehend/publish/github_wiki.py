@@ -107,8 +107,8 @@ def publish_wiki_page(
         markdown: Page markdown body.
         assets: Mapping of asset filename to local PNG path.
         config: Wiki configuration.
-        title: Paper title for the index page.
-        tags: Paper tags for the index page.
+        title: Summary title for the Papers index page.
+        tags: Summary tags for the Papers index page.
 
     Returns:
         Published wiki page URL path (without domain).
@@ -130,14 +130,14 @@ def publish_wiki_page(
         destination = assets_dir / asset_name
         destination.write_bytes(asset_path.read_bytes())
 
-    _update_home_index(
+    _update_papers_index(
         wiki_dir=wiki_dir,
         slug=slug,
         title=title,
         tags=tags,
     )
 
-    _run_git(["add", page_path.name, "assets", "Home.md"], cwd=wiki_dir)
+    _run_git(["add", page_path.name, "assets", "Papers.md"], cwd=wiki_dir)
 
     if _git_has_changes(wiki_dir):
         message = f"Add summary: {title}"
@@ -295,22 +295,22 @@ def _update_concepts_index(
     concepts_path.write_text(content, encoding="utf-8")
 
 
-def _update_home_index(
+def _update_papers_index(
     *,
     wiki_dir: Path,
     slug: str,
     title: str,
     tags: list[str],
 ) -> None:
-    home_path = wiki_dir / "Home.md"
+    papers_path = wiki_dir / "Papers.md"
     tag_text = ", ".join(f"`{tag}`" for tag in tags)
     timestamp = datetime.now(tz=UTC).strftime("%Y-%m-%d")
     entry = f"- [{title}]({slug}) — {tag_text} — {timestamp}"
 
-    if home_path.is_file():
-        content = home_path.read_text(encoding="utf-8")
+    if papers_path.is_file():
+        content = papers_path.read_text(encoding="utf-8")
     else:
-        content = "# Paper summaries\n\n"
+        content = "# Papers\n\n"
 
     if re.search(rf"\]\({re.escape(slug)}\)", content):
         return
@@ -319,7 +319,7 @@ def _update_home_index(
         content += "\n"
 
     content += entry + "\n"
-    home_path.write_text(content, encoding="utf-8")
+    papers_path.write_text(content, encoding="utf-8")
 
 
 def _run_git(args: list[str], *, cwd: Path | None = None) -> None:

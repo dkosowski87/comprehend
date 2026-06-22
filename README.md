@@ -248,7 +248,16 @@ If the queue is empty or the paper is already published, the automation posts a 
    git ls-remote git@github.com:owner/repo.wiki.git
    ```
 
-Wiki pages are stored at `https://github.com/owner/repo/wiki`. An index of all summaries is maintained in `Home.md`. Concept pages use the `concept-*` prefix and are listed in `Concepts.md`.
+Wiki pages are stored at `https://github.com/owner/repo/wiki`. `Home.md` is the top-level hub linking to section indexes. Paper summaries are listed in `Papers.md` (updated on each publish). Concept pages use the `concept-*` prefix and are listed in `Concepts.md`.
+
+**One-time wiki migration:** copy existing entries from `Home.md` into a new `Papers.md` page, then replace `Home.md` with hub links, for example:
+
+```markdown
+# Comprehend
+
+- [Papers](Papers)
+- [Concepts](Concepts)
+```
 
 ## Concept explanations (manual)
 
