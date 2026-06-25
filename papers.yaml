@@ -16,7 +16,7 @@ papers:
   title: DETRs Beat YOLOs on Real-time Object Detection
 - url: https://arxiv.org/abs/2312.08344
   slug: arxiv-2312-08344
-  title: 'FoundationPose: Unified 6D Pose Estimation and Model-Based Tracking'
+  title: 'FoundationPose: Unified 6D Pose Estimation and Tracking of Novel Objects'
 - url: https://arxiv.org/abs/2003.08934
   slug: arxiv-2003-08934
   title: 'NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis'
@@ -28,7 +28,7 @@ papers:
   title: 'On the Spectral Bias of Neural Networks'
 - url: https://arxiv.org/abs/2511.09554
   slug: arxiv-2511-09554
-  title: Efficient Neural Architecture Search for Object Detection
+  title: 'RF-DETR: Neural Architecture Search for Real-Time Detection Transformers'
 - url: https://openaccess.thecvf.com/content_CVPR_2020/papers/Niemeyer_Differentiable_Volumetric_Rendering_Learning_Implicit_3D_Representations_Without_3D_Supervision_CVPR_2020_paper.pdf
   slug: differentiable-volumetric-rendering-cvpr-2020
   title: 'Differentiable Volumetric Rendering: Learning Implicit 3D Representations Without 3D Supervision'
@@ -40,55 +40,55 @@ papers:
   title: 'Occupancy Networks: Learning 3D Reconstruction in Function Space'
 - url: https://arxiv.org/abs/2211.17192
   slug: arxiv-2211-17192
-  title: Accelerating Large Language Model Decoding with Speculative Sampling
+  title: Fast Inference from Transformers via Speculative Decoding
 - url: https://arxiv.org/abs/2103.00020
   slug: arxiv-2103-00020
   title: Learning Transferable Visual Models From Natural Language Supervision
 - url: https://arxiv.org/abs/2509.25164
   slug: arxiv-2509-25164
-  title: Real-Time Open-Vocabulary Object Detection
+  title: 'YOLO26: Key Architectural Enhancements and Performance Benchmarking for Real-Time Object Detection'
 - url: https://openaccess.thecvf.com/content_ICCV_2019/papers/Niemeyer_Occupancy_Flow_4D_Reconstruction_by_Learning_Particle_Dynamics_ICCV_2019_paper.pdf
   slug: occupancy-flow-iccv-2019
   title: 'Occupancy Flow: 4D Reconstruction by Learning Particle Dynamics'
 - url: https://arxiv.org/abs/2604.22875
   slug: arxiv-2604-22875
-  title: Vision-Language Model Benchmark
+  title: 'SketchVLM: Vision language models can annotate images to explain thoughts and guide users'
 - url: https://robotics-transformer2.github.io/assets/rt2.pdf
   slug: rt-2
   title: 'RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control'
 - url: https://arxiv.org/abs/2603.19312
   slug: arxiv-2603-19312
-  title: Self-Supervised Learning with Joint Embedding Predictive Architecture
+  title: 'LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels'
 - url: https://arxiv.org/abs/2307.08691
   slug: arxiv-2307-08691
-  title: 'Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training'
+  title: 'FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning'
 - url: https://arxiv.org/abs/2407.08608
   slug: arxiv-2407-08608
-  title: 'Muon: An Optimizer for Hidden Layers in Neural Networks'
+  title: 'FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision'
 - url: https://arxiv.org/abs/2104.14294
   slug: arxiv-2104-14294
   title: Emerging Properties in Self-Supervised Vision Transformers
 - url: https://arxiv.org/abs/2504.13181
   slug: arxiv-2504-13181
-  title: Contrastive Vision-Language Pretraining
+  title: 'Perception Encoder: The best visual embeddings are not at the output of the network'
 - url: https://proceedings.neurips.cc/paper_files/paper/2018/file/69386f6bb1dfed68692a24c8686939b9-Paper.pdf
   slug: neurips-2018-neural-ordinary-differential-equations
   title: Neural Ordinary Differential Equations
 - url: https://arxiv.org/abs/2408.00714
   slug: arxiv-2408-00714
-  title: 'Mask DINO: Towards A Unified Transformer-based Framework for Object Detection and Segmentation'
+  title: 'SAM 2: Segment Anything in Images and Videos'
 - url: https://arxiv.org/abs/2511.16719
   slug: arxiv-2511-16719
-  title: Instance Segmentation with Transformer Decoders
+  title: 'SAM 3: Segment Anything with Concepts'
 - url: https://arxiv.org/abs/1912.07372
   slug: arxiv-1912-07372
-  title: Local Implicit Grid Representations for 3D Scenes
+  title: 'Differentiable Volumetric Rendering: Learning Implicit 3D Representations without 3D Supervision'
 - url: https://arxiv.org/abs/2406.03459
   slug: arxiv-2406-03459
   title: 'LW-DETR: A Transformer Replacement to YOLO for Real-Time Detection'
 - url: https://arxiv.org/abs/2205.06230
   slug: arxiv-2205-06230
-  title: 'GLIP: Grounded Language-Image Pre-training'
+  title: Simple Open-Vocabulary Object Detection with Vision Transformers
 - url: https://arxiv.org/abs/2501.09898
   slug: arxiv-2501-09898
   title: 'FoundationStereo: Zero-Shot Stereo Matching'
@@ -103,16 +103,16 @@ papers:
   title: 'ConvNeXt V2: Co-Designing and Scaling ConvNets with Masked Autoencoders'
 - url: https://arxiv.org/abs/2312.14635
   slug: arxiv-2312-14635
-  title: Flow Maps for Universal Local Neural Parameterization
+  title: Fluid Simulation on Neural Flow Maps
 - url: https://arxiv.org/abs/2503.11651
   slug: arxiv-2503-11651
   title: 'VGGT: Visual Geometry Grounded Transformer'
 - url: https://arxiv.org/abs/2311.12198
   slug: arxiv-2311-12198
-  title: 3D Gaussian Splatting for Real-Time Radiance Field Rendering
+  title: 'PhysGaussian: Physics-Integrated 3D Gaussians for Generative Dynamics'
 - url: https://arxiv.org/abs/2511.16624
   slug: arxiv-2511-16624
-  title: Large-Scale 3D Reconstruction
+  title: 'SAM 3D: 3Dfy Anything in Images'
 - url: https://arxiv.org/abs/2112.10752
   slug: arxiv-2112-10752
   title: High-Resolution Image Synthesis with Latent Diffusion Models
@@ -130,16 +130,16 @@ papers:
   title: 'SMPL: A Skinned Multi-Person Linear Model'
 - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
   slug: neurips-2020-ntk-generalization
-  title: Fine-Grained Analysis of Optimization and Generalization for Overparameterized Two-Layer Neural Networks
+  title: Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains
 - url: https://arxiv.org/pdf/2605.27365v2
   slug: arxiv-2605-27365
   title: 'LocateAnything: Fast and High-Quality Vision-Language Grounding with Parallel Box Decoding'
 - url: https://arxiv.org/abs/2604.13036
   slug: arxiv-2604-13036
-  title: Generative Scene Modeling
+  title: 'Lyra 2.0: Explorable Generative 3D Worlds'
 - url: https://arxiv.org/abs/2503.20020
   slug: arxiv-2503-20020
-  title: Robotics Foundation Model
+  title: 'Gemini Robotics: Bringing AI into the Physical World'
 - url: https://arxiv.org/abs/2605.13465
   slug: arxiv-2605-13465
   title: Z-Order Transformer for Feed-Forward Gaussian Splatting
@@ -196,7 +196,7 @@ papers:
   title: Differentiable Vector Quantization for Rate-Distortion Optimization of Generative Image Compression
 - url: https://arxiv.org/pdf/2305.18565
   slug: arxiv-2305-18565
-  title: "PaLI-X: On Scaling up a Multilingual Vision and Language Model"
+  title: 'PaLI-X: On Scaling up a Multilingual Vision and Language Model'
 - url: https://arxiv.org/abs/2412.01506
   slug: arxiv-2412-01506
   title: Structured 3D Latents for Scalable and Versatile 3D Generation
@@ -502,7 +502,7 @@ papers:
   title: 'SliderEdit: Continuous Image Editing with Fine-Grained Instruction Control'
 - url: https://arxiv.org/abs/2511.02483
   slug: arxiv-2511-02483
-  title: "OLATverse: A Large-scale Real-world Object Dataset with Precise Lighting\n  Control"
+  title: 'OLATverse: A Large-scale Real-world Object Dataset with Precise Lighting Control'
 - url: https://arxiv.org/abs/2604.20841
   slug: arxiv-2604-20841
   title: 'DeVI: Physics-based Dexterous Human-Object Interaction via Synthetic Video Imitation'
@@ -514,7 +514,7 @@ papers:
   title: '3D-LATTE: Latent Space 3D Editing from Textual Instructions'
 - url: https://arxiv.org/abs/2506.02387
   slug: arxiv-2506-02387
-  title: 'VS-Bench: Evaluating VLMs for Strategic Reasoning and Decision-Making in Multi-Agent Environments'
+  title: 'VS-Bench: Evaluating VLMs for Strategic Abilities in Multi-Agent Environments'
 - url: https://arxiv.org/abs/2505.20981v2
   slug: arxiv-2505-20981
   title: 'RefAV: Towards Planning-Centric Scenario Mining'
