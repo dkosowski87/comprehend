@@ -89,6 +89,9 @@ papers:
 - url: https://arxiv.org/abs/2205.06230
   slug: arxiv-2205-06230
   title: Simple Open-Vocabulary Object Detection with Vision Transformers
+- url: https://proceedings.neurips.cc/paper_files/paper/2020/file/70feb62b69f16e0238f741fab228fec2-Paper.pdf
+  slug: neurips-2020-unsupervised-learning-of-visual-features-by-contrasting-cluster-assignments
+  title: 'Unsupervised Learning of Visual Features by Contrasting Cluster Assignments'
 - url: https://arxiv.org/abs/2501.09898
   slug: arxiv-2501-09898
   title: 'FoundationStereo: Zero-Shot Stereo Matching'
@@ -101,6 +104,9 @@ papers:
 - url: https://openaccess.thecvf.com/content/CVPR2023/papers/Woo_ConvNeXt_V2_Co-Designing_and_Scaling_ConvNets_With_Masked_Autoencoders_CVPR_2023_paper.pdf
   slug: convnext-v2-cvpr-2023
   title: 'ConvNeXt V2: Co-Designing and Scaling ConvNets with Masked Autoencoders'
+- url: https://openaccess.thecvf.com/content_CVPR_2020/papers/He_Momentum_Contrast_for_Unsupervised_Visual_Representation_Learning_CVPR_2020_paper.pdf
+  slug: momentum-contrast-cvpr-2020
+  title: 'Momentum Contrast for Unsupervised Visual Representation Learning'
 - url: https://arxiv.org/abs/2312.14635
   slug: arxiv-2312-14635
   title: Fluid Simulation on Neural Flow Maps
@@ -206,6 +212,9 @@ papers:
 - url: https://arxiv.org/abs/2604.08048
   slug: arxiv-2604-08048
   title: Guiding a Diffusion Model by Swapping Its Tokens
+- url: https://proceedings.neurips.cc/paper_files/paper/2025/file/21f1c5bbf2519321c1bee9bfa9edcd46-Paper-Conference.pdf
+  slug: neurips-2025-perceptionlm-open-access-data-and-models-for-detailed-visual-understanding
+  title: 'PerceptionLM: Open-Access Data and Models for Detailed Visual Understanding'
 - url: https://arxiv.org/abs/2603.26181
   slug: arxiv-2603-26181
   title: 'GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport'
@@ -308,6 +317,9 @@ papers:
 - url: https://arxiv.org/abs/2511.22950
   slug: arxiv-2511-22950
   title: 'RobotSeg: A Model and Dataset for Segmenting Robots in Image and Video'
+- url: https://openaccess.thecvf.com/content/ICCV2023/papers/Zhai_Sigmoid_Loss_for_Language_Image_Pre-Training_ICCV_2023_paper.pdf
+  slug: iccv-2023-sigmoid-loss-for-language-image-pre-training
+  title: 'Sigmoid Loss for Language Image Pre-Training'
 - url: https://arxiv.org/abs/2511.22357
   slug: arxiv-2511-22357
   title: 'AnchorFlow: Training-Free 3D Editing via Latent Anchor-Aligned Flows'
@@ -329,6 +341,9 @@ papers:
 - url: https://arxiv.org/abs/2511.04029
   slug: arxiv-2511-04029
   title: 'Faithful Contouring: Near-Lossless 3D Voxel Representation Free from Iso-surface'
+- url: https://arxiv.org/pdf/2403.13298?
+  slug: arxiv-2403-13298
+  title: 'Rotary position embedding for vision transformer'
 - url: https://arxiv.org/abs/2503.14880
   slug: arxiv-2503-14880
   title: 'DPFlow: Adaptive Optical Flow Estimation with a Dual-Pyramid Framework'
@@ -338,6 +353,9 @@ papers:
 - url: https://arxiv.org/abs/2509.11334
   slug: arxiv-2509-11334
   title: 'Dual Band Thermal Videography: Separating Time-Varying Reflection and Emission Near Ambient Conditions'
+- url: https://aclanthology.org/2024.acl-long.679.pdf
+  slug: acl-2024-video-chatgpt
+  title: 'Video-ChatGPT: Towards Detailed Video Understanding via Large Vision and Language Models'
 - url: https://arxiv.org/abs/2508.04728
   slug: arxiv-2508-04728
   title: Neural Field-Based 3D Surface Reconstruction of Microstructures from Multi-Detector Signals in Scanning Electron Microscopy
@@ -356,6 +374,9 @@ papers:
 - url: https://arxiv.org/abs/2304.02296
   slug: arxiv-2304-02296
   title: Data Leakage Detection and De-duplication in Large Scale Geospatial Image Datasets
+- url: https://proceedings.iclr.cc/paper_files/paper/2024/file/0b408293619f725fd30162af057e531a-Paper-Conference.pdf
+  slug: iclr-2024-vision-transformers-need-registers
+  title: 'Vision Transformers Need Registers'
 - url: https://arxiv.org/abs/2604.22334
   slug: arxiv-2604-22334
   title: 'FILTR: Extracting Topological Features from Pretrained 3D Models'
@@ -371,6 +392,9 @@ papers:
 - url: https://arxiv.org/abs/2604.13596
   slug: arxiv-2604-13596
   title: 'VGGT-Segmentor: Geometry-Enhanced Cross-View Segmentation'
+- url: https://proceedings.iclr.cc/paper_files/paper/2024/file/15d45097f9806983f0629a77e93ee60f-Paper-Conference.pdf
+  slug: iclr-2024-window-attention-is-bugged-how-not-to-interpolate-position-embeddings
+  title: 'Window attention is bugged: how not to interpolate position embeddings'
 - url: https://arxiv.org/abs/2604.12502
   slug: arxiv-2604-12502
   title: 'SEATrack: Simple, Efficient, and Adaptive Multimodal Tracker'
@@ -407,6 +431,9 @@ papers:
 - url: https://arxiv.org/pdf/2003.04618
   slug: arxiv-2003-04618
   title: 'Convolutional Occupancy Networks'
+- url: https://arxiv.org/pdf/2211.12860
+  slug: arxiv-2211-12860
+  title: 'DETRs with Collaborative Hybrid Assignments Training'
 - url: https://arxiv.org/abs/2604.24833
   slug: arxiv-2604-24833
   title: 'MotionBricks: Scalable Real-Time Motions with Modular Latent Generative Model and Smart Primitives'
@@ -416,6 +443,9 @@ papers:
 - url: https://arxiv.org/abs/2602.15989
   slug: arxiv-2602-15989
   title: 'SAM 3D Body: Robust Full-Body Human Mesh Recovery'
+- url: https://proceedings.neurips.cc/paper_files/paper/2024/file/a03037317560b8c5f2fb4b6466d4c439-Paper-Conference.pdf
+  slug: neurips-2024-what-matters-when-building-vision-language-models
+  title: 'What matters when building vision-language models?'
 - url: https://arxiv.org/abs/2601.10611
   slug: arxiv-2601-10611
   title: 'Molmo2: Open Weights and Data for Vision-Language Models with Video Understanding and Grounding'
@@ -437,6 +467,9 @@ papers:
 - url: https://arxiv.org/abs/2512.10840
   slug: arxiv-2512-10840
   title: 'PoseGAM: Robust Unseen Object Pose Estimation via Geometry-Aware Multi-View Reasoning'
+- url: https://proceedings.iclr.cc/paper_files/paper/2024/file/9bf0810a4a1597a36d27ceea58667d92-Paper-Conference.pdf
+  slug: iclr-2024-data-filtering-networks
+  title: 'DATA FILTERING NETWORKS'
 - url: https://arxiv.org/abs/2512.11016
   slug: arxiv-2512-11016
   title: 'SoccerMaster: A Vision Foundation Model for Soccer Understanding'
@@ -464,6 +497,9 @@ papers:
 - url: https://arxiv.org/abs/2512.05564
   slug: arxiv-2512-05564
   title: 'ProPhy: Progressive Physical Alignment for Dynamic World Simulation'
+- url: https://arxiv.org/pdf/1904.00962
+  slug: arxiv-1904-00962
+  title: 'LARGE BATCH OPTIMIZATION FOR DEEP LEARNING: TRAINING BERT IN 76 MINUTES'
 - url: https://arxiv.org/abs/2412.08486
   slug: arxiv-2412-08486
   title: 'Learning Flow Fields in Attention for Controllable Person Image Generation'
@@ -527,3 +563,18 @@ papers:
 - url: https://arxiv.org/abs/2505.04410
   slug: arxiv-2505-04410
   title: 'DeCLIP: Decoupled Learning for Open-Vocabulary Dense Perception'
+- url: https://arxiv.org/pdf/2206.13378
+  slug: arxiv-2206-13378
+  title: 'Guillotine Regularization: Why removing layers is needed to improve generalization in Self-Supervised Learning'
+- url: https://arxiv.org/abs/2204.00987
+  slug: arxiv-2204-00987
+  title: 'Revisiting adaptive bins for monocular depth estimation'
+- url: https://arxiv.org/pdf/2401.08740
+  slug: arxiv-2401-08740
+  title: 'SiT: Exploring flow and diffusion-based generative models with scalable interpolant transformers'
+- url: https://arxiv.org/abs/2406.09418
+  slug: arxiv-2406-09418
+  title: 'VideoGPT+: Integrating Image and Video Encoders for Enhanced Video Understanding'
+- url: https://arxiv.org/abs/2312.06709
+  slug: arxiv-2312-06709
+  title: 'AM-RADIO: Agglomerative Vision Foundation Model -- Reduce All Domains Into One'
