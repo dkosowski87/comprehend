@@ -107,6 +107,15 @@ papers:
 - url: https://openaccess.thecvf.com/content_CVPR_2020/papers/He_Momentum_Contrast_for_Unsupervised_Visual_Representation_Learning_CVPR_2020_paper.pdf
   slug: momentum-contrast-cvpr-2020
   title: 'Momentum Contrast for Unsupervised Visual Representation Learning'
+- url: https://arxiv.org/pdf/1401.4082
+  slug: arvix-1401-4082
+  title: 'Stochastic backpropagation and approximate inference in deep generative models'
+- url: https://arxiv.org/pdf/1505.05770
+  slug: arvix-1505-05770v
+  title: 'Variational inference with normalizing flows'
+- url: https://arxiv.org/pdf/1710.10121
+  slug: arvix-1710-10121
+  title: 'Beyond finite layer neural networks: Bridging deep architectures and numerical differential equations'
 - url: https://arxiv.org/abs/2312.14635
   slug: arxiv-2312-14635
   title: Fluid Simulation on Neural Flow Maps
@@ -221,6 +230,9 @@ papers:
 - url: https://arxiv.org/abs/2603.25706
   slug: arxiv-2603-25706
   title: 'Wan-Weaver: Interleaved Multi-modal Generation via Decoupled Training'
+- http: https://arxiv.org/pdf/1708.00588
+  slug: arvix-1708-00588
+  title: 'Hidden physics models: Machine learning of nonlinear partial differential equations'
 - url: https://arxiv.org/abs/2504.02259
   slug: arxiv-2504-02259
   title: 'T*: Re-thinking Temporal Search for Long-Form Video Understanding'
