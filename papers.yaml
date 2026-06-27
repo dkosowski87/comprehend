@@ -110,12 +110,6 @@ papers:
 - url: https://arxiv.org/pdf/1401.4082
   slug: arvix-1401-4082
   title: 'Stochastic backpropagation and approximate inference in deep generative models'
-- url: https://arxiv.org/pdf/1505.05770
-  slug: arvix-1505-05770v
-  title: 'Variational inference with normalizing flows'
-- url: https://arxiv.org/pdf/1710.10121
-  slug: arvix-1710-10121
-  title: 'Beyond finite layer neural networks: Bridging deep architectures and numerical differential equations'
 - url: https://arxiv.org/abs/2312.14635
   slug: arxiv-2312-14635
   title: Fluid Simulation on Neural Flow Maps
@@ -185,6 +179,12 @@ papers:
 - url: https://arxiv.org/pdf/2605.22344
   slug: arxiv-2605-22344
   title: 'Bernini: Latent Semantic Planning for Video Diffusion'
+- url: https://arxiv.org/pdf/1505.05770
+  slug: arvix-1505-05770v
+  title: 'Variational inference with normalizing flows'
+- url: https://arxiv.org/pdf/1710.10121
+  slug: arvix-1710-10121
+  title: 'Beyond finite layer neural networks: Bridging deep architectures and numerical differential equations'
 - url: https://arxiv.org/abs/2604.24024
   slug: arxiv-2604-24024
   title: Breaking the Scalability Limit of Multi-Projector Calibration with Embedded Cameras
