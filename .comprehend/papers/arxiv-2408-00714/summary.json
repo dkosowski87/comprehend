@@ -143,7 +143,18 @@
         "4b"
       ],
       "page": 2,
-      "figure_number": 1
+      "figure_number": 1,
+      "xref": null,
+      "clip": [
+        65.63,
+        58.78,
+        548.02,
+        279.59
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5a.png"
     },
     {
       "id": "5b",
@@ -155,7 +166,18 @@
         "4b"
       ],
       "page": 4,
-      "figure_number": 2
+      "figure_number": 2,
+      "xref": null,
+      "clip": [
+        65.64,
+        43.83,
+        546.53,
+        295.39
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5b.png"
     },
     {
       "id": "5c",
@@ -167,7 +189,18 @@
         "4b"
       ],
       "page": 5,
-      "figure_number": 3
+      "figure_number": 3,
+      "xref": null,
+      "clip": [
+        65.16,
+        43.84,
+        546.48,
+        227.89
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5c.png"
     },
     {
       "id": "5d",
@@ -176,7 +209,18 @@
       "description": "Positions PVS as a generalization that includes Segment Anything for images and semi-supervised video object segmentation as special cases.",
       "refs": [],
       "page": 15,
-      "figure_number": 7
+      "figure_number": 7,
+      "xref": null,
+      "clip": [
+        65.53,
+        287.93,
+        546.41,
+        676.4
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5d.png"
     },
     {
       "id": "5e",
@@ -187,7 +231,18 @@
         "4c"
       ],
       "page": 17,
-      "figure_number": 8
+      "figure_number": 8,
+      "xref": null,
+      "clip": [
+        65.87,
+        72.75,
+        546.38,
+        258.56
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5e.png"
     },
     {
       "id": "5f",
@@ -196,7 +251,18 @@
       "description": "Data-engine workflow separating masklet selection, masklet tracking, and verification across annotator roles.",
       "refs": [],
       "page": 21,
-      "figure_number": 11
+      "figure_number": 11,
+      "xref": null,
+      "clip": [
+        65.87,
+        97.84,
+        546.14,
+        583.87
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5f.png"
     }
   ]
 }
