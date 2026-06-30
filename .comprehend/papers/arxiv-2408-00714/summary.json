@@ -1,0 +1,268 @@
+{
+  "title": "SAM 2: Segment Anything in Images and Videos",
+  "pdf_url": "https://arxiv.org/pdf/2408.00714.pdf",
+  "tags": [
+    "instance-segmentation",
+    "object-tracking",
+    "visual-tracking",
+    "transformers",
+    "temporal-coherence"
+  ],
+  "slug": "arxiv-2408-00714",
+  "keywords": [
+    "SAM 2",
+    "Promptable Visual Segmentation",
+    "masklet",
+    "streaming memory",
+    "memory attention",
+    "memory bank",
+    "object pointer",
+    "occlusion head",
+    "Hiera image encoder",
+    "SA-V data engine",
+    "corrective clicks",
+    "mask decoder"
+  ],
+  "problem": [
+    "Segment Anything made promptable segmentation practical for still images, but videos require the same object or part to remain localized through motion, deformation, occlusion, blur, and reappearance.",
+    "Existing video segmentation systems usually separate prompt interpretation from tracking, so a correction on a later frame often restarts segmentation instead of refining a persistent object memory (5b).",
+    "Available video object segmentation datasets are much smaller and more category-bound than the open-ended goal of segmenting any valid object, part, or subpart in videos.",
+    "A useful foundation model must handle images as a single-frame special case while supporting interactive video prompts, near real-time propagation, and corrections on arbitrary frames (5a) and (5d)."
+  ],
+  "solution": [
+    "SAM 2 defines Promptable Visual Segmentation: clicks, boxes, or masks can be placed on any video frame, and the model predicts a spatio-temporal masklet that can be refined with additional prompts (5d).",
+    "The model extends SAM with a streaming transformer architecture: a Hiera image encoder produces per-frame features once, memory attention conditions each frame on stored memories and object pointers, and the mask decoder predicts the current mask (5c) and (4a).",
+    "Predictions are written back through a memory encoder into a memory bank, letting later frames use both recent unprompted frames and prompted frames instead of relying on a separate tracker (5c) and (4b).",
+    "The mask decoder keeps SAM's promptable design but adds high-resolution skip features, an object pointer, and an occlusion head so the model can represent ambiguity and frames where the target is not visible (5e).",
+    "A three-phase SA-V data engine places the model in the annotation loop, progressing from per-frame SAM annotation to SAM 2 assisted correction and verification of masklets (5f).",
+    "Training simulates interactive use on images and video clips, mixing initial masks, clicks, boxes, and corrective clicks, with mask, IoU, and occlusion supervision (4c)."
+  ],
+  "key_concepts": [
+    "A masklet is the video analogue of an image mask: it represents one prompted object or part across frames, including disappearance and reappearance. This is why SAM 2 stores target-specific memory rather than only frame-level image features.",
+    "Streaming memory makes long videos tractable. The image encoder processes each frame once, while memory attention reuses compact memories and object pointers to condition the current prediction on the target's history (5c) and (4a).",
+    "Prompted frames and recent unprompted frames play different roles in the memory bank. Prompted frames capture user-verified evidence and are retained separately, while recent frames provide short-term motion and appearance context (4b).",
+    "The object pointer is a lightweight semantic token derived from the mask decoder output. Cross-attending to object pointers complements spatial memory maps, especially when the target is small, partially hidden, or visually similar to nearby objects.",
+    "The occlusion head changes the output space relative to image-only SAM: the correct answer for a frame may be that the target is absent, while the stored memory remains useful when the target reappears (5e).",
+    "The SA-V data engine is part of the method, not only a dataset contribution. SAM 2 in the loop finds hard masklets, annotators correct failures with occasional clicks, and verified predictions become training data for the next model update (5f)."
+  ],
+  "math": [
+    {
+      "id": "4a",
+      "label": "memory-conditioned frame features",
+      "latex": "\\mathbf{z}_t^{(\\ell+1)} = \\mathrm{MLP}\\left(\\mathrm{CrossAttn}\\left(\\mathrm{SelfAttn}\\left(\\mathbf{z}_t^{(\\ell)}\\right), \\left[\\mathbf{B}_t;\\mathbf{P}_t\\right]\\right)\\right)",
+      "variables": [
+        {
+          "symbol": "\\mathbf{z}_t^{(\\ell)}",
+          "meaning": "frame token features for video frame t at memory-attention block ell"
+        },
+        {
+          "symbol": "\\mathbf{B}_t",
+          "meaning": "spatial memories available to the current frame from prompted and recent frames"
+        },
+        {
+          "symbol": "\\mathbf{P}_t",
+          "meaning": "object pointer tokens stored from mask decoder outputs in other frames"
+        },
+        {
+          "symbol": "\\mathrm{SelfAttn}",
+          "meaning": "self-attention over current-frame tokens"
+        },
+        {
+          "symbol": "\\mathrm{CrossAttn}",
+          "meaning": "cross-attention from current-frame tokens to memory maps and object pointers"
+        }
+      ]
+    },
+    {
+      "id": "4b",
+      "label": "memory encoding and bank update",
+      "latex": "\\mathbf{m}_t = \\mathrm{ConvFuse}\\left(\\mathbf{e}_t + \\mathrm{Down}\\left(\\hat{\\mathbf{y}}_t\\right)\\right),\\quad \\mathcal{B}_{t+1}=\\mathrm{FIFO}\\left(\\mathcal{B}_t \\cup \\left\\{\\mathbf{m}_t\\right\\}, N, M\\right)",
+      "variables": [
+        {
+          "symbol": "\\mathbf{m}_t",
+          "meaning": "memory feature map written for frame t"
+        },
+        {
+          "symbol": "\\mathbf{e}_t",
+          "meaning": "unconditioned image-encoder embedding for frame t"
+        },
+        {
+          "symbol": "\\hat{\\mathbf{y}}_t",
+          "meaning": "predicted mask logits or mask for the target on frame t"
+        },
+        {
+          "symbol": "\\mathrm{Down}",
+          "meaning": "convolutional downsampling of the predicted mask"
+        },
+        {
+          "symbol": "\\mathcal{B}_t",
+          "meaning": "memory bank before processing frame t"
+        },
+        {
+          "symbol": "N",
+          "meaning": "maximum number of recent unprompted frame memories retained"
+        },
+        {
+          "symbol": "M",
+          "meaning": "maximum number of prompted frame memories retained"
+        }
+      ]
+    },
+    {
+      "id": "4c",
+      "label": "interactive training objective",
+      "latex": "\\mathcal{L}=20\\mathcal{L}_{\\mathrm{focal}}+\\mathcal{L}_{\\mathrm{dice}}+\\mathcal{L}_{\\mathrm{IoU}}+\\mathcal{L}_{\\mathrm{occ}}",
+      "variables": [
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{focal}}",
+          "meaning": "focal loss on the selected mask prediction"
+        },
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{dice}}",
+          "meaning": "dice loss on the selected mask prediction"
+        },
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{IoU}}",
+          "meaning": "mean-absolute-error loss for predicted mask quality"
+        },
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{occ}}",
+          "meaning": "cross-entropy loss for whether the target object is visible in the frame"
+        }
+      ]
+    }
+  ],
+  "visuals": [
+    {
+      "id": "5a",
+      "caption": "SAM 2 overview: promptable task, foundation model, and SA-V data engine",
+      "type": "extract",
+      "description": "Overview of SAM 2 as a unified image and video segmentation system trained with a model-in-the-loop data engine.",
+      "refs": [
+        "4a",
+        "4b"
+      ],
+      "page": 2,
+      "figure_number": 1,
+      "xref": null,
+      "clip": [
+        65.63,
+        58.78,
+        548.02,
+        279.59
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5a.png"
+    },
+    {
+      "id": "5b",
+      "caption": "Interactive segmentation with SAM 2",
+      "type": "extract",
+      "description": "Shows selection, propagation, and refinement: a later corrective click repairs the masklet using SAM 2 memory.",
+      "refs": [
+        "4a",
+        "4b"
+      ],
+      "page": 4,
+      "figure_number": 2,
+      "xref": null,
+      "clip": [
+        65.64,
+        43.83,
+        546.53,
+        295.39
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5b.png"
+    },
+    {
+      "id": "5c",
+      "caption": "SAM 2 architecture",
+      "type": "extract",
+      "description": "Streaming architecture with image encoder, memory attention, memory bank, prompt encoder, mask decoder, and memory encoder.",
+      "refs": [
+        "4a",
+        "4b"
+      ],
+      "page": 5,
+      "figure_number": 3,
+      "xref": null,
+      "clip": [
+        65.16,
+        43.84,
+        546.48,
+        227.89
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5c.png"
+    },
+    {
+      "id": "5d",
+      "caption": "Promptable Visual Segmentation task",
+      "type": "extract",
+      "description": "Positions PVS as a generalization that includes Segment Anything for images and semi-supervised video object segmentation as special cases.",
+      "refs": [],
+      "page": 15,
+      "figure_number": 7,
+      "xref": null,
+      "clip": [
+        65.53,
+        287.93,
+        546.41,
+        676.4
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5d.png"
+    },
+    {
+      "id": "5e",
+      "caption": "Mask decoder architecture",
+      "type": "extract",
+      "description": "Details the SAM-style decoder with high-resolution image features, output tokens, object pointer generation, and occlusion scoring.",
+      "refs": [
+        "4c"
+      ],
+      "page": 17,
+      "figure_number": 8,
+      "xref": null,
+      "clip": [
+        65.87,
+        72.75,
+        546.38,
+        258.56
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5e.png"
+    },
+    {
+      "id": "5f",
+      "caption": "Annotation guideline overview",
+      "type": "extract",
+      "description": "Data-engine workflow separating masklet selection, masklet tracking, and verification across annotator roles.",
+      "refs": [],
+      "page": 21,
+      "figure_number": 11,
+      "xref": null,
+      "clip": [
+        65.87,
+        97.84,
+        546.14,
+        583.87
+      ],
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2408-00714-5f.png"
+    }
+  ]
+}
