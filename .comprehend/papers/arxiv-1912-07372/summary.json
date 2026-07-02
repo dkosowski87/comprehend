@@ -1,0 +1,197 @@
+{
+  "title": "Differentiable Volumetric Rendering: Learning Implicit 3D Representations without 3D Supervision",
+  "pdf_url": "https://arxiv.org/pdf/1912.07372.pdf",
+  "tags": [
+    "3d-reconstruction",
+    "implicit-representations",
+    "neural-rendering",
+    "multi-view-stereo"
+  ],
+  "slug": "arxiv-1912-07372",
+  "keywords": [
+    "Differentiable Volumetric Rendering",
+    "DVR",
+    "implicit representations",
+    "occupancy network",
+    "texture field",
+    "implicit differentiation",
+    "surface depth",
+    "photometric reconstruction loss",
+    "freespace loss",
+    "occupancy loss",
+    "ShapeNet",
+    "DTU dataset"
+  ],
+  "problem": [
+    "Learning-based 3D reconstruction usually depends on accurate 3D ground truth, which is expensive or unavailable for many real-world objects and scenes.",
+    "Differentiable rendering from 2D images had mostly been tied to voxels or meshes, so methods inherited discretization artifacts, memory growth with resolution, or fixed-template topology limits.",
+    "Implicit representations avoid discretizing geometry, but prior occupancy and texture models were typically trained with 3D supervision rather than RGB images, masks, or sparse depth.",
+    "For an implicit surface, the rendered intersection point changes with network parameters, so backpropagating an image loss requires a way to differentiate the predicted surface depth."
+  ],
+  "solution": [
+    "The paper introduces Differentiable Volumetric Rendering (DVR), which renders an occupancy network and texture field by ray casting to the first isosurface intersection and evaluating color there (5b).",
+    "It represents shape as a continuous occupancy function and appearance as a continuous texture field, optionally conditioned on an image encoder latent code for single-view reconstruction **4a**.",
+    "The central step is to treat the surface hit as an implicit equation on a camera ray (5c) and use implicit differentiation to obtain an analytic gradient for surface depth **4c**.",
+    "Training samples image pixels and applies RGB, optional depth, freespace, and occupancy losses so object masks and 2D images can supervise both visible texture and missing or spurious geometry **4d**.",
+    "Because the depth-gradient formula depends only on derivatives at the final surface point, DVR avoids storing all volumetric samples from ray marching for the backward pass (5a)."
+  ],
+  "key_concepts": [
+    "Occupancy as geometry: the object surface is the level set f_theta(p, z) = tau, so geometry can be extracted at arbitrary resolution while training keeps a constant-size implicit function **4a**.",
+    "Texture on the surface: the texture field predicts RGB at 3D points, but rendering uses it only at the ray-surface hit, coupling appearance supervision directly to the learned shape **4b**.",
+    "Surface depth as the differentiable bottleneck: once the hit point is written as r(hat d), the difficult part of differentiable rendering becomes differentiating hat d rather than differentiating a rasterizer **4c**.",
+    "Implicit differentiation removes the need to unroll ray marching: the forward pass can search for the first occupancy transition, while the backward pass uses local derivatives of f_theta at the final hit point.",
+    "Mask-aware losses separate three pixel cases: valid surface hits receive photometric supervision, outside-mask rays remove false geometry with freespace loss, and inside-mask misses are encouraged to create occupancy **4d**."
+  ],
+  "math": [
+    {
+      "id": "4a",
+      "label": "implicit shape and texture fields",
+      "latex": "f_{\\theta}: \\mathbb{R}^{3} \\times \\mathcal{Z} \\to [0,1], \\quad t_{\\theta}: \\mathbb{R}^{3} \\times \\mathcal{Z} \\to \\mathbb{R}^{3}",
+      "variables": [
+        {
+          "symbol": "f_{\\theta}",
+          "meaning": "occupancy network that maps a 3D point and latent code to occupancy probability"
+        },
+        {
+          "symbol": "t_{\\theta}",
+          "meaning": "texture field that maps a 3D point and latent code to RGB color"
+        },
+        {
+          "symbol": "\\mathbf{p}",
+          "meaning": "3D point in object or world coordinates"
+        },
+        {
+          "symbol": "\\mathbf{z} \\in \\mathcal{Z}",
+          "meaning": "latent descriptor used to condition single-view shape and texture"
+        },
+        {
+          "symbol": "\\theta",
+          "meaning": "shared neural network parameters"
+        }
+      ]
+    },
+    {
+      "id": "4b",
+      "label": "ray-surface rendering",
+      "latex": "\\mathbf{r}(d)=\\mathbf{r}_{0}+d\\mathbf{w}, \\quad \\hat{\\mathbf{p}}=\\mathbf{r}(\\hat{d}), \\quad f_{\\theta}(\\hat{\\mathbf{p}})=\\tau, \\quad \\hat{\\mathbf{I}}_{\\mathbf{u}}=t_{\\theta}(\\hat{\\mathbf{p}})",
+      "variables": [
+        {
+          "symbol": "\\mathbf{r}_{0}",
+          "meaning": "camera center for the current view"
+        },
+        {
+          "symbol": "\\mathbf{w}",
+          "meaning": "ray direction from the camera through pixel u"
+        },
+        {
+          "symbol": "\\hat{d}",
+          "meaning": "predicted surface depth along the ray"
+        },
+        {
+          "symbol": "\\hat{\\mathbf{p}}",
+          "meaning": "predicted intersection point with the implicit surface"
+        },
+        {
+          "symbol": "\\tau",
+          "meaning": "occupancy threshold defining the isosurface"
+        },
+        {
+          "symbol": "\\hat{\\mathbf{I}}_{\\mathbf{u}}",
+          "meaning": "rendered RGB prediction at pixel u"
+        }
+      ]
+    },
+    {
+      "id": "4c",
+      "label": "analytic surface-depth gradient",
+      "latex": "\\frac{\\partial \\hat{d}}{\\partial \\theta} = -\\left(\\frac{\\partial f_{\\theta}(\\hat{\\mathbf{p}})}{\\partial \\hat{\\mathbf{p}}} \\cdot \\mathbf{w}\\right)^{-1} \\frac{\\partial f_{\\theta}(\\hat{\\mathbf{p}})}{\\partial \\theta}",
+      "variables": [
+        {
+          "symbol": "\\frac{\\partial \\hat{d}}{\\partial \\theta}",
+          "meaning": "change in predicted surface depth caused by changing network parameters"
+        },
+        {
+          "symbol": "\\frac{\\partial f_{\\theta}(\\hat{\\mathbf{p}})}{\\partial \\hat{\\mathbf{p}}}",
+          "meaning": "spatial derivative of occupancy at the predicted surface point"
+        },
+        {
+          "symbol": "\\frac{\\partial f_{\\theta}(\\hat{\\mathbf{p}})}{\\partial \\theta}",
+          "meaning": "parameter derivative of occupancy at the predicted surface point"
+        },
+        {
+          "symbol": "\\mathbf{w}",
+          "meaning": "ray direction used to convert depth changes into 3D point changes"
+        }
+      ]
+    },
+    {
+      "id": "4d",
+      "label": "pixel-sampled DVR supervision",
+      "latex": "\\mathcal{L}_{\\mathrm{rgb}}(\\theta)=\\sum_{\\mathbf{u}\\in\\mathcal{P}_{0}}\\lVert \\xi(\\mathbf{I})_{\\mathbf{u}}-\\xi(\\hat{\\mathbf{I}})_{\\mathbf{u}}\\rVert_{1}, \\quad \\mathcal{L}_{\\mathrm{depth}}(\\theta)=\\sum_{\\mathbf{u}\\in\\mathcal{P}_{0}}\\lvert d_{\\mathbf{u}}-\\hat{d}_{\\mathbf{u}}\\rvert_{1}",
+      "variables": [
+        {
+          "symbol": "\\mathcal{P}_{0}",
+          "meaning": "sampled pixels inside the object mask where the renderer predicts a finite surface depth"
+        },
+        {
+          "symbol": "\\xi(\\cdot)",
+          "meaning": "image feature function, implemented with RGB values and optionally image gradients"
+        },
+        {
+          "symbol": "\\mathbf{I}",
+          "meaning": "observed supervision image"
+        },
+        {
+          "symbol": "\\hat{\\mathbf{I}}",
+          "meaning": "image rendered from the implicit shape and texture model"
+        },
+        {
+          "symbol": "d_{\\mathbf{u}}",
+          "meaning": "ground truth depth for pixel u when depth supervision is available"
+        },
+        {
+          "symbol": "\\hat{d}_{\\mathbf{u}}",
+          "meaning": "predicted surface depth for pixel u"
+        }
+      ]
+    }
+  ],
+  "visuals": [
+    {
+      "id": "5a",
+      "caption": "Overview of differentiable volumetric rendering for implicit shape and texture representations",
+      "type": "extract",
+      "description": "Shows that an analytic gradient of surface depth with respect to network parameters lets RGB image losses train an implicit 3D representation.",
+      "refs": [
+        "4c"
+      ],
+      "page": 1,
+      "figure_number": 1
+    },
+    {
+      "id": "5b",
+      "caption": "Differentiable volumetric rendering pipeline",
+      "type": "extract",
+      "description": "Depicts pixel sampling, ray-based occupancy evaluation, surface-depth prediction, texture-field evaluation, image/depth losses, and optional image conditioning.",
+      "refs": [
+        "4a",
+        "4b",
+        "4d"
+      ],
+      "page": 3,
+      "figure_number": 2
+    },
+    {
+      "id": "5c",
+      "caption": "Ray notation for occupancy and texture rendering",
+      "type": "extract",
+      "description": "Defines the camera ray, the first isosurface intersection, and the texture lookup used to render a pixel color.",
+      "refs": [
+        "4b",
+        "4c"
+      ],
+      "page": 3,
+      "figure_number": 3
+    }
+  ]
+}
