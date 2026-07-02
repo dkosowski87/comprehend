@@ -80,9 +80,6 @@ papers:
 - url: https://arxiv.org/abs/2511.16719
   slug: arxiv-2511-16719
   title: 'SAM 3: Segment Anything with Concepts'
-- url: https://arxiv.org/abs/1912.07372
-  slug: arxiv-1912-07372
-  title: 'Differentiable Volumetric Rendering: Learning Implicit 3D Representations without 3D Supervision'
 - url: https://arxiv.org/abs/2406.03459
   slug: arxiv-2406-03459
   title: 'LW-DETR: A Transformer Replacement to YOLO for Real-Time Detection'
