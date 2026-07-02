@@ -8,7 +8,9 @@ from pathlib import Path
 
 import fitz
 
-FIGURE_CAPTION_PATTERN = re.compile(r"^(?:Figure|Fig\.?)\s+(\d+)\s*[:.]")
+FIGURE_CAPTION_PATTERN = re.compile(
+    r"^(?:Figure|Fig\.?)\s+(\d+)(?:\s*[:.]|\s+[A-Z(])",
+)
 PAGE_TOP_MARGIN = 20.0
 REGION_PADDING = 5.0
 CAPTION_MAX_LINES = 6

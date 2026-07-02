@@ -92,6 +92,17 @@ def test_figure_clip_tightens_vertical_bounds() -> None:
     assert clip[3] - clip[1] < 250
 
 
+def test_list_figure_regions_detects_caption_without_colon() -> None:
+    pdf_path = _require_pdf("arxiv-2504-13181")
+
+    regions = list_figure_regions(pdf_path)
+    figure_one = next(
+        region for region in regions if region.page == 2 and region.number == 1
+    )
+
+    assert "Perception Encoder" in figure_one.caption
+
+
 def test_render_extracted_figure_uses_composite_region_for_xref(tmp_path: Path) -> None:
     pdf_path = _require_pdf("arxiv-2304-08069")
     visual = VisualSpec(
