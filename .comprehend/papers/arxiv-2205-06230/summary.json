@@ -1,0 +1,190 @@
+{
+  "title": "Simple Open-Vocabulary Object Detection with Vision Transformers",
+  "pdf_url": "https://arxiv.org/pdf/2205.06230.pdf",
+  "tags": [
+    "object-detection",
+    "open-vocabulary",
+    "transformers",
+    "contrastive-learning",
+    "zero-shot"
+  ],
+  "slug": "arxiv-2205-06230",
+  "keywords": [
+    "OWL-ViT",
+    "open-vocabulary detection",
+    "image-conditioned detection",
+    "contrastive image-text pre-training",
+    "query embeddings",
+    "per-token detection heads",
+    "bipartite matching loss",
+    "focal sigmoid cross-entropy",
+    "federated annotations",
+    "random negatives",
+    "mosaic augmentation",
+    "location bias"
+  ],
+  "problem": [
+    "Object detectors are usually trained for a fixed category vocabulary, but collecting localized annotations for large, long-tailed, or open label spaces is expensive.",
+    "Contrastive image-text models provide strong image-level and language-aligned representations, yet transferring those representations to object-level localization is less established than transferring them to classification.",
+    "Existing open-vocabulary detectors often add multistage training, region proposal distillation, weak supervision, or image-text fusion, which complicates the system and can limit how many independent queries can be evaluated per image.",
+    "The paper also targets image-conditioned detection: detecting objects from a single query patch when the desired category is hard to name in text."
+  ],
+  "solution": [
+    "OWL-ViT first trains separate image and text Transformer encoders with contrastive image-text pre-training **4a**, then removes image-token pooling and attaches per-token detection heads for boxes and object embeddings (5a).",
+    "Open-vocabulary classification replaces fixed class weights with query embeddings from category names or descriptions, so each image can be scored against its own set of text queries using the embedding similarity in **4b**.",
+    "Detection fine-tuning keeps the DETR-style set prediction formulation, using a bipartite matching loss **4c** while adapting classification to federated, multi-label detection data with focal sigmoid cross-entropy **4d**.",
+    "Because image and text encoders are not fused, the same detector can accept image-derived query embeddings for one-shot or few-shot image-conditioned detection; the paper extracts a foreground query feature with the dissimilarity rule in **4e**.",
+    "The transfer recipe adds practical regularization and data handling: a much smaller text-encoder learning rate, location bias for box predictions, random negatives for federated labels, prompt augmentation, prompt ensembling, and mosaic augmentation."
+  ],
+  "key_concepts": [
+    "Per-token detection turns the Vision Transformer sequence into a set of object candidates: each output token predicts one box and one object embedding, avoiding a separate DETR decoder while preserving end-to-end set prediction (5a).",
+    "Using query embeddings as classifier weights makes the label space image-specific. A batch can contain different text queries for different images, and inference can score thousands of precomputed queries without rerunning the image encoder.",
+    "Separating image and text encoders is central to the method. It sacrifices early image-text fusion but makes text-derived and image-derived queries interchangeable, enabling both open-vocabulary detection and image-conditioned detection.",
+    "Federated annotations require multi-label treatment: an object can have several valid labels, and many categories are simply unknown for a given image, so focal sigmoid cross-entropy and sampled random negatives fit the data better than a single softmax label.",
+    "The paper's scaling analysis supports the recipe: stronger image-level pre-training is necessary but not sufficient for detection transfer, and large pure ViTs benefit most when fine-tuning is stabilized with the described regularization choices."
+  ],
+  "math": [
+    {
+      "id": "4a",
+      "label": "contrastive image-text pre-training",
+      "latex": "\\mathcal{L}_{\\mathrm{ITC}} = \\frac{1}{2N}\\sum_{n=1}^{N}\\left[-\\log \\frac{\\exp(\\mathbf{v}_n^{\\mathrm{T}}\\mathbf{t}_n/\\tau)}{\\sum_{m=1}^{N}\\exp(\\mathbf{v}_n^{\\mathrm{T}}\\mathbf{t}_m/\\tau)} - \\log \\frac{\\exp(\\mathbf{t}_n^{\\mathrm{T}}\\mathbf{v}_n/\\tau)}{\\sum_{m=1}^{N}\\exp(\\mathbf{t}_n^{\\mathrm{T}}\\mathbf{v}_m/\\tau)}\\right]",
+      "variables": [
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{ITC}}",
+          "meaning": "symmetric image-text contrastive loss used during image-level pre-training"
+        },
+        {
+          "symbol": "\\mathbf{v}_n",
+          "meaning": "pooled image embedding for image n"
+        },
+        {
+          "symbol": "\\mathbf{t}_n",
+          "meaning": "text embedding for the matching caption or text description"
+        },
+        {
+          "symbol": "N",
+          "meaning": "number of image-text pairs in the contrastive batch"
+        },
+        {
+          "symbol": "\\tau",
+          "meaning": "temperature for scaling image-text similarities"
+        }
+      ]
+    },
+    {
+      "id": "4b",
+      "label": "open-vocabulary query scoring",
+      "latex": "s_{ik}=\\mathbf{z}_i^{\\mathrm{T}}\\mathbf{q}_k,\\quad p_{ik}=\\sigma(s_{ik})",
+      "variables": [
+        {
+          "symbol": "\\mathbf{z}_i",
+          "meaning": "object image embedding predicted from image token i"
+        },
+        {
+          "symbol": "\\mathbf{q}_k",
+          "meaning": "text- or image-derived query embedding k"
+        },
+        {
+          "symbol": "s_{ik}",
+          "meaning": "classification logit for token i and query k"
+        },
+        {
+          "symbol": "p_{ik}",
+          "meaning": "sigmoid probability that query k applies to the object predicted by token i"
+        }
+      ]
+    },
+    {
+      "id": "4c",
+      "label": "DETR-style bipartite matching for detection",
+      "latex": "\\hat{\\pi}=\\arg\\min_{\\pi}\\sum_{j=1}^{M}\\mathcal{C}(\\mathbf{y}_j,\\hat{\\mathbf{y}}_{\\pi(j)}),\\quad \\mathcal{L}_{\\mathrm{det}}=\\sum_{j=1}^{M}\\left[\\mathcal{L}_{\\mathrm{cls}}+\\mathcal{L}_{\\mathrm{box}}+\\mathcal{L}_{\\mathrm{gIoU}}\\right](\\mathbf{y}_j,\\hat{\\mathbf{y}}_{\\hat{\\pi}(j)})",
+      "variables": [
+        {
+          "symbol": "\\mathbf{y}_j",
+          "meaning": "ground-truth object annotation j, including labels and box"
+        },
+        {
+          "symbol": "\\hat{\\mathbf{y}}_{\\pi(j)}",
+          "meaning": "model prediction assigned to ground-truth object j"
+        },
+        {
+          "symbol": "\\mathcal{C}",
+          "meaning": "matching cost combining classification and box terms"
+        },
+        {
+          "symbol": "M",
+          "meaning": "number of annotated objects in the image after any instance merging"
+        },
+        {
+          "symbol": "\\mathcal{L}_{\\mathrm{gIoU}}",
+          "meaning": "generalized IoU box loss used with the box regression loss"
+        }
+      ]
+    },
+    {
+      "id": "4d",
+      "label": "focal sigmoid classification for federated labels",
+      "latex": "\\mathcal{L}_{\\mathrm{cls}}(p,y)=-\\alpha y(1-p)^{\\gamma}\\log p-(1-\\alpha)(1-y)p^{\\gamma}\\log(1-p)",
+      "variables": [
+        {
+          "symbol": "p",
+          "meaning": "sigmoid probability for a token-query pair"
+        },
+        {
+          "symbol": "y",
+          "meaning": "binary target indicating whether the query label applies"
+        },
+        {
+          "symbol": "\\alpha",
+          "meaning": "positive-class weighting coefficient, set to 0.3 in the paper's experiments"
+        },
+        {
+          "symbol": "\\gamma",
+          "meaning": "focal modulation exponent, set to 2.0 in the paper's experiments"
+        }
+      ]
+    },
+    {
+      "id": "4e",
+      "label": "image-conditioned query feature extraction",
+      "latex": "f(\\mathbf{z}_i)=\\sum_{j=0}^{N-1}\\mathbf{z}_i^{\\mathrm{T}}\\mathbf{z}_j,\\quad i^{\\ast}=\\arg\\min_{i:\\,\\mathrm{IoU}(\\mathbf{b}_i,Q)>0.65} f(\\mathbf{z}_i),\\quad \\mathbf{q}_{\\mathrm{img}}=\\mathbf{z}_{i^{\\ast}}",
+      "variables": [
+        {
+          "symbol": "Q",
+          "meaning": "query image patch containing the example object"
+        },
+        {
+          "symbol": "\\mathbf{b}_i",
+          "meaning": "predicted box associated with class-head feature i"
+        },
+        {
+          "symbol": "\\mathbf{z}_i",
+          "meaning": "class-head feature for a predicted box that overlaps the query patch"
+        },
+        {
+          "symbol": "f(\\mathbf{z}_i)",
+          "meaning": "similarity of feature i to the other overlapping class-head features"
+        },
+        {
+          "symbol": "\\mathbf{q}_{\\mathrm{img}}",
+          "meaning": "selected image-derived query embedding used on target images"
+        }
+      ]
+    }
+  ],
+  "visuals": [
+    {
+      "id": "5a",
+      "caption": "OWL-ViT contrastive pre-training and transfer to open-vocabulary detection",
+      "type": "extract",
+      "description": "Method overview showing image-text contrastive pre-training, removal of token pooling, per-token box and class heads, and text query embeddings used for open-vocabulary classification.",
+      "refs": [
+        "4a",
+        "4b",
+        "4c"
+      ],
+      "page": 3,
+      "figure_number": 1
+    }
+  ]
+}
