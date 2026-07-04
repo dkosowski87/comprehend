@@ -184,7 +184,13 @@
         "4c"
       ],
       "page": 3,
-      "figure_number": 1
+      "figure_number": 1,
+      "xref": null,
+      "clip": null,
+      "mermaid_source": null,
+      "manim_scene_path": null,
+      "manim_scene_class": null,
+      "asset_filename": "arxiv-2205-06230-5a.png"
     }
   ]
 }
