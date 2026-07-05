@@ -263,6 +263,9 @@ papers:
 - url: https://arxiv.org/abs/2503.16591
   slug: arxiv-2503-16591
   title: "UniK3D: Universal Camera Monocular 3D Estimation"
+- url: https://proceedings.mlr.press/v202/ryali23a/ryali23a.pdf
+  slug: mlr-202-ryali23a
+  title: 'Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles'
 - url: https://arxiv.org/abs/2602.23574
   slug: arxiv-2602-23574
   title: Evidential Neural Radiance Fields
