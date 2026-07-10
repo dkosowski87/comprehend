@@ -380,6 +380,9 @@ papers:
 - url: https://arxiv.org/abs/2503.20184
   slug: arxiv-2503-20184
   title: 'Spectrum from Defocus: Fast Spectral Imaging with Chromatic Focal Stack'
+- url: https://arxiv.org/pdf/2504.16082
+  slug: arxiv-2504-16082
+  title: 'MR. Video: “MapReduce” is the Principle for Long Video Understanding'
 - url: https://arxiv.org/abs/2503.08703
   slug: arxiv-2503-08703
   title: 'SDTrack: A Baseline for Event-based Tracking via Spiking Neural Networks'
