@@ -128,6 +128,9 @@ papers:
 - url: https://arxiv.org/abs/2506.11035
   slug: arxiv-2506-11035
   title: 'Tversky Neural Networks: Psychologically Plausible Deep Learning with Differentiable Tversky Similarity'
+- url: https://arxiv.org/abs/2606.03643
+  slug: arxiv-2606-03643
+  title: 'GR00T N1: An Open Foundation Model for Generalist Humanoid Robots'
 - url: https://3dvar.com/Pandey2021Total.pdf
   slug: total3d-understanding
   title: 'Total3DUnderstanding: Joint Layout, Object Pose and Mesh Reconstruction'
@@ -137,6 +140,9 @@ papers:
 - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/55053683268957697aa39fba6f231c68-Paper.pdf
   slug: neurips-2020-ntk-generalization
   title: Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains
+- url: https://arxiv.org/pdf/2607.09024
+  slug: arxiv-2607-09024
+  title: 'Video Generation Models are General-Purpose Vision Learners'
 - url: https://arxiv.org/pdf/2605.27365v2
   slug: arxiv-2605-27365
   title: 'LocateAnything: Fast and High-Quality Vision-Language Grounding with Parallel Box Decoding'
@@ -221,6 +227,9 @@ papers:
 - url: https://proceedings.neurips.cc/paper_files/paper/2025/file/21f1c5bbf2519321c1bee9bfa9edcd46-Paper-Conference.pdf
   slug: neurips-2025-perceptionlm-open-access-data-and-models-for-detailed-visual-understanding
   title: 'PerceptionLM: Open-Access Data and Models for Detailed Visual Understanding'
+- url: https://arxiv.org/abs/2601.08828
+  slug: arxiv-2601-08828
+  title: 'Motion Attribution for Video Generation'
 - url: https://arxiv.org/abs/2603.26181
   slug: arxiv-2603-26181
   title: 'GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport'
@@ -392,6 +401,9 @@ papers:
 - url: https://proceedings.iclr.cc/paper_files/paper/2024/file/0b408293619f725fd30162af057e531a-Paper-Conference.pdf
   slug: iclr-2024-vision-transformers-need-registers
   title: 'Vision Transformers Need Registers'
+- url: https://arxiv.org/abs/2604.12358
+  slug: arxiv-2604-12358
+  title: 'Why and When Visual Token Pruning Fails? A Study on Relevant Visual Information Shift in MLLMs Decoding'
 - url: https://arxiv.org/abs/2604.22334
   slug: arxiv-2604-22334
   title: 'FILTR: Extracting Topological Features from Pretrained 3D Models'
@@ -404,6 +416,9 @@ papers:
 - url: https://arxiv.org/abs/2604.17078
   slug: arxiv-2604-17078
   title: Understanding and Enforcing Weight Disentanglement in Task Arithmetic
+- url: https://arxiv.org/abs/2506.15681
+  slug: arxiv-2506-15681
+  title: 'GenRecal: Generation after Recalibration from Large to Small Vision-Language Models'
 - url: https://arxiv.org/abs/2604.13596
   slug: arxiv-2604-13596
   title: 'VGGT-Segmentor: Geometry-Enhanced Cross-View Segmentation'
