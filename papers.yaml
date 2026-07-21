@@ -86,6 +86,9 @@ papers:
 - url: https://arxiv.org/abs/2205.06230
   slug: arxiv-2205-06230
   title: Simple Open-Vocabulary Object Detection with Vision Transformers
+- url: https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf
+  slug: httpsresearchnvidiacomlabscosmos-labcosmos3technical-reportpdf
+  title: 'Cosmos 3: Omnimodal World Models for Physical AI'
 - url: https://proceedings.neurips.cc/paper_files/paper/2020/file/70feb62b69f16e0238f741fab228fec2-Paper.pdf
   slug: neurips-2020-unsupervised-learning-of-visual-features-by-contrasting-cluster-assignments
   title: 'Unsupervised Learning of Visual Features by Contrasting Cluster Assignments'
