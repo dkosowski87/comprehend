@@ -134,6 +134,27 @@ papers:
 - url: https://arxiv.org/abs/2606.03643
   slug: arxiv-2606-03643
   title: 'GR00T N1: An Open Foundation Model for Generalist Humanoid Robots'
+- url: https://arxiv.org/abs/1803.10122
+  slug: arxiv-1803-10122
+  title: World Models
+- url: https://arxiv.org/abs/2408.11039
+  slug: arxiv-2408-11039
+  title: 'Transfusion: Predict the Next Token and Diffuse Images with One Multi-Modal Model'
+- url: https://arxiv.org/abs/2411.04996
+  slug: arxiv-2411-04996
+  title: 'Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models'
+- url: https://arxiv.org/abs/2511.21631
+  slug: arxiv-2511-21631
+  title: Qwen3-VL Technical Report
+- url: https://arxiv.org/abs/2503.20314
+  slug: arxiv-2503-20314
+  title: 'Wan: Open and Advanced Large-Scale Video Generative Models'
+- url: https://arxiv.org/abs/2412.19351
+  slug: arxiv-2412-19351
+  title: 'ETTA: Elucidating the Design Space of Text-to-Audio Models'
+- url: https://arxiv.org/abs/2403.12945
+  slug: arxiv-2403-12945
+  title: 'DROID: A Large-Scale In-The-Wild Robot Manipulation Dataset'
 - url: https://3dvar.com/Pandey2021Total.pdf
   slug: total3d-understanding
   title: 'Total3DUnderstanding: Joint Layout, Object Pose and Mesh Reconstruction'
